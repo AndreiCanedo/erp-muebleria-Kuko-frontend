@@ -1,0 +1,58 @@
+/*Reseteamos el css que trae por defecto mi navegador*/
+
+*{
+    margin:0;
+    padding:0;
+    vertical-align: baseline;
+}
+
+*,
+*::before,
+*::after{
+   
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;/*-webkit y moz son para compatibilidad de navegadores*/
+    -moz-box-sizing: border-box;
+
+}
+
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    min-height: 100vh;/*significa que ocupa el 100% de la altura vertical*/
+    scroll-behavior: smooth;/*Este nos ayuda asuavisar mi scroleo*/
+    text-rendering: optimizeSpeed;/*este nos ayuda a renderizar nuestras letras mas rapido*/
+    line-height: 1.5;
+}
+
+
+ul,ol{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+    display: block;
+}
+
+p a{
+    display: inline;
+}
+
+img, video, iframe, picture, figure{
+    max-width: 100%;
+    display: block;
+    /*esto se reinicia para poder usar como quiera lo que tengan estas etiquetas*/
+}
+
+form, input, select, textarea, button, label{
+    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+

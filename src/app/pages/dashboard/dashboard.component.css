@@ -1,0 +1,300 @@
+/********************************************************************************************/
+/****************************************PARTE ARRIBA****************************************/
+/********************************************************************************************/
+
+.dashboard__graficas{
+    display: flex;
+    flex-direction: row;
+}
+
+/********************************************************************************************/
+/**************************************GRAFICA BARRAS****************************************/
+/********************************************************************************************/
+
+
+.grafica__semanal{
+    width: 75%;
+    height: 50rem;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    background-color: var(--color-principal);
+    border-radius: 3rem;
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+}
+
+
+
+.grafica__title{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    height: 3rem;
+    margin-top: 2rem;
+    margin-left: 8rem;
+}
+
+.grafica__acomodo{
+    width: 95%;
+}
+
+.grafica__text{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.grafica__option{
+    font-size: 2rem;
+    cursor: pointer;
+    width: 5%;
+}
+
+.grafica__grafica-barras{
+    margin-top: 1rem;
+    margin-left: 3rem;
+    width: 95%;
+    height: 85%;
+    /* background-color: brown; */
+}
+
+/********************************************************************************************/
+/****************************************GRAFICA ESTADO**************************************/
+/********************************************************************************************/
+
+.grafica__estado{
+    width: 25%;
+    display: flex;
+    flex-direction: column;   
+}
+
+.estado__capital, .estado__ventas{
+    width: 100%;
+    height: 49%;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    background-color: var(--color-principal);
+    border-radius: 3rem;
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);   
+}
+
+.estado__acomodo{
+    display: flex;
+    flex-direction: row;
+}
+
+.capital__info{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.capital__text, 
+.ventas__title,
+.transacciones__title,
+.deudas__title{
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 2rem;
+    margin-bottom: 3rem;
+
+}
+
+.capital__precio, .ventas__ultima{
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.capital__comparacion, .ventas__compracion{
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+}
+
+.comparacion__subida, .ventas__subida{
+    height: 2rem;
+    width: 2rem;
+    padding: 0.2rem;
+    padding-top: 0.5rem;
+    font-size: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-background-select);
+    color: var(--color-text-select);
+    border-radius: 2rem;
+}
+
+.comparacion__porcentaje{
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+
+}
+
+.comparacion__tiempo{
+    margin-left: 0.2rem;
+    align-content: center;
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-text-subtema);
+}
+
+.capital__datos{
+    display: flex;
+    flex-direction: row;
+    margin-top: 4rem;
+    margin-left: 2rem;
+    justify-content: space-between;
+}
+
+.datos__ingreso{
+    width: 50%;
+}
+
+.ingreso__punto, .egreso__punto{
+    font-size: 1rem;
+    margin-right: 1rem;
+    color: var(--color-text-select);
+}
+
+.ingreso__text, .egreso__text{
+    font-size: 1.2rem;
+}
+
+.egreso__punto{
+    color: var(--color-text-error);
+}
+
+/********************************************************************************************/
+/****************************************VENTAS ESTADO**************************************/
+/*******************************************************************************************/
+
+.ventas__header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.ventas__icon{
+    width: 3rem;
+    height: 3rem;
+    margin-top: 1.8rem;
+    margin-right: 2rem;
+    padding: 1rem;
+    padding-top: .8rem;
+    padding-left: 1.1rem;
+    background-color: var(--color-background-icondollar);
+    border-radius: 3rem;
+    color: var(--color-principal);
+}
+
+/********************************************************************************************/
+/**********************************TRANSACCIONES RECIENTES**********************************/
+/*******************************************************************************************/
+
+.dashboard__transacciones{
+    display: flex;
+    flex-direction: row;
+}
+
+.transacciones__resientes{
+
+    width: 25%;
+    height: 50rem;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    background-color: var(--color-principal);
+    border-radius: 3rem;
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+
+}
+
+.transacciones__registro{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 6rem;
+}
+
+.registro__fecha{
+    margin-left: 2rem;
+    font-size: 1.5rem;
+    font-weight: lighter;
+}
+
+.registro__centro{
+    display: flex; 
+    position: relative;
+}
+
+.registro__icon{
+    margin-top: 0.8rem;
+    font-size: 1.2rem;
+    color: var(--color-text-select);
+}
+
+.registro__icon::after { 
+    content: ""; 
+    display: block; 
+    width: 2px; 
+    height: 3.5rem; 
+    background-color: var(--color-text-subtema-light); 
+    position: absolute; 
+    top: 40%;  
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+.registro__information{
+    width: 50%;
+    margin-right: 2rem;
+
+}
+
+/********************************************************************************************/
+/**************************************REGISTRO DEUDAS**************************************/
+/*******************************************************************************************/
+
+.registro__deudas{
+    width: 75%;
+    height: 50rem;
+    margin-right: 0;
+    margin-bottom: 2rem;
+    background-color: var(--color-principal);
+    border-radius: 3rem;
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+}
+
+.deudas__table{
+    margin-left: 2rem;
+    width: 95%;
+    height: 80%;
+    border-radius: 2rem;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.deudas__table th, .deudas__table td { 
+    text-align: center;
+    padding: 8px; 
+}
+
+.deudas__table th { 
+    background-color: #003366;
+    color: #fff; 
+}
+.deudas__table tr{
+    background-color: var(--color-background-select2);
+    /* color:var(--color-text-select); */
+}
+
+.deudas__table tr:nth-child(even) { 
+    background-color: var(--color-background-select); 
+} 
+
+.deudas__table tr:hover { 
+    background-color: #ddd; 
+    color:var(--color-text-select);
+}

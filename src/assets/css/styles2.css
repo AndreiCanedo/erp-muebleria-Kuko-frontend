@@ -1,0 +1,324 @@
+:root{
+    
+    --color-principal: #FFFFFF;
+    --color-secundary: #000;
+    --color-background: #e9f3f6fd;
+    --color-menu-aside: #9f9f9f;
+    --color-background-select:#CCE9ED;
+    --color-background-select2:#bdd1ef;
+    --color-background-box: #efe8e8fd;
+    --color-text-select:#00A2FF;
+    --color-text-subtema:#6a6868;
+    --color-text-subtema-light:#e2dfdf;
+    --color-text-error:#ff5353;
+    --color-background-error:#f3afaf;
+    --color-background-error2:#f5d4d4;
+    --color-background-icondollar: #f6d861;
+        
+}
+/*Posicion Relativa es que ese cuadro no dependa de otro*/
+/*Posicion absoluta queda a la deriba y puedes manejarla pero depende de la ultima
+posicion relativa para posicionarce*/
+
+
+/*Estilos Generales*/
+
+html{
+    font-size: 10px;/*Para medidas de los rem*/
+}                   /*62.5% equivale a 10px*/
+
+body{
+    width: 100%;
+    height: 100%;
+    font-family: "Poppins", Helvetica, sans-serif;
+    font-size: 1.5rem;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    /*overflow: hidden;/*ocultamos o quitamos la barra de scroll*/
+}
+
+/* body .login__background{
+    background-image: url("../../../assets/img/fondo.png") !important;
+    background-color: none !important;
+} */
+
+h1, h2, h3, h4, h5, h6{
+    color: var(--color-title);
+}
+
+.layout-login__layout{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-image: url("../img/fondo.png");
+    background-size: cover;
+}
+
+.layout{
+    position: flex;
+    margin-top: 1.5rem;
+    margin-right: 3rem;
+    margin-left: 1.5rem;
+    min-width: 1200px;
+    min-height: 100vh;
+    
+    display: grid;
+    grid-template-areas: "caja1 caja2";
+    grid-template-columns: 17% 83%;
+}
+
+/**************************************************************************/
+/******************************ASIDE***************************************/
+/**************************************************************************/
+.layout__aside{
+    position: fixed;
+    width: 17%;
+    height: 100%;    
+    grid-area: caja1;
+    
+}
+
+.aside__menu{
+    position: relative;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: center;
+    background-color: var(--color-principal);
+    border-radius: 2rem;
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3) ;
+    overflow: hidden;
+}
+
+.menu__logo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-top: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+}
+
+.menu__container-img{
+    width: 35%;
+}
+
+.menu__title{
+    font-size: 1.9rem;
+}
+
+.layout__menu{
+    flex: 1;
+    width: 100%;
+    padding: 0 2rem;
+}
+
+.menu__list{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.menu__option{
+    margin: 2rem 0;
+    margin-bottom: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.menu__submenu-title {
+    display: flex;
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    font-size: 1.3rem;
+    color: var(--color-menu-aside); 
+}
+
+.submenu__list {
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    padding-top: 1.5rem; 
+    list-style-type: none; 
+}
+
+.submenu__option {
+    position: relative;
+    display: flex;
+    height: 4rem;
+    width: 100%;
+    justify-content: start;
+    align-items: center;
+    padding-left: 2rem;
+    transition: all 300ms ease-in-out;
+}
+
+.submenu__link{
+    display: flex;  
+    flex-direction: row;
+    justify-content: center;
+    color: var(--color-secundary);
+    transition: all 300ms ease-in-out;
+}
+
+.submenu__icon{
+    padding-top: .3rem;
+    padding-right: .3rem;
+}
+
+.submenu__option:hover,
+.submenu__option:hover .submenu__link{
+    background-color: var(--color-background-select);
+    border-radius: 0 2rem 2rem 0;
+    color: var(--color-text-select);
+    padding-left: 3rem;
+    transform: translateX(-2rem);
+}
+
+.menu__buttom{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 5rem;
+    justify-content: center;
+    padding-bottom: 1.5rem;
+}
+
+.menu__logout{
+    width: 15rem;
+    border: none;
+    border-radius: 3rem;
+    box-shadow: 0 5px 15px rgba(0,162,255, 0.3);
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+}
+
+.logout__link{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.menu__logout:hover,
+.menu__logout:hover .logout__link{
+    background-color: var(--color-background-select);
+    color: var(--color-text-select);
+}
+
+/**************************************************************************/
+/******************************NAVBAR**************************************/
+/**************************************************************************/
+
+
+
+.layout__left{
+    margin-left: 3rem;
+    grid-area: caja2;
+    overflow: hidden;
+}   
+
+
+.layout__nav {
+    position: fixed; 
+    height: 7rem; 
+    width: 86%;
+    background-color: var(--color-background);
+}
+
+.nav__menu{
+    width: 90%;
+    height: 5rem;
+    margin-left: 3rem;
+    margin-bottom: 2rem;
+    border-radius: 3rem;
+    background-color: var(--color-principal);
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+}
+
+.nav__list{
+    display: flex;
+    height: 5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav__list-option{
+    margin: 0 1rem;
+}
+
+.nav__list-option--elment1{
+    width: 85%;
+}
+
+.list-option__icon{
+    width: 4rem;
+    height: 4rem;
+    padding-left: .9rem;
+    padding-top: .8rem;
+    font-size: 2.5rem;
+    border-radius: 4rem;
+    background-color: var(--color-principal);
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+}
+
+.list-option__icon:hover{
+    color: var(--color-text-select);
+    background-color: var(--color-background-select);
+}
+
+.list-option__button{
+    position: relative;
+    display: flex;
+    width: 12rem;
+    height: 3.5rem;
+    justify-content: center;
+    padding-top: .4rem;
+    border: none;
+    border-radius: 4rem;
+    box-shadow: 0 5px 15px rgba(0,162,255, 0.3);
+}
+.button__text{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.list-option__button:hover{
+    color: var(--color-text-select);
+    background-color: var(--color-background-select);
+}
+
+.list-option__avatar{
+    margin-right: 1.5rem;
+    width: 3rem;
+    border-radius: 3rem;
+}
+
+
+/**************************************************************************/
+/******************************DASHBOARD***********************************/
+/**************************************************************************/
+
+.layout__dashboard {
+    padding-top: 5rem;
+    margin-top: 5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-left: 1rem;
+    background-color: var(--color-background);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+

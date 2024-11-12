@@ -1,0 +1,108 @@
+<section class="dashboard__graficas">
+    <aside class="grafica__semanal">
+        <div class="grafica__title">
+            <div class="grafica__acomodo">
+                <h3 class="grafica__text">Egresos e ingresos</h3>
+            </div>
+            <div class="grafica__option">
+                <i class="fa-solid fa-ellipsis-vertical grafica__icon"></i>
+            </div>
+        </div>
+        <div class="grafica__grafica-barras">
+            <app-grafica
+                [facturasEgreso]='trasaccionesPorSemanaEgreso'
+                [facturasIngreso]='trasaccionesPorSemanaIngreso'>
+            </app-grafica>
+        </div>
+    </aside>
+    <aside class="grafica__estado">
+        <div class="estado__capital">
+            <h4 class="capital__text">Estado Capital</h4>
+            <div class="estado__acomodo">
+                <div class="capital__info">
+                    <h3 class="capital__precio">{{neto}}</h3>
+                    <div class="capital__comparacion">
+                        <i class="comparacion__subida fa-solid fa-arrow-trend-up"></i>
+                        <span class="caomparacion__porcentaje">9% </span>
+                        <h5 class="comparacion__tiempo">la ultima semana</h5>
+                    </div>
+                    <div class="capital__datos">
+                        <div class="datos__ingreso">
+                            <i class="fa-solid fa-circle ingreso__punto"></i>
+                            <span class="ingreso__text">Ingreso</span>
+                        </div>
+                        <div class="datos__egreso">
+                            <i class="fa-solid fa-circle egreso__punto"></i>
+                            <span class="egreso__text">Egreso</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="capital__grafica">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="estado__ventas">
+            <div class="ventas__header">
+                <h4 class="ventas__title">Ventas semanales</h4>
+                <i class="ventas__icon fa-solid fa-dollar-sign"></i>
+            </div>
+            <h3 class="ventas__ultima">$6,000.00</h3>
+            <div class="ventas__compracion">
+                <i class="ventas__subida fa-solid fa-arrow-trend-up"></i>
+                <span class="comparacion__porcentaje">9% </span>
+                <h5 class="comparacion__tiempo">ultima venta</h5>
+            </div>
+            <div class="ventas__grafica">
+
+            </div>
+        </div>
+    </aside>
+</section>
+<section class="dashboard__transacciones">
+    <aside class="transacciones__resientes">
+        <h3 class="transacciones__title">Ultimas Transacciones</h3>
+        <div *ngFor="let transaccion of transacciones" class="transacciones__registro">
+            <h4 class="registro__fecha">{{ transaccion.fecha| date:'shortTime' }}</h4>
+            <div class="registro__centro">
+                <i class="registro__icon fa-solid fa-circle"></i>
+            </div>
+            <span class="registro__information">factura {{ transaccion.tipo }} de {{formatCurrency(calcularTransaccion(transaccion))}}</span>
+        </div>       
+         
+
+    </aside>
+
+    <aside class="registro__deudas">
+        <h4 class="deudas__title">Registro de pagos pendientes</h4>
+        <table class="deudas__table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Perfil</th>
+                    <th>Deuda</th>
+                    <th>Ultimo Pago</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>sayer</td>
+                    <td>30000</td>
+                    <td>10000</td>
+                    <td>30/agos/2024</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>sayer</td>
+                    <td>30000</td>
+                    <td>10000</td>
+                    <td>30/agos/2024</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </aside>
+</section>

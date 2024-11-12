@@ -1,20 +1,33 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { PagesComponent } from './pages/pages.component';
+
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
+import { PagesModule } from './pages/pages.module';
+import { SharedModule } from "./shared/shared.module";
+import { AuthModule } from './auth/auth.module';
+
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PagesComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [
-    provideClientHydration()
-  ],
-  bootstrap: [AppComponent]
+    AppRoutingModule,
+    NgApexchartsModule,
+    PagesModule,
+    SharedModule,
+    AuthModule
+],
+  providers: [provideHttpClient(withFetch())],
+  bootstrap: [AppComponent], 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

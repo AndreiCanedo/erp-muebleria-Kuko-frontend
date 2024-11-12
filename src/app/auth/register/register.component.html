@@ -1,0 +1,92 @@
+<div class="layout-login__layout">
+    <div class="layout-login">
+        <div class="layout__menu">
+            <div class="menu__title">
+                <h5 class="title__text">Bienvenidos a MK</h5>
+                <h3 class="title__subtitle">Iniciar Registro</h3>
+            </div>
+            <div class="menu__login">
+                <form class="login__form"
+                        id="registerForm"
+                        autocomplete="off"
+                        [formGroup]="registerForm"
+                        (ngSubmit)="crearUsuario()">
+                    
+                    <div class="login__name">
+                        <div class="login__position">
+                            <label for="firstName" class="login__title">Nombre</label>
+                            <input type="text" 
+                                class="login__box login__box-name" 
+                                id="firstName" 
+                                formControlName="firstName" 
+                                [ngClass]="{'invalid-field': campoNoValido('firstName')}"
+                                [attr.placeholder]="campoNoValido('firstName') ? 'Nombre requerido' : ''">
+                        </div>
+                        <div class="login__position">
+                            <label for="lastName" class="login__title">Apellido</label>
+                            <input type="text" 
+                                class="login__box login__box-name" 
+                                id="lastName" 
+                                formControlName="lastName" 
+                                [ngClass]="{'invalid-field': campoNoValido('lastName')}"
+                                [attr.placeholder]="campoNoValido('lastName') ? 'Apellido requerido' : ''">
+                        </div>
+                    </div>
+                    
+                    <label for="country" class="login__title">Pais</label>
+                    <input type="text" 
+                        class="login__box" 
+                        id="country" 
+                        formControlName="country" 
+                        [ngClass]="{'invalid-field': campoNoValido('country')}"
+                        [attr.placeholder]="campoNoValido('country') ? 'pais requerido' : ''">
+                    
+                    <label for="username" class="login__title">Email</label>
+                    <input type="email" 
+                        class="login__box" 
+                        id="username" 
+                        formControlName="username" 
+                        [ngClass]="{'invalid-field': campoNoValido('username')}"
+                        [attr.placeholder]="campoNoValido('username') ? 'email requerido' : ''">
+        
+                    <label for="password" class="login__title">Password</label>
+                    <input type="password" 
+                        class="login__box" 
+                        id="password" 
+                        formControlName="password" 
+                        [ngClass]="{'invalid-field': campoNoValido('firstName')}"
+                        [attr.placeholder]="campoNoValido('password') ? 'contraseña requerida' : ''">
+                    
+                    <label for="password2" class="login__title">Password Remember</label>
+                    <input type="password" 
+                        class="login__box" 
+                        id="password2" 
+                        formControlName="password2" 
+                        [ngClass]="{'invalid-field': contrasenasNoValidas()}"
+                        [attr.placeholder]="contrasenasNoValidas() ? 'contraseña no coinciden' : ''">
+
+                    <div class="login__buttom">
+                        <button class="buttom__loguear" type="submit">Sign in</button>
+                    </div>
+                    <!-- <div class="menu__option">
+                        <h3 class="option__text">or sign in with</h3>
+                
+                        <div class="option__login">
+                
+                            <button class="login__google">
+                                <i class="fa-solid fa-google google__icon"></i>
+                                <span class="google__text">Sign in with Google</span>
+                            </button>
+                
+                        </div>
+                    </div> -->
+                </form>
+            </div>
+        
+            <footer class="menu__footer">
+                <span class="footer__text">cuentas con una cuenta? <a routerLink="/login" class="footer__link">Inicia Sesion aqui</a></span>
+            </footer>
+        </div>
+    </div>
+</div>
+
