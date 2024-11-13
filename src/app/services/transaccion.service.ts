@@ -1,68 +1,41 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs';
-import { Muebleria } from '../models/mueblerias.model';
+import { Observable } from 'rxjs';
 import { Transaccion } from '../models/transaccion.model';
 import { TipoFactura } from '../models/tipo-factura.enum';
+import { SharedService } from './shared.service';
 
-const base_url = environment.base_url
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransaccionService{
 
-  private http = inject(HttpClient)
+  
+  private sharedService = inject(SharedService)
+
+  private endpoint = '/estado'
+  private respField = 'transaccion'
 
   constructor() { }
 
-  get token(): string {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || '';
-    }
-    return '';
-
+  cargarTransaccion():Observable<Transaccion[]>{
+    return this.sharedService.get<Transaccion>(this.endpoint,this.respField)
   }
 
-  get headers(){
-    return {
-      headers:{
-        'x-token': this.token
-      }
-    }
-  }
-
-  cargarTransaccion(){
-    const url = `${base_url}/estado`
-    return this.http.get(url,this.headers)
-        .pipe(
-          map<any,Transaccion[]>( (resp: { ok:boolean, transaccion: {transacciones:Transaccion[]} } ) => resp.transaccion.transacciones )
-        )
-  }
-
-  obtenerTransaccionesById(id:string){
-    const url = `${base_url}/estado/${id}`
-    return this.http.get<any>(url,this.headers)
-        .pipe(
-          map( (resp: { ok:boolean, transaccion: {transacciones:Transaccion[]} } ) => resp.transaccion.transacciones[0] )
-        )
+  obtenerTransaccionesById(id:string):Observable<Transaccion>{
+    return this.sharedService.getById<Transaccion>(`${this.endpoint}/${id}`,this.respField)
   }
 
   crearTransacciones( transaccion: { netoActual:number, netoNuevo:number, fecha:Date, tipo:TipoFactura }){
-    const url = `${base_url}/estado`
-    return this.http.post(url,transaccion,this.headers)
+    return this.sharedService.post<Transaccion>( this.endpoint, transaccion )
   }
 
-  actualizarTransacciones( transaccion:Transaccion ){
-    const url = `${base_url}/estado/${transaccion.uid}`
-    return this.http.put(url,transaccion,this.headers)
+  actualizarTransacciones( transaccion:Transaccion,id:string ){
+    return this.sharedService.put<Transaccion>(`${this.endpoint}/${id}`, transaccion)
   }
 
   deleteTransaccion( _id:string ){
-    const url = `${base_url}/estado/${_id}`
-    return this.http.put(url,this.headers)
+    return this.sharedService.delete<Transaccion>(`${this.endpoint}/${_id}`)
   }
-
 
 }

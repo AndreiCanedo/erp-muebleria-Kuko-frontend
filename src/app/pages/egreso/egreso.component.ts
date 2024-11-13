@@ -43,7 +43,7 @@ export class EgresoComponent implements OnInit {
   }
 
   cargarEgresos(){
-    this.egresoServices.cargarEgreso()
+    this.egresoServices.cargarEgresos()
       .subscribe(egresos => {
         this.egresos = egresos
         this.egresosTemp = egresos

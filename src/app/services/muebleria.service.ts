@@ -1,69 +1,40 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Muebleria } from '../models/mueblerias.model';
+import { SharedService } from './shared.service';
 
-
-const base_url = environment.base_url
 
 @Injectable({
   providedIn: 'root'
 })
 export class MuebleriaService {
 
-  private http = inject(HttpClient);
+  private sharedService = inject(SharedService)
+
+  private endpoint = '/muebleria'
+  private respField = 'muebleria'
   
   constructor() { }
 
-  get token(): string {
-    //console.log(localStorage.getItem('token'))
-    //verificar si windows esta difinido antes de acceder
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || '';
-    }
-    return '';
-
+  cargarMuebleria():Observable<Muebleria[]>{
+    return this.sharedService.get<Muebleria>(this.endpoint,this.respField)
+   
   }
 
-  get headers(){
-    return {
-      headers:{
-        'x-token': this.token
-      }
-    }
+  obtennerMuebleriaById(id:string):Observable<Muebleria>{
+    return this.sharedService.getById<Muebleria>(`${this.endpoint}/${id}`,this.respField)
   }
 
-
-  cargarMuebleria(){
-    const url = `${base_url}/muebleria`;
-    return this.http.get( url, this.headers)
-              .pipe(
-                map<any,Muebleria[]>( ( resp: { ok:boolean, muebleria:{mueblerias:Muebleria[]} } ) => resp.muebleria.mueblerias)
-              )
+  crearMuebleria( muebleria: { neto:number } ):Observable<Muebleria>{
+    return this.sharedService.post<Muebleria>(this.endpoint,muebleria)
   }
 
-  obtennerMuebleriaById(id:string){
-    const url = `${base_url}/muebleria/${id}`
-    return this.http.get<any>(url,this.headers)
-            .pipe(
-              map( (resp: {ok:boolean, muebleria:{mueblerias:Muebleria[]} } ) => resp.muebleria.mueblerias[0] )
-            )
+  actualizarMuebleria( muebleria: Muebleria ):Observable<Muebleria>{
+    return this.sharedService.put<Muebleria>(this.endpoint,muebleria)
   }
 
-  crearMuebleria( muebleria: { neto:number } ){
-    const url = `${base_url}/muebleria`
-    return this.http.post(url,muebleria,this.headers)
-  }
-
-  actualizarMuebleria( muebleria: Muebleria ){
-    const url = `${base_url}/muebleria/${muebleria.uid}`
-    return this.http.put(url,muebleria,this.headers)
-  }
-
-  eliminarMuebleria( _id: string ){
-    const url = `${base_url}/muebleria/${_id}`
-    return this.http.delete(url,this.headers)
+  eliminarMuebleria( _id: string ):Observable<Muebleria>{
+    return this.sharedService.delete<Muebleria>(this.endpoint)
   }
 
 
