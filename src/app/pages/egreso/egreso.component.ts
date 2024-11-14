@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { EgresoService } from '../../services/egreso.service';
 import { Egreso } from '../../models/egreso.model';
 import { delay } from 'rxjs';
+import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-egreso',
@@ -11,6 +13,7 @@ import { delay } from 'rxjs';
 export class EgresoComponent implements OnInit {
 
   private egresoServices = inject(EgresoService)
+  private fb = inject(FormBuilder)
 
   public egreso :Egreso = {
     id: '',
@@ -34,12 +37,25 @@ export class EgresoComponent implements OnInit {
   public animacion:boolean = false;
   public cajaEdit = false;
   public cajaCrear = false;
-  public egresoForm!: Egreso;
+  public egresoForm!: FormGroup;
 
   constructor(){}
   
   ngOnInit(): void {
-    this.cargarEgresos(); 
+    this.cargarEgresos();
+    
+    this.egresoForm = this.fb.group({
+      
+      nombre:[ '', Validators.required ],
+      motivo:[ '', Validators.required ],
+      justificacion:[ '', Validators.required],
+      monto:[ 0, Validators.required],
+      cambio:[ 0 ],
+      formaPago:[ '', Validators.required],
+      muebleria: this.fb.group({
+        id:['1']
+      })
+    })
   }
 
   cargarEgresos(){
@@ -50,7 +66,35 @@ export class EgresoComponent implements OnInit {
       })
   }
 
+  
 
+  guardarEgreso(){
+    if(this.egresoForm.valid){
+      let idValue = this.egresoForm.get('id')?.value
+      let egresoN = this.egresoForm.value
+      console.log('egreso component => ', this.egresoForm.value)
+      console.log('id => ', idValue)
+      if(idValue != null){
+        this.egresoServices.actualizarEgreso(egresoN,idValue)
+          .subscribe(
+            resp => Swal.fire('Factura de egreso Actualizada correctamente','success'),
+            error => console.error("error al actualizar egreso", error)
+          )
+      }else{
+        this.egresoServices.crearEgreso(egresoN)
+        .subscribe(
+          resp => Swal.fire('Factura de egreso Creada correctamente','success'),
+          error => console.error("error al crear factura egreso", error)
+        )
+      }
+    }else{
+      console.log('Formulario invalido')
+    }
+
+  }
+  
+
+    
   monstrarEgresoById(id:string){
     
     if(id == "nuevo"){
@@ -105,6 +149,7 @@ export class EgresoComponent implements OnInit {
   /*****************************Cajas CSS*********************************/
   /***********************************************************************/
   mostrarCajaEdit(){
+    this.egresoForm.reset();
     this.cajaEdit = true;
     this.cajaCrear = false;
     this.mostrarCajaFormEliminar =false;
@@ -113,6 +158,7 @@ export class EgresoComponent implements OnInit {
   }
 
   mostrarCajaCrear(){
+    this.egresoForm.reset();
     this.cajaEdit=false;
     this.cajaCrear = true;
     this.mostrarCajaFormEliminar =false;
@@ -147,7 +193,9 @@ export class EgresoComponent implements OnInit {
   }
 
   //OCULTAR CAJA
-  cerrarCaja(){
+  cerrarCaja(event:Event){
+    event.preventDefault();//evitar que se envie los datos
+    this.egresoForm.reset();//cada vez que cerremos reiniciemos formulario
     this.animacion=true;
     setTimeout(()=>{
       this.animacion = false;

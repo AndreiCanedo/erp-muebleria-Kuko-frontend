@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Egreso } from '../models/egreso.model';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { SharedService } from './shared.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,14 @@ export class EgresoService {
   }
 
   crearEgreso(egreso:Egreso):Observable<Egreso>{
+    console.log('egreso => ',egreso)
     return this.sharedServices.post<Egreso>(`${this.endpoint}`,egreso)
+        .pipe(
+          catchError((error:HttpErrorResponse):Observable<Egreso> => {
+            console.error('Error al crear Egreso', error.message)
+            return throwError(error)
+          })
+        )
   }
 
   actualizarEgreso(egreso:Egreso, id:string):Observable<Egreso>{

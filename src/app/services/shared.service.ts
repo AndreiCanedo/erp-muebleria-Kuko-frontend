@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 
 @Injectable({
@@ -43,9 +43,15 @@ export class SharedService {
   }
 
   public post<T>(url:string, data:any): Observable<T>{
-    return this.http.post<T>(`${this.base_url}${url}`, data, this.header)
+    const fullUrl = `${this.base_url}${url}`
+    console.log('url => ',fullUrl)
+    console.log('dato => ',data)
+    return this.http.post<T>(fullUrl, data, this.header)
       .pipe(
-        catchError(this.handleError)
+        catchError((error:HttpErrorResponse):Observable<T> => {
+          console.error(`Error en la solicitud POST a ${fullUrl}`,error.message)
+          return throwError(error)
+        })
       );
   }
 
@@ -72,10 +78,12 @@ export class SharedService {
   }
 
   get header(){
+    const token = this.token; 
+    console.log('Token => ', token);
     return {
-      headers:{
-        'x-token': this.token
-      }
+      headers:new HttpHeaders({
+          'x-token': this.token
+        })
     }
   }
 
