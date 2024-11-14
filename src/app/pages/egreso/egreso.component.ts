@@ -39,23 +39,12 @@ export class EgresoComponent implements OnInit {
   public cajaCrear = false;
   public egresoForm!: FormGroup;
 
-  constructor(){}
+  constructor(){
+    this.resetForm();
+  }
   
   ngOnInit(): void {
     this.cargarEgresos();
-    
-    this.egresoForm = this.fb.group({
-      
-      nombre:[ '', Validators.required ],
-      motivo:[ '', Validators.required ],
-      justificacion:[ '', Validators.required],
-      monto:[ 0, Validators.required],
-      cambio:[ 0 ],
-      formaPago:[ '', Validators.required],
-      muebleria: this.fb.group({
-        id:['1']
-      })
-    })
   }
 
   cargarEgresos(){
@@ -149,7 +138,7 @@ export class EgresoComponent implements OnInit {
   /*****************************Cajas CSS*********************************/
   /***********************************************************************/
   mostrarCajaEdit(){
-    this.egresoForm.reset();
+    this.resetForm();
     this.cajaEdit = true;
     this.cajaCrear = false;
     this.mostrarCajaFormEliminar =false;
@@ -158,7 +147,7 @@ export class EgresoComponent implements OnInit {
   }
 
   mostrarCajaCrear(){
-    this.egresoForm.reset();
+    this.resetForm();
     this.cajaEdit=false;
     this.cajaCrear = true;
     this.mostrarCajaFormEliminar =false;
@@ -195,7 +184,7 @@ export class EgresoComponent implements OnInit {
   //OCULTAR CAJA
   cerrarCaja(event:Event){
     event.preventDefault();//evitar que se envie los datos
-    this.egresoForm.reset();//cada vez que cerremos reiniciemos formulario
+    this.resetForm();//cada vez que cerremos reiniciemos formulario
     this.animacion=true;
     setTimeout(()=>{
       this.animacion = false;
@@ -207,5 +196,20 @@ export class EgresoComponent implements OnInit {
     }, 500);
   }
 
+  //Reiniciar Servicios
+  resetForm(){
+    this.egresoForm = this.fb.group({
+      
+      nombre:[ '', Validators.required ],
+      motivo:[ '', Validators.required ],
+      justificacion:[ '', Validators.required],
+      monto:[ 0, Validators.required],
+      cambio:[ 0 ],
+      formaPago:[ '', Validators.required],
+      muebleria: this.fb.group({
+        id:['1']
+      })
+    })
+  }
 
 }
