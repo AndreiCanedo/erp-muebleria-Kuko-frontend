@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { EgresoService } from '../../services/egreso.service';
 import { Egreso } from '../../models/egreso.model';
-import { delay } from 'rxjs';
+import { delay, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -10,10 +10,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './egreso.component.html',
   styleUrl: './egreso.component.css'
 })
-export class EgresoComponent implements OnInit {
+export class EgresoComponent implements OnInit, OnDestroy {
 
   private egresoServices = inject(EgresoService)
   private fb = inject(FormBuilder)
+  private subscription!: Subscription ;
 
   public egreso :Egreso = {
     id: '',
@@ -44,7 +45,12 @@ export class EgresoComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.subscription = this.egresoServices.egresoCreado$.subscribe(() => this.cargarEgresos());
     this.cargarEgresos();
+  }
+
+  ngOnDestroy():void {
+    this.subscription.unsubscribe();
   }
 
   cargarEgresos(){
@@ -66,14 +72,18 @@ export class EgresoComponent implements OnInit {
       if(idValue != null){
         this.egresoServices.actualizarEgreso(egresoN,idValue)
           .subscribe(
-            resp => Swal.fire('Factura de egreso Actualizada correctamente','success'),
-            error => console.error("error al actualizar egreso", error)
+            resp => {
+              Swal.fire('Factura de egreso Actualizada correctamente','success');
+              this.egresoServices.notificarEgresoCreado();
+            },error => console.error("error al actualizar egreso", error)
           )
       }else{
         this.egresoServices.crearEgreso(egresoN)
         .subscribe(
-          resp => Swal.fire('Factura de egreso Creada correctamente','success'),
-          error => console.error("error al crear factura egreso", error)
+          resp => {
+            Swal.fire('Factura de egreso Creada correctamente','success');
+            this.egresoServices.notificarEgresoCreado();
+          },error => console.error("error al crear factura egreso", error)
         )
       }
     }else{

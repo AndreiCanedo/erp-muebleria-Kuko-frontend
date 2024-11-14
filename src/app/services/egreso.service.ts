@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Egreso } from '../models/egreso.model';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { SharedService } from './shared.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -13,6 +13,13 @@ export class EgresoService {
 
   private endpoint = '/factura/egresos'
   private respField = 'egreso';
+  private egresoCreadoSource = new Subject<void>();
+
+  egresoCreado$ = this.egresoCreadoSource.asObservable();
+  
+  notificarEgresoCreado(){
+    this.egresoCreadoSource.next();
+  }
 
   cargarEgresos():Observable<Egreso[]>{
     return this.sharedServices.get<Egreso>(this.endpoint,this.respField)
@@ -40,6 +47,8 @@ export class EgresoService {
   eliminarEgreso(id:string):Observable<Egreso>{
     return this.sharedServices.delete<Egreso>(`${this.endpoint}/${id}`)
   }
+
+
 
   /*
   egreso:{ nombre:string, 
