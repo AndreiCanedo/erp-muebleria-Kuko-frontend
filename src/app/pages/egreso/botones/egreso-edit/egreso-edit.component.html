@@ -1,12 +1,24 @@
 
-
-<form class="form__options"
+<form *ngIf="!idExist" class="form__options--buscarID"
+    [formGroup]="egresoId"
+    (ngSubmit)="buscarIdEgreso()">
+    <div class="options__id">
+        <label for="inputIdFound" class="options__text">Id Factura</label>
+        <input id="inputIdFound" type="number" class="options__input" formControlName="idFound">
+    </div>
+    <p *ngIf="existeErrorBuscarID" class="form--eliminar__error">El Id no existe</p>
+    <div class="form__button">
+        <button type="submit" class="button__save" [disabled]="egresoId.invalid">Buscar ID</button>
+        <button type="button" (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
+    </div>
+</form>
+<form *ngIf="idExist" class="form__options"
               [formGroup] = "egresoForm"
               (ngSubmit)="guardarEgreso()">
 
     <div class="options__id">
         <label for="inputId" class="options__text">Id Factura</label>
-        <input id="inputId" type="number" class="options__input" formControlName="id">
+        <input id="inputId" type="number" [readonly]="idExist" class="options__input options__input--id" formControlName="id">
     </div>
     <div class="options__nombre">
         <label for="inputName" class="options__text">Nombre</label>
@@ -34,6 +46,6 @@
     </div>
     <div class="form__button">
         <button type="submit" class="button__save" [disabled]="egresoForm.invalid">Actualizar</button>
-        <button (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
+        <button type="button" (click)="regresarCaja()" class="button__cancelar">Regresar</button>
     </div>
 </form>

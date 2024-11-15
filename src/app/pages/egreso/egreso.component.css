@@ -152,7 +152,7 @@
 
 .caja__form--edit{
     top: -2rem;
-    height: 70rem;
+    height: auto;
 }
 
 .caja__form--crear{

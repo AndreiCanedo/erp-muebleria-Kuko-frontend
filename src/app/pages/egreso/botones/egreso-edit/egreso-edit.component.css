@@ -121,3 +121,24 @@
     background-color: var(--color-background-select);
     color: var(--color-text-select);
 }
+
+.form--eliminar__error{
+    margin-left: 3rem;
+    padding-left: 2rem;
+    font-size: 1.3rem;
+    width: 15rem;
+    color: var(--color-text-error);
+    background-color: var(--color-background-error2);
+    box-shadow: 0 0 5px rgba(var(--color-background-error2), 0.3);
+    border-radius: 1rem;
+    animation: fadeOut 3.5s forwards;
+}
+
+@keyframes fadeOut{
+    0% { opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.options__input--id{
+    color: gray;
+}

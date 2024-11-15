@@ -1,18 +1,20 @@
-import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EgresoService } from '../../../../services/egreso.service';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-egreso-crear',
   templateUrl: './egreso-crear.component.html',
   styleUrl: './egreso-crear.component.css'
 })
-export class EgresoCrearComponent implements OnInit{
+export class EgresoCrearComponent implements OnInit, OnDestroy{
   
   private fb = inject(FormBuilder)
   private egresoServices = inject(EgresoService)
   
+  public subscription!: Subscription;
   public egresoForm! :FormGroup
   
   @Output() cancelar = new EventEmitter<void>();
@@ -21,6 +23,12 @@ export class EgresoCrearComponent implements OnInit{
   
   ngOnInit(): void {
     this.resetForm();
+  }
+
+  ngOnDestroy(): void {
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   guardarEgreso(){
     if(this.egresoForm.valid){
