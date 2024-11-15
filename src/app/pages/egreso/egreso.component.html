@@ -34,56 +34,23 @@
     </aside>
 
     <!-- Caja formulario -->
-     <aside *ngIf="mostrarCajaForm" 
+    <aside *ngIf="mostrarCajaForm" 
             class="caja__form" 
             [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaForm, 'caja__form--edit': cajaEdit, 'caja__form--crear': cajaCrear }">
+
         <div class="form__header">
             <h2 class="form__title">
                 {{ cajaEdit ? 'Modificar Factura Egreso' : 'Nueva Factura Egreso'}}
             </h2>
-            <i (click)="cerrarCaja($event)" class="fa-solid fa-x form__salir"></i>
-            
+            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>    
         </div>
-        <form class="form__options"
-              [formGroup] = "egresoForm"
-              (ngSubmit)="guardarEgreso()">
+        
 
-            <div *ngIf="cajaEdit" class="options__id">
-                <label for="inputId" class="options__text">Id Factura</label>
-                <input id="inputId" type="number" class="options__input" formControlName="id">
-            </div>
-            <div class="options__nombre">
-                <label for="inputName" class="options__text">Nombre</label>
-                <input id="inputName" type="text" class="options__input" formControlName="nombre">
-            </div>
-            <div class="options__motivo">
-                <label for="inputMotivo" class="options__text">Motivo</label>
-                <input id="inputMotivo" type="text" class="options__input" formControlName="motivo">
-            </div>
-            <div class="options__justificacion">
-                <label for="inputJustificacion" class="options__text">Justificacion</label>
-                <input id="inputJustificacion" type="text" class="options__input" formControlName="justificacion">
-            </div>
-            <div class="options__monto">
-                <label for="inputMonto" class="options__text">Monto</label>
-                <input id="inputMonto" type="text" class="options__input" formControlName="monto">
-            </div>
-            <div class="options__cambio">
-                <label for="inputCambio" class="options__text">Cambio</label>
-                <input id="inputCambio" type="text" class="options__input" formControlName="cambio">
-            </div>
-            <div class="options__formaPago">
-                <label for="inputFormaPago" class="options__text">Forma de Pago</label>
-                <input id="inputFormaPago" type="text" class="options__input"  formControlName="formaPago">
-            </div>
-            <div class="form__button">
-                <button type="submit" class="button__save" [disabled]="egresoForm.invalid">
-                    {{ cajaEdit ? 'Actualizar' : 'Crear'}}
-                </button>
-                <button (click)="cerrarCaja($event)" class="button__cancelar">Cancelar</button>
-            </div>
-        </form>
-     </aside>
+            <app-egreso-crear *ngIf="cajaCrear" (cancelar)="cerrarCaja()"></app-egreso-crear>
+            <app-egreso-edit *ngIf="cajaEdit" (cancelar)="cerrarCaja()"></app-egreso-edit>
+ 
+    </aside>
+    
 
     <!-- Caja Eliminar  -->
     <aside *ngIf="mostrarCajaFormEliminar" 
@@ -93,7 +60,7 @@
             <h2 class="form__title" [ngClass]="{'form__title-verificar':mostrarTablaEliminar}">
                 Eliminar Factura Egresos
             </h2>
-            <i (click)="cerrarCaja($event)" class="fa-solid fa-x form__salir"></i>
+            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>
         </div>
         <form class="form__options">
             <div class="options__id">
@@ -130,7 +97,7 @@
             <button *ngIf="!mostrarTablaEliminar" (click)="mostrarTablaVerificar()" class="button__save">Buscar</button>
             <button *ngIf="mostrarTablaEliminar && !idExist"  class="button__save">Eliminar</button>
 
-            <button *ngIf="!mostrarTablaEliminar" (click)="cerrarCaja($event)" class="button__cancelar">Cancelar</button>
+            <button *ngIf="!mostrarTablaEliminar" (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
             <button *ngIf="mostrarTablaEliminar && !idExist" (click)="regresarVerificar()"  class="button__cancelar">Regresar</button>
         </div>
     </aside>

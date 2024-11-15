@@ -6,6 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EgresoComponent } from './egreso/egreso.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GraficaComponent } from './grafica/grafica.component';
+import { EgresoEditComponent } from './egreso/botones/egreso-edit/egreso-edit.component';
+import { EgresoCrearComponent } from './egreso/botones/egreso-crear/egreso-crear.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 
@@ -13,9 +16,12 @@ import { GraficaComponent } from './grafica/grafica.component';
   declarations: [
     DashboardComponent,
     GraficaComponent,
-    EgresoComponent
+    EgresoComponent,
+    EgresoEditComponent,
+    EgresoCrearComponent
   ],
   imports: [
+    BrowserModule,
     CommonModule,
     NgApexchartsModule,
     FormsModule,

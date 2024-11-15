@@ -2,8 +2,6 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { EgresoService } from '../../services/egreso.service';
 import { Egreso } from '../../models/egreso.model';
 import { delay, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-egreso',
@@ -13,7 +11,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class EgresoComponent implements OnInit, OnDestroy {
 
   private egresoServices = inject(EgresoService)
-  private fb = inject(FormBuilder)
   private subscription!: Subscription ;
 
   public egreso :Egreso = {
@@ -32,17 +29,15 @@ export class EgresoComponent implements OnInit, OnDestroy {
   public existeErrorBuscarID = false;
   public egresos: Egreso[] = []
   public egresosTemp: Egreso[] = []
+  //abrir y cerrar cajas de boton
   public mostrarCajaForm:boolean = false;
   public mostrarCajaFormEliminar:boolean = false;
   public mostrarTablaEliminar:boolean = false;
   public animacion:boolean = false;
   public cajaEdit = false;
   public cajaCrear = false;
-  public egresoForm!: FormGroup;
 
-  constructor(){
-    this.resetForm();
-  }
+  constructor(){}
   
   ngOnInit(): void {
     this.subscription = this.egresoServices.egresoCreado$.subscribe(() => this.cargarEgresos());
@@ -60,39 +55,6 @@ export class EgresoComponent implements OnInit, OnDestroy {
         this.egresosTemp = egresos
       })
   }
-
-  
-
-  guardarEgreso(){
-    if(this.egresoForm.valid){
-      let idValue = this.egresoForm.get('id')?.value
-      let egresoN = this.egresoForm.value
-      console.log('egreso component => ', this.egresoForm.value)
-      console.log('id => ', idValue)
-      if(idValue != null){
-        this.egresoServices.actualizarEgreso(egresoN,idValue)
-          .subscribe(
-            resp => {
-              Swal.fire('Factura de egreso Actualizada correctamente','success');
-              this.egresoServices.notificarEgresoCreado();
-            },error => console.error("error al actualizar egreso", error)
-          )
-      }else{
-        this.egresoServices.crearEgreso(egresoN)
-        .subscribe(
-          resp => {
-            Swal.fire('Factura de egreso Creada correctamente','success');
-            this.egresoServices.notificarEgresoCreado();
-          },error => console.error("error al crear factura egreso", error)
-        )
-      }
-    }else{
-      console.log('Formulario invalido')
-    }
-
-  }
-  
-
     
   monstrarEgresoById(id:string){
     
@@ -148,7 +110,6 @@ export class EgresoComponent implements OnInit, OnDestroy {
   /*****************************Cajas CSS*********************************/
   /***********************************************************************/
   mostrarCajaEdit(){
-    this.resetForm();
     this.cajaEdit = true;
     this.cajaCrear = false;
     this.mostrarCajaFormEliminar =false;
@@ -157,7 +118,6 @@ export class EgresoComponent implements OnInit, OnDestroy {
   }
 
   mostrarCajaCrear(){
-    this.resetForm();
     this.cajaEdit=false;
     this.cajaCrear = true;
     this.mostrarCajaFormEliminar =false;
@@ -188,13 +148,11 @@ export class EgresoComponent implements OnInit, OnDestroy {
   mostrarCaja(){
     this.animacion = true;
     this.mostrarCajaForm = true;
-    setTimeout(()=> this.animacion = false, 300);
+    setTimeout(()=> this.animacion = false, 100);
   }
 
   //OCULTAR CAJA
-  cerrarCaja(event:Event){
-    event.preventDefault();//evitar que se envie los datos
-    this.resetForm();//cada vez que cerremos reiniciemos formulario
+  cerrarCaja(){
     this.animacion=true;
     setTimeout(()=>{
       this.animacion = false;
@@ -204,22 +162,6 @@ export class EgresoComponent implements OnInit, OnDestroy {
       this.mostrarCajaFormEliminar =false;
       this.mostrarTablaEliminar = false
     }, 500);
-  }
-
-  //Reiniciar Servicios
-  resetForm(){
-    this.egresoForm = this.fb.group({
-      
-      nombre:[ '', Validators.required ],
-      motivo:[ '', Validators.required ],
-      justificacion:[ '', Validators.required],
-      monto:[ 0, Validators.required],
-      cambio:[ 0 ],
-      formaPago:[ '', Validators.required],
-      muebleria: this.fb.group({
-        id:['1']
-      })
-    })
   }
 
 }
