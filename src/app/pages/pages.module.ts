@@ -9,6 +9,7 @@ import { GraficaComponent } from './grafica/grafica.component';
 import { EgresoEditComponent } from './egreso/botones/egreso-edit/egreso-edit.component';
 import { EgresoCrearComponent } from './egreso/botones/egreso-crear/egreso-crear.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { EgresoEliminarComponent } from './egreso/botones/egreso-eliminar/egreso-eliminar.component';
 
 
 
@@ -18,7 +19,8 @@ import { BrowserModule } from '@angular/platform-browser';
     GraficaComponent,
     EgresoComponent,
     EgresoEditComponent,
-    EgresoCrearComponent
+    EgresoCrearComponent,
+    EgresoEliminarComponent
   ],
   imports: [
     BrowserModule,

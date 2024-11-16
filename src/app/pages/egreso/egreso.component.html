@@ -55,51 +55,16 @@
     <!-- Caja Eliminar  -->
     <aside *ngIf="mostrarCajaFormEliminar" 
         class="caja__form" 
-        [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaEliminar, 'caja__form--eliminar': mostrarCajaEliminar, 'caja__form--verificar': mostrarTablaEliminar && !idExist}">
+        [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaEliminar, 'caja__form--eliminar': mostrarCajaEliminar, 'caja__form--verificar': mostrarTablaEliminar}">
         <div class="form__header">
             <h2 class="form__title" [ngClass]="{'form__title-verificar':mostrarTablaEliminar}">
                 Eliminar Factura Egresos
             </h2>
             <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>
         </div>
-        <form class="form__options">
-            <div class="options__id">
-                <label for="inputId" class="options__text">Id Factura</label>
-                <input id="inputId" type="number" class="options__input" [(ngModel)]="buscarById" [ngModelOptions]="{standalone: true}">
-            </div>
-        </form>
-        <p *ngIf="existeErrorBuscarID" class="form--eliminar__error">El Id no existe</p>
-        <table *ngIf="mostrarTablaEliminar && !idExist" class="form--eliminar__table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Motivo</th>
-                    <th>Justificacion</th>
-                    <th>Monto</th>
-                    <th>Cambio</th>
-                    <th>Forma De Pago</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ egreso.id }}</td>
-                    <td>{{ egreso.nombre }}</td>
-                    <td>{{ egreso.motivo }}</td>
-                    <td>{{ egreso.justificacion }}</td>
-                    <td>{{ formatCurrency(egreso.monto) }}</td>
-                    <td>{{ formatCurrency(egreso.cambio) }}</td>
-                    <td>{{ egreso.formaPago }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="form__button">
-            <button *ngIf="!mostrarTablaEliminar" (click)="mostrarTablaVerificar()" class="button__save">Buscar</button>
-            <button *ngIf="mostrarTablaEliminar && !idExist"  class="button__save">Eliminar</button>
 
-            <button *ngIf="!mostrarTablaEliminar" (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
-            <button *ngIf="mostrarTablaEliminar && !idExist" (click)="regresarVerificar()"  class="button__cancelar">Regresar</button>
-        </div>
+        <app-egreso-eliminar (cancelar)="cerrarCaja()"></app-egreso-eliminar>
+       
     </aside>
 
 </section>

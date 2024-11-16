@@ -1,0 +1,42 @@
+<form *ngIf="!idExist" class="form__options"
+    [formGroup]="egresoId"
+    (ngSubmit)="buscarId()">
+    <div class="options__id">
+        <label for="inputId" class="options__text">Id Factura</label>
+        <input id="inputId" type="number" class="options__input" formControlName="idFound">
+    </div>
+    <p *ngIf="existeErrorBuscarID" class="form--eliminar__error">El Id no existe</p>
+    <div class="form__button">
+        <button type="submit" class="button__save">Buscar ID</button>
+    
+        <button type="button" (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
+    </div>
+</form>
+<table *ngIf="idExist" class="form--eliminar__table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Motivo</th>
+            <th>Justificacion</th>
+            <th>Monto</th>
+            <th>Cambio</th>
+            <th>Forma De Pago</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ egreso.id }}</td> 
+            <td>{{ egreso.nombre }}</td>
+            <td>{{ egreso.motivo }}</td>
+            <td>{{ egreso.justificacion }}</td>
+            <td>{{ formatCurrency(egreso.monto) }}</td>
+            <td>{{ formatCurrency(egreso.cambio) }}</td>
+            <td>{{ egreso.formaPago }}</td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="idExist" class="form__button">
+    <button  type="button" (click)="eliminarEgreso()" class="button__save">Eliminar</button>
+    <button  type="button" (click)="regresarCaja()" class="button__cancelar">Regresar</button>
+</div>

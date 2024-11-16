@@ -44,8 +44,6 @@ export class SharedService {
 
   public post<T>(url:string, data:any): Observable<T>{
     const fullUrl = `${this.base_url}${url}`
-    console.log('url => ',fullUrl)
-    console.log('dato => ',data)
     return this.http.post<T>(fullUrl, data, this.header)
       .pipe(
         catchError((error:HttpErrorResponse):Observable<T> => {

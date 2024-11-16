@@ -264,15 +264,15 @@
 .caja__form--eliminar{
     top: 1rem;
     left: 24rem;
-    width: 30rem;
-    height: 30rem; 
+    width: auto;
+    height: auto; 
 }
 
 .caja__form--verificar{
     top: 1rem;
     left: 24rem;
-    width: 70rem;
-    height: 38rem;
+    width: auto;
+    height: auto;
 }
 
 .form--eliminar__table{
