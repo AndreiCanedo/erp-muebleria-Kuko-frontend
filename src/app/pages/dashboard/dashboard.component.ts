@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MuebleriaService } from '../../services/muebleria.service';
 import { TransaccionService } from '../../services/transaccion.service';
 import { Transaccion } from '../../models/transaccion.model';
@@ -29,9 +29,6 @@ export class DashboardComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.cargarDatos();
-    // Agregar el evento touchstart de manera pasiva
-    //si tengo problemas con dispositivos tactiles logica en la funcion onTouchSatrt 
-    // this.elementRef.nativeElement.addEventListener('touchstart', this.onTouchStart, { passive: true });
     const idMuebleria = "1";
     this.muebleriaServices.obtennerMuebleriaById(idMuebleria)
       .subscribe(muebleria => {

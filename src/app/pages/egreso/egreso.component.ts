@@ -2,6 +2,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { EgresoService } from '../../services/egreso.service';
 import { Egreso } from '../../models/egreso.model';
 import { Subscription } from 'rxjs';
+import { StorageServiceService } from '../../services/storage-service.service';
 
 @Component({
   selector: 'app-egreso',
@@ -11,8 +12,9 @@ import { Subscription } from 'rxjs';
 export class EgresoComponent implements OnInit, OnDestroy {
 
   private egresoServices = inject(EgresoService)
+  private storageServices = inject(StorageServiceService)
+  
   private subscription!: Subscription ;
-
   public egresos: Egreso[] = []
   public egresosTemp: Egreso[] = []
   
@@ -23,12 +25,14 @@ export class EgresoComponent implements OnInit, OnDestroy {
   public animacion:boolean = false;
   public cajaEdit = false;
   public cajaCrear = false;
+  public gastoSemanalActual:string = '0';
 
   constructor(){}
   
   ngOnInit(): void {
     this.subscription = this.egresoServices.egresoCreado$.subscribe(() => this.cargarEgresos());
     this.cargarEgresos();
+    this.transaccionSemanal();
   }
 
   ngOnDestroy():void {
@@ -48,6 +52,18 @@ export class EgresoComponent implements OnInit, OnDestroy {
           style: 'currency', 
           currency: 'USD' 
         }); 
+  }
+
+  transaccionSemanal(){
+    
+    let totalDeSemanas
+    const transaccionSemanal = this.storageServices.cargarDatos('trasaccionesPorSemanaEgreso')
+    console.log(transaccionSemanal)
+
+    // totalDeSemanas = transaccionSemanal?.length
+    // this.gastoSemanalActual = transaccionSemanal[totalDeSemanas]
+
+
   }
 
 
