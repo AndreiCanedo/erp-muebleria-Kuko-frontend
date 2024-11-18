@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
   }
   //Para no acomular informacion en mi localStorage
   ngOnDestroy(): void {
-      this.limpiarDatos();
+      // this.limpiarDatos();
   }
 
   //Cargar Datos Desde el LocalStorage
