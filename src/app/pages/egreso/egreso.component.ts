@@ -3,6 +3,7 @@ import { EgresoService } from '../../services/egreso.service';
 import { Egreso } from '../../models/egreso.model';
 import { Subscription } from 'rxjs';
 import { StorageServiceService } from '../../services/storage-service.service';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-egreso',
@@ -13,6 +14,7 @@ export class EgresoComponent implements OnInit, OnDestroy {
 
   private egresoServices = inject(EgresoService)
   private storageServices = inject(StorageServiceService)
+  private utilServices = inject(UtilService)
   
   private subscription!: Subscription ;
   public egresos: Egreso[] = []
@@ -48,10 +50,7 @@ export class EgresoComponent implements OnInit, OnDestroy {
   }
     
   formatCurrency(value: number): string { 
-    return value.toLocaleString('en-US', { 
-          style: 'currency', 
-          currency: 'USD' 
-        }); 
+    return this.utilServices.formatCurrency(value)
   }
 
   transaccionSemanal(){
