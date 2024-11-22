@@ -149,7 +149,7 @@
     left: 24rem;
     transform: translateX(-50%);
     width: 30rem;
-    height: 65rem; 
+    height: auto; 
     background-color:var(--color-principal);
     box-shadow: 0 0 15px rgba(0,162,255, 0.3); 
     border: 1px solid #ccc; 
@@ -247,7 +247,8 @@
 }
 
 .button__save,
-.button__cancelar{
+.button__cancelar,
+.boton__estimado{
 
     margin-left: 2rem;
     margin-right: 2rem;
@@ -262,7 +263,8 @@
 }
 
 .button__cancelar:hover,
-.button__save:hover{
+.button__save:hover,
+.boton__estimado:hover{
     background-color: var(--color-background-select);
     color: var(--color-text-select);
 }
@@ -397,7 +399,7 @@
 
 .total__semanal{
     margin: 1rem 1.5rem;
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-weight: bold;
 }
 
@@ -430,4 +432,23 @@
 .total__estipado--efectivo{
     font-size: 2rem;
     font-weight: bold;
+    cursor: pointer ;
 }
+
+
+/*************************************************************************/
+/*********************CAJA Actualizar Estimado****************************/
+/*************************************************************************/
+
+.actualizar__estimado{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+.options__input--estimado{
+    margin-bottom: 2rem;
+}
+

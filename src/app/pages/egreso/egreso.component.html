@@ -13,11 +13,11 @@
                 <h2 class="title__total">Gasto semanal</h2>
                 <i class="total__icon--title fa-solid fa-dollar"></i>
             </div>
-            <h1 class="total__semanal">$321321</h1>
+            <h1 class="total__semanal">{{ egresoSemanaActual }}</h1>
             <div class="total__datos">
                 <p class="total__estimado">Gasto semanal</p>
                 <i class="total__icon fa-solid fa-arrow-trend-up"></i>
-                <h5 class="total__estipado--efectivo">$1321321</h5>
+                <h5 (click)="cajaEstimado()" class="total__estipado--efectivo">{{ estimadoSemanal }}</h5>
             </div>
 
         </aside>
@@ -25,30 +25,9 @@
     
     <aside class="table__table">
         <h2 class="table__table--title">Tabla de Facturas Egresos</h2>
-        <table class="table__contenido">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Motivo</th>
-                    <th>Justificacion</th>
-                    <th>Monto</th>
-                    <th>Cambio</th>
-                    <th>Forma De Pago</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let egreso of egresos">
-                    <td>{{ egreso.id }}</td>
-                    <td>{{ egreso.nombre }}</td>
-                    <td>{{ egreso.motivo }}</td>
-                    <td>{{ egreso.justificacion }}</td>
-                    <td>{{ formatCurrency(egreso.monto) }}</td>
-                    <td>{{ formatCurrency(egreso.cambio) }}</td>
-                    <td>{{ egreso.formaPago }}</td>
-                </tr>
-            </tbody>
-        </table>
+        
+        <app-tabla [columnas]="columns" [datos]="egresos"></app-tabla>
+    
     </aside>
 
     <!-- Caja formulario -->
@@ -83,6 +62,27 @@
 
         <app-egreso-eliminar (cancelar)="cerrarCaja()"></app-egreso-eliminar>
        
+    </aside>
+
+    <!-- Caja Estimado -->
+    <aside *ngIf="mostrarCajaEstimado"
+        class="caja__form" 
+        [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaEstimado }">
+
+        <div class="form__header">
+            <h2 class="form__title">
+                Gasto Estimado Semanal
+            </h2>
+            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>
+        </div>
+
+        <form [formGroup]="estimadoForm" 
+            class="actualizar__estimado"
+            (submit)="actualizarEstimado()">
+            <input type="number" formControlName = "estimado" class="options__input options__input--estimado">
+            <button type="submit" class="boton__estimado">Agregar</button>
+        </form>
+
     </aside>
 
 </section>

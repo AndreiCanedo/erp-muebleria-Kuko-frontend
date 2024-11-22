@@ -10,6 +10,7 @@ import { EgresoEditComponent } from './egreso/botones/egreso-edit/egreso-edit.co
 import { EgresoCrearComponent } from './egreso/botones/egreso-crear/egreso-crear.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { EgresoEliminarComponent } from './egreso/botones/egreso-eliminar/egreso-eliminar.component';
+import { TablaComponent } from './tabla/tabla.component';
 
 
 
@@ -20,7 +21,8 @@ import { EgresoEliminarComponent } from './egreso/botones/egreso-eliminar/egreso
     EgresoComponent,
     EgresoEditComponent,
     EgresoCrearComponent,
-    EgresoEliminarComponent
+    EgresoEliminarComponent,
+    TablaComponent
   ],
   imports: [
     BrowserModule,

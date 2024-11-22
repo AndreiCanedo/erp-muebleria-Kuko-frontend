@@ -1,0 +1,73 @@
+.table__contenido{
+    margin-top: 2rem;
+    margin-left: 2rem;
+    width: 95%;
+    height: 80%;
+    border-radius: 2rem;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.table__contenido th, .table__contenido td { 
+    text-align: center;
+    padding: 8px; 
+}
+
+.table__contenido th { 
+    background-color: #003366;
+    color: #fff; 
+}
+.table__contenido tr{
+    background-color: var(--color-background-select2);
+    /* color:var(--color-text-select); */
+}
+
+.table__contenido tr:nth-child(even) { 
+    background-color: var(--color-background-select); 
+} 
+
+.table__contenido tr:hover { 
+    background-color: #ddd; 
+    color:var(--color-text-select);
+}
+
+/*************************************************************************/
+/*********************************Buttons*********************************/
+/*************************************************************************/
+
+.table__paginacion{
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+    margin-top: .5rem;
+    width: 95%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.table__anterior,
+.tabla__siguiente{
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 7rem;
+    font-size: 1.2rem;
+    border-radius: 3.5rem;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 5px 10px rgba(0,162,255, 0.3);
+    transition: all 300ms ease-in-out;
+
+    font-weight: bold;
+
+}
+
+.table__anterior:hover,
+.tabla__siguiente:hover{
+    background-color: var(--color-background-select);
+    color: var(--color-text-select);
+}
+
+.table__page{
+    font-size: 1.2rem;
+}

@@ -4,7 +4,6 @@ import { EgresoService } from '../../../../services/egreso.service';
 import { Egreso } from '../../../../models/egreso.model';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { error } from 'console';
 
 @Component({
   selector: 'app-egreso-eliminar',
