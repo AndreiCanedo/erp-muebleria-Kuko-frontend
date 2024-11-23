@@ -1,0 +1,50 @@
+<section class="cliente__table">
+
+    <ul class="clientes__cajas">
+        
+        <li class="caja__cliente">
+            <div class="caja__header">
+                <i class="caja__icon--trespuntos fa-solid fa-ellipsis-vertical" (click)="abrirCajaTresPuntos()"></i>
+                <ul class="trespuntos__caja" *ngIf="cajaTresPuntos">
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Actualizar</h5>
+                    </li>
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Eliminar</h5>
+                    </li>
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Cancelar</h5>
+                    </li>
+                </ul>
+            </div>
+            <div class="caja__icon--carpeta">
+                <i class="icon--carpeta__containe fa-solid fa-square-plus"></i>
+            </div>
+            <p class="caja__nombre">Agregar Nuevo Cliente</p>
+        </li>
+        
+        <li class="caja__cliente">
+            <div class="caja__header">
+                <i class="caja__icon--trespuntos fa-solid fa-ellipsis-vertical" (click)="abrirCajaTresPuntos()"></i>
+                <ul class="trespuntos__caja" *ngIf="cajaTresPuntos">
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Actualizar</h5>
+                    </li>
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Eliminar</h5>
+                    </li>
+                    <li class="trespuntos__elementos">
+                        <h5 class="elementos__title">Cancelar</h5>
+                    </li>
+                </ul>
+            </div>
+            <div class="caja__icon--carpeta">
+                <i class="icon--carpeta__containe fa-solid fa-folder"></i>
+            </div>
+            <p class="caja__nombre">D-Tex</p>
+        </li>
+       
+        
+    </ul>
+
+</section>
