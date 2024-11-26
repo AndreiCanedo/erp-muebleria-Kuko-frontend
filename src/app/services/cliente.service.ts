@@ -11,7 +11,7 @@ export class ClienteService {
   private sharedServices = inject(SharedService)
 
   private endpoint = '/cliente';
-  private respField = 'Cliente';
+  private respField = 'cliente';
   private clienteCreadoSourse = new Subject<void>();
 
   clienteCreado$ =  this.clienteCreadoSourse.asObservable();
@@ -21,6 +21,7 @@ export class ClienteService {
   }
 
   cargarCliente():Observable<Cliente[]>{
+
     return this.sharedServices.get<Cliente>(this.endpoint,this.respField);
   }
 
@@ -39,6 +40,5 @@ export class ClienteService {
   eliminarCliente(id:string):Observable<Cliente>{
     return this.sharedServices.delete<Cliente>(`${this.endpoint}/${id}` )
   }
-
 
 }
