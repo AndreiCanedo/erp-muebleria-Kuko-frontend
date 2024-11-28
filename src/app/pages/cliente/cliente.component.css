@@ -97,6 +97,37 @@
     border-radius: 1rem;
     overflow: hidden;
     z-index: 9999;
+    animation-duration: .5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes mostrar {
+    from{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes ocultar {
+    from{
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.mostrar{
+    animation-name: mostrar;
+}
+
+.ocultar{
+    animation-name: ocultar;
 }
 
 .trespuntos__elementos{
@@ -114,4 +145,26 @@
     left:19rem;
 }
 
+/******************************************************************************/
+/********************************Caja Crear************************************/
+/*****************************************************************************/
+
+.cliente__crear{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 60rem;
+    height: auto;
+    top: 20rem;
+    right: 45rem;
+    background-color:var(--color-principal);
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3); 
+    border: 1px solid #ccc; 
+    border-radius: 3rem;
+    padding: 20px; 
+    z-index: 1000;
+    animation-duration: .5s;
+    animation-fill-mode: forwards;
+
+}
 

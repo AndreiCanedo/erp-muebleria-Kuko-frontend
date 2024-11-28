@@ -1,0 +1,44 @@
+<div class="cliente__header">
+    <h2 class="header__title">Crear Cliente</h2>
+    <i class="header__icon fa-solid fa-x"  (click)="cerrarCaja()"></i>
+</div>
+
+<form class="cliente__form"
+    [formGroup]="clienteForm"
+    (ngSubmit)="onSubmit()">
+    
+    <label for="inputName" class="form__text">Cliente o Empresa</label>
+    <input type="text" id="inputName" class="form__input" formControlName="nombre">
+    
+    <label for="inputDireccion" class="form__text">Direccion</label>
+    <input type="text" id="inputDireccion" class="form__input" formControlName="direccion">
+    
+    <div class="form__datos">
+        <div class="datos__info">
+            <label for="inputCorreo" class="form__text">Correo Electronico</label>
+            <input type="text" id="inputCorreo" class="form__input" formControlName="correo">
+        </div>
+
+        <div class="datos__info">
+            <label for="inputTelefono" class="form__text">Telefono</label>
+            <input type="text" id="inputTelefono" class="form__input" formControlName="telefono">
+        </div>
+    </div>
+
+    <div class="form__check">
+        <label for="checkBox" class="form__text">Cliente Facturable</label>
+        <input type="checkbox" class="check__box" (change)="toggleRFC($event)">
+    </div>
+    
+    <div class="form__rfc" *ngIf="mostrarRFC">
+        <label for="inputRFC" class="form__text">RFC</label>
+        <input type="text" id="inputRFC" class="form__input" formControlName="rfc">
+    </div>
+
+    <div class="form__buttons">
+        <button type="submit" class="form__save">Crear Cliente</button>
+        <button type="button" (click)="cerrarCaja()" class="form__cancel">Cancelar</button>
+    </div>
+
+</form>
+

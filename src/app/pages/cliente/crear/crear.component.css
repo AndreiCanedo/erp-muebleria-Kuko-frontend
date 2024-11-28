@@ -1,0 +1,101 @@
+.cliente__header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.header__title{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.header__icon{
+    width: 3rem;
+    height: 3rem;
+    padding-left: 1rem;
+    border-radius: 3rem;
+    padding-top: 0.8rem;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+}
+
+.header__icon:hover{
+    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
+}
+
+.cliente__form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form__text{
+    margin-left: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.form__input{
+    height: 3.5rem;
+    width: calc(100% - 2.5rem);
+    margin-left: 2rem;
+    margin-top: .5rem;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-radius: 3rem;
+    border:none ; 
+    outline: none;
+    box-shadow: 0 1rem 1rem -8px rgba(0,0,0,0.30);
+    background-color: var(--color-background-box);
+}
+
+.form__datos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.datos__info{
+    display: flex;
+    flex-direction: column;
+}
+
+.form__check{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 32%;
+    justify-content: space-between;
+}
+
+.check__box{
+    margin-left: 1rem;   
+}
+
+.form__buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.form__save,
+.form__cancel{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: 12rem;
+    height: 3.5rem;
+    border-radius: 3.5rem;
+    border: none;
+    box-shadow: 0 5px 10px rgba(0,162,255, 0.3);
+    transition: all 300ms ease-in-out;
+
+    font-weight: bold;
+}
+
+.form__save:hover,
+.form__cancel:hover{
+    background-color: var(--color-background-select);
+    color: var(--color-text-select);
+}

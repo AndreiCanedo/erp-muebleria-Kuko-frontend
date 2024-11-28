@@ -12,6 +12,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { EgresoEliminarComponent } from './egreso/botones/egreso-eliminar/egreso-eliminar.component';
 import { TablaComponent } from './tabla/tabla.component';
 import { ClienteComponent } from './cliente/cliente.component';
+import { CrearComponent } from './cliente/crear/crear.component';
+import { ActualizarClienteComponent } from './cliente/actualizar-cliente/actualizar-cliente.component';
+import { FormClienteComponent } from './cliente/form-cliente/form-cliente.component';
 
 
 
@@ -24,7 +27,10 @@ import { ClienteComponent } from './cliente/cliente.component';
     EgresoCrearComponent,
     EgresoEliminarComponent,
     TablaComponent,
-    ClienteComponent
+    ClienteComponent,
+    CrearComponent,
+    ActualizarClienteComponent,
+    FormClienteComponent
   ],
   imports: [
     BrowserModule,
