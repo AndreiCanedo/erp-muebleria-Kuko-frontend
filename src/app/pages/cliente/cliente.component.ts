@@ -1,6 +1,8 @@
 import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { ClienteService } from '../../services/cliente.service';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { error } from 'console';
 
 @Component({
   selector: 'app-cliente',
@@ -48,8 +50,42 @@ export class ClienteComponent implements OnInit, OnDestroy{
   }
 
 
-  actualizarClienteForm(key:number){
-    this.idActualizar = (key + 1).toString();
+/*********************************************************************************/
+/********************************LOGICA ELIMINAR**********************************/
+/*********************************************************************************/  
+
+eliminarCliente(key:number,id:number){
+  this.cerrarCaja(key)
+  console.log("id a eliminar => ", id)
+  let eliminarId = id.toString();
+  if(eliminarId != null){
+    Swal.fire({
+      title: "Estas seguro que deseas eliminar el Cliente?",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar"
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.clienteService.eliminarCliente(eliminarId)
+          .subscribe(() => {
+            this.clienteService.notificarClienteCreado();
+            Swal.fire("Cliente Eliminado", "", "success");
+          }, error => {
+            Swal.fire("Error al eliminar Cliente", error.message, "error")
+          })
+      }
+    })
+  }
+  
+  
+}
+
+  
+/***********************************************************************************/
+/************************LOGICA CREAR Y ACTUALIZAR**********************************/
+/***********************************************************************************/
+
+  actualizarClienteForm(key:number, id:number){
+    this.idActualizar = id.toString();
     this.cerrarCaja(key);
     setTimeout(() => {
       this.cajaCrearCliente = true;

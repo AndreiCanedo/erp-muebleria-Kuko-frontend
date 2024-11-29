@@ -17,9 +17,9 @@
                 <i class="caja__icon--trespuntos fa-solid fa-ellipsis-vertical" (click)="abrirCajaTresPuntos(i)"></i>
                 <ul class="trespuntos__caja" [ngClass]="[getTresPuntosClass(i), animacionTresPuntos[i]]" *ngIf="cajaTresPuntos[i]">
                     <li class="trespuntos__elementos">
-                        <h5 class="elementos__title" (click)="actualizarClienteForm(i)">Actualizar</h5>
+                        <h5 class="elementos__title" (click)="actualizarClienteForm(i,cliente.id)">Actualizar</h5>
                     </li>
-                    <li class="trespuntos__elementos">
+                    <li class="trespuntos__elementos" (click)="eliminarCliente(i,cliente.id)">
                         <h5 class="elementos__title">Eliminar</h5>
                     </li>
                     <li class="trespuntos__elementos" (click)="cerrarCaja(i)">
@@ -35,9 +35,9 @@
     </ul>
 </section>
 
-<!----------------------------------------------------------->
-<!----------------- Crear Cliente --------------------------->
-<!----------------------------------------------------------->
+<!------------------------------------------------------------------------>
+<!----------------- Crear y Actualizar Cliente --------------------------->
+<!------------------------------------------------------------------------>
 
 
 <section class="cliente__crear" [ngClass]="animacionCajaIndividual" *ngIf="cajaCrearCliente">
@@ -45,3 +45,12 @@
     <app-actualizar-cliente *ngIf="cajaActualizarCliente" (cancelar)="cerrarCajaForm()" [idActualizar]="idActualizar"></app-actualizar-cliente>
     
 </section>
+
+
+<!------------------------------------------------------------------------>
+<!------------------------ Ver Cliente informacion ----------------------->
+<!------------------------------------------------------------------------>
+
+<!-- <section class="cliente__info" [ngClass]="animacionCajaIndividual">
+
+</section> -->
