@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -6,16 +6,28 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './form-cliente.component.html',
   styleUrl: './form-cliente.component.css'
 })
-export class FormClienteComponent {
+export class FormClienteComponent implements OnChanges{
   
   @Input() clienteForm!:FormGroup;
-  @Input() mostrarRFC: boolean = false;
+  @Input() mostrarRFC!: boolean;
+  @Input() actualizar!:boolean;
   @Output() submitForm = new EventEmitter<void>();
   @Output() cancelar = new EventEmitter<void>();
   
   
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('RFC Form => ',this.mostrarRFC)
+  }
+  
+  
   toggleRFC(event:any):void{
     this.mostrarRFC = event.target.checked;
+    if (!this.mostrarRFC) { 
+      this.clienteForm.get('rfc')?.setValue('N/A'); 
+    } else { 
+      this.clienteForm.get('rfc')?.setValue(''); 
+    }
   }
   
   cerrarCaja(){

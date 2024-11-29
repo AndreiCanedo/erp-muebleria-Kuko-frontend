@@ -14,6 +14,8 @@ export class ClienteComponent implements OnInit, OnDestroy{
   public clientes: any[] = [];
   
   //caja CrearCliente y actualizar
+  public idActualizar!:string;
+  public cajaActualizarCliente:boolean = false;
   public cajaCrearCliente:boolean = false;
   public animacionCajaIndividual:string = '';
   
@@ -46,6 +48,15 @@ export class ClienteComponent implements OnInit, OnDestroy{
   }
 
 
+  actualizarClienteForm(key:number){
+    this.idActualizar = (key + 1).toString();
+    this.cerrarCaja(key);
+    setTimeout(() => {
+      this.cajaCrearCliente = true;
+      this.cajaActualizarCliente = true;
+      this.animacionCajaIndividual = 'mostrar'
+    }, 300)
+  }
   
   cerrarCajaForm(){
     this.animacionCajaIndividual = 'ocultar';
@@ -58,6 +69,7 @@ export class ClienteComponent implements OnInit, OnDestroy{
   abrirCajaCrear(){
     setTimeout(() => {
       this.cajaCrearCliente = true;
+      this.cajaActualizarCliente = false;
       this.animacionCajaIndividual = 'mostrar'
     }, 300)
   }

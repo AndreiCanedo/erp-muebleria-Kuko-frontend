@@ -14,7 +14,8 @@ export class CrearComponent implements OnInit{
   private fb = inject(FormBuilder)
   
   public clienteForm!:FormGroup;
-  
+  public actualizar:boolean = false;
+
   @Output() cancelar = new EventEmitter<void>();
   
   ngOnInit(): void {

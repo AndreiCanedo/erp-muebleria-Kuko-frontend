@@ -1,5 +1,5 @@
 <div class="cliente__header">
-    <h2 class="header__title">Crear Cliente</h2>
+    <h2 class="header__title">{{actualizar ? 'Agregar Cliente' : 'Crear Cliente'}}</h2>
     <i class="header__icon fa-solid fa-x"  (click)="cerrarCaja()"></i>
 </div>
 
@@ -27,7 +27,7 @@
 
     <div class="form__check">
         <label for="checkBox" class="form__text">Cliente Facturable</label>
-        <input type="checkbox" class="check__box" (change)="toggleRFC($event)">
+        <input type="checkbox" class="check__box" [checked]="mostrarRFC" (change)="toggleRFC($event)">
     </div>
     
     <div class="form__rfc" *ngIf="mostrarRFC">
@@ -36,7 +36,7 @@
     </div>
 
     <div class="form__buttons">
-        <button type="submit" class="form__save">Crear Cliente</button>
+        <button type="submit" class="form__save">{{actualizar ? 'Actualizar' : 'Crear Cliente'}}</button>
         <button type="button" (click)="cerrarCaja()" class="form__cancel">Cancelar</button>
     </div>
 
