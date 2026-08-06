@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { EgresoComponent } from './egreso/egreso.component';
@@ -93,7 +92,6 @@ import { RegistrarPagoOrdenComponent } from './listado-pagos-orden/registrar-pag
     PagesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgApexchartsModule,
     MoneyPipe,
     FormaPagoPipe,
     SharedModule
