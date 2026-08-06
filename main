@@ -1,0 +1,7 @@
+* [32mchore/actualizar-dependencias[m 11e85fd [[34morigin/chore/actualizar-dependencias[m: ahead 1] feat: dashboard completo y mejoras en ordenes de compra
+  clientePages                 [m ca61a0d Respaldo antes de actualizar dependencias
+  debug                        [m fea8216 [[34morigin/debug[m] Creacion de tabla general y reduccion de codigo, se agrego paginacion
+  main                         [m 098dd36 [[34morigin/main[m] Programa Muebleria Frontend dashboard y pagina Egresos
+  master                       [m 098dd36 Programa Muebleria Frontend dashboard y pagina Egresos
+  produccion                   [m 098dd36 Programa Muebleria Frontend dashboard y pagina Egresos
+  refactor-general             [m ca61a0d [[34morigin/refactor-general[m] Respaldo antes de actualizar dependencias
