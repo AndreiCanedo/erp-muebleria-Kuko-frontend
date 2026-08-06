@@ -1,0 +1,244 @@
+<section class="presupuesto-page">
+
+    <header class="presupuesto-page__header">
+
+        <div class="presupuesto-page__encabezado">
+
+            <span class="presupuesto-page__header-icon">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </span>
+
+            <div>
+                <h1 class="presupuesto-page__title">
+                    Nuevo presupuesto
+                </h1>
+
+                <p class="presupuesto-page__subtitle">
+                    Selecciona un cliente y agrega los muebles que formaran parte de la cotizacion
+                </p>
+            </div>
+
+        </div>
+
+    </header>
+
+    <section class="presupuesto-card">
+
+        <header class="presupuesto-card__header">
+
+            <div class="presupuesto-card__empresa">
+
+                <div class="presupuesto-card__logo">
+
+                    <img
+                        src="../../../assets/img/logo.png"
+                        alt="Logo Muebleria"
+                        class="presupuesto-card__logo-img">
+
+                </div>
+
+                <div>
+                    <span class="presupuesto-card__label">
+                        Documento
+                    </span>
+
+                    <h2 class="presupuesto-card__title">
+                        Orden de compra
+                    </h2>
+                </div>
+
+            </div>
+
+            <span class="presupuesto-card__estado">
+                Presupuesto
+            </span>
+
+        </header>
+
+        <section class="presupuesto-card__datos">
+
+            <div class="presupuesto-card__campo">
+
+                <span class="presupuesto-card__campo-label">
+                    Cliente
+                </span>
+
+                <button type="button"
+                    class="presupuesto-card__selector"
+                    [disabled]="ui.cargando"
+                    (click)="mostrarClientes()">
+
+                    <span class="presupuesto-card__selector-contenido">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <span>
+                            {{clienteSeleccionado?.nombre || 'Seleccionar cliente'}}
+                        </span>
+
+                    </span>
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </button>
+
+            </div>
+
+            <div class="presupuesto-card__campo">
+
+                <span class="presupuesto-card__campo-label">
+                    Estado
+                </span>
+
+                <div class="presupuesto-card__dato">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    Presupuesto
+                </div>
+
+            </div>
+
+            <div class="presupuesto-card__campo">
+
+                <span class="presupuesto-card__campo-label">
+                    Numero de folio
+                </span>
+
+                <div class="presupuesto-card__dato">
+                    <i class="fa-solid fa-hashtag"></i>
+                    Pendiente de asignacion
+                </div>
+
+            </div>
+
+            <div class="presupuesto-card__campo">
+
+                <span class="presupuesto-card__campo-label">
+                    Fecha de entrega
+                </span>
+
+                <div class="presupuesto-card__dato">
+                    <i class="fa-solid fa-calendar"></i>
+                    Sin programar
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="presupuesto-card__detalle">
+
+            <div class="presupuesto-card__detalle-header">
+
+                <div>
+                    <h3 class="presupuesto-card__detalle-title">
+                        Detalle del presupuesto
+                    </h3>
+
+                    <p class="presupuesto-card__detalle-description">
+                        Ajusta las cantidades y precios antes de guardar el presupuesto
+                    </p>
+                </div>
+
+            </div>
+
+            <app-tabla-orden-detalle [detalles]="detalleView"
+                (agregar)="agregarFila()"
+                (eliminar)="eliminarFila($event)"
+                (actualizar)="actualizarPrecioTotal($event)">
+
+            </app-tabla-orden-detalle>
+
+        </section>
+
+        <section class="presupuesto-card__resumen">
+
+            <div>
+                <span class="presupuesto-card__total-label">
+                    Total del presupuesto
+                </span>
+
+                <p class="presupuesto-card__total-description">
+                    Importe calculado con los muebles agregados
+                </p>
+            </div>
+
+            <strong class="presupuesto-card__total">
+                {{ totalOrden | money }}
+            </strong>
+
+        </section>
+
+        <footer class="presupuesto-card__acciones">
+
+            <button type="button"
+                class="presupuesto-card__guardar"
+                [disabled]="ui.cargando"
+                (click)="guardarOrdenCompra()">
+
+                @if (ui.cargando) {
+
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Guardando...
+
+                } @else {
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Guardar presupuesto
+
+                }
+
+            </button>
+
+        </footer>
+
+    </section>
+
+</section>
+
+<app-modal [visible]="ui.mostrarClientes"
+    size="sm"
+    title="Seleccionar cliente"
+    (cerrar)="cerrarClientes()">
+
+    <app-seleccionar-cliente (clienteSeleccionado)="seleccionarCliente($event)"
+        (crearCliente)="mostrarCrearCliente()">
+
+    </app-seleccionar-cliente>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarCrearCliente"
+    size="lg"
+    title="Crear cliente"
+    (cerrar)="cerrarCrearCliente()">
+
+    <app-crear (cancelar)="cerrarCrearCliente()"
+        (clienteCreado)="clienteCreado($event)">
+
+    </app-crear>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarSeleccionarMueble"
+    size="md"
+    title="Seleccionar mueble"
+    (cerrar)="cerrarSeleccionarMueble()">
+
+    <app-seleccionar-mueble (muebleSeleccionado)="seleccionarMueble($event)"
+        (crearMueble)="abrirCrearMueble()">
+        
+    </app-seleccionar-mueble>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarCrearMueble"
+    size="md"
+    title="Nuevo Mueble"
+    (cerrar)="cerrarCrearMueble()">
+    
+    <app-crear-mueble (muebleCreado)="muebleCreado($event)"
+        (cancelar)="cerrarCrearMueble()">
+
+    </app-crear-mueble>
+
+</app-modal>

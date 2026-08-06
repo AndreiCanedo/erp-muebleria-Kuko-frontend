@@ -1,0 +1,46 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    font-family: "Poppins", Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--color-title);
+}
+
+button {
+    border: 0;
+    background: none;
+}
+
+input,
+select,
+textarea {
+    outline: none;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 0.2rem solid var(--color-primary-light);
+    outline-offset: 0.2rem;
+}
+
+.swal2-container {
+    z-index: 2000 !important;
+}

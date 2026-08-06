@@ -1,0 +1,156 @@
+<section class="muebles-page">
+
+    <header class="muebles-page__header">
+
+        <div class="muebles-page__encabezado">
+
+            <span class="muebles-page__header-icon">
+                <i class="fa-solid fa-couch"></i>
+            </span>
+
+            <div>
+                <h1 class="muebles-page__title">Muebles</h1>
+
+                <p class="muebles-page__subtitle">
+                    Administra el catalogo de muebles y sus precios de referencia.
+                </p>
+            </div>
+
+        </div>
+
+        <button type="button" class="muebles-page__nuevo" (click)="abrirCrearMueble()">
+            <i class="fa-solid fa-plus"></i>
+            Nuevo Mueble
+        </button>
+
+    </header>
+
+    <div class="mueble-page__search">
+
+        <app-search-box placeholder="Buscar mueble por descripcion"
+            [value]="textoBusqueda"
+            (search)="buscar($event)">
+            
+        </app-search-box>
+        
+    </div>
+
+
+    @if(ui.cargando){
+        
+        <app-state state="loading" 
+            message="Cargando muebles...">
+        </app-state>
+
+    } @else if (ui.error) {
+        
+        <app-state state="error" 
+            [message]="ui.error" 
+            buttonText="Reintentar" 
+            (retry)="buscarMuebles(textoBusqueda)">
+        </app-state>
+
+    } @else if(muebles.length === 0){
+
+    <app-state state="empty"
+        icon="fa-solid fa-couch"
+        [message] = "textoBusqueda 
+            ? 'No se encontraron muebles para la busqueda'
+            : 'No hay muebles registrados'">
+    </app-state>
+
+    } @else {
+
+        <ul class="muebles-page__lista">
+
+            @for(mueble of muebles; track mueble.id){
+                <li class="mueble-card">
+
+                    <div class="mueble-card__icon">
+                        <i class="fa-solid fa-couch"></i>
+                    </div>
+
+                    <div class="mueble-card__contenido">
+
+                        <h2 class="mueble-card__descripcion">
+                            {{ mueble.descripcion }}
+                        </h2>
+
+                        <p class="mueble-card__precio">
+                            Precio referencia: 
+                            <strong>
+                                {{ mueble.precioReferencia | money }}
+                            </strong>
+                        </p>
+
+                    </div>
+
+                    <div class="mueble-card__acciones">
+
+                        <button type="button" 
+                            class="mueble-card__accion"
+                            title="Editar Mueble"
+                            aria-label="Editar mueble"
+                            (click)="abrirActualizarMueble(mueble)">
+
+                            <i class="fa-solid fa-pen"></i>
+                        
+                        </button>
+
+                        <button
+                            type="button"
+                            class="mueble-card__accion mueble-card__accion--eliminar"
+                            title="Eliminar mueble"
+                            aria-label="Eliminar mueble"
+                            [disabled]="ui.eliminando"
+                            (click)="confirmarEliminarMueble(mueble)">
+                            
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+
+                    </div>
+
+                </li>
+            }
+
+        </ul>
+
+    }
+
+</section>
+
+@if(ui.mostrarCrear) {
+    <app-modal 
+        title="Nuevo Mueble"
+        size="md"
+        [visible]="true"
+        (close)="cerrarCrearMueble()">
+
+        <app-crear-mueble 
+            (muebleCreado)="handleMuebleCreado($event)"
+            (cancelar)="cerrarCrearMueble()">
+        
+        </app-crear-mueble>
+
+    </app-modal>
+}
+
+@if(ui.mostrarActualizar && muebleSeleccionado) {
+
+    <app-modal 
+        title="Actualizar Mueble"
+        size="md"
+        [visible]="true"
+        (close)="cerrarActualizarMueble()">
+
+        <app-actualizar-mueble 
+            [mueble] = "muebleSeleccionado"
+            (muebleActualizado)="handleMuebleActualizado($event)"
+            (cancelar)="cerrarActualizarMueble()">
+        
+        </app-actualizar-mueble>
+
+    </app-modal>
+
+}
+

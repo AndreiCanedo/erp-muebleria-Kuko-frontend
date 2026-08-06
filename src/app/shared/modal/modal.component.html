@@ -1,0 +1,40 @@
+@if(mostrar){
+
+    <div  class="modal__backdrop"
+        [class.backdrop__open] = "animacion === 'modal__open'"
+        [class.backdrop__close] = "animacion === 'modal__close'"
+        (click)="onBackdropClick()">
+        
+        <div class="modal__container" 
+            [ngClass]="[size, animacion]"
+            (animationend)="onAnimationEnd()"
+            (click)="$event.stopPropagation()">
+
+            @if (title) {
+
+                <div class="modal__header">
+                    <h2 class="modal__title">{{ title }}</h2>
+
+                    @if (showClose) {
+                        <button type="button" 
+                            class="close__button" 
+                            aria-label="Cerrar modal" 
+                            (click)="cerrarModal()">
+
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    }
+                </div>
+
+            }
+            
+            <div class="modal__body">
+                <ng-content></ng-content>
+            </div>
+        
+        </div>
+    
+    </div>
+
+}
+

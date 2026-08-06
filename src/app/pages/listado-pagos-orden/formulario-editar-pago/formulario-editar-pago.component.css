@@ -1,0 +1,173 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.formulario-pago {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    width: 100%;
+}
+
+.formulario-pago__campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.7rem;
+}
+
+.formulario-pago__campo label {
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+}
+
+.formulario-pago__campo input,
+.formulario-pago__campo select,
+.formulario-pago__campo textarea {
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 0.9rem 1.3rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.formulario-pago__campo textarea {
+    min-height: 11rem;
+
+    resize: vertical;
+}
+
+.formulario-pago__campo input:hover,
+.formulario-pago__campo select:hover,
+.formulario-pago__campo textarea:hover {
+    border-color: var(--color-primary-light);
+}
+
+.formulario-pago__campo input:focus,
+.formulario-pago__campo select:focus,
+.formulario-pago__campo textarea:focus {
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 0.3rem
+        color-mix(
+            in srgb,
+            var(--color-primary) 13%,
+            transparent
+        );
+}
+
+.formulario-pago__campo input:disabled,
+.formulario-pago__campo select:disabled,
+.formulario-pago__campo textarea:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    background-color: var(--color-surface-muted);
+}
+
+.formulario-pago__error {
+    font-size: 1.2rem;
+
+    color: var(--color-danger);
+}
+
+.formulario-pago__acciones {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 1rem;
+
+    padding-top: 1.5rem;
+
+    border-top: 0.1rem solid var(--color-border);
+}
+
+.formulario-pago__boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.7rem;
+
+    min-height: 4.3rem;
+    padding: 0.8rem 1.6rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    border-radius: var(--radius-medium);
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal),
+        background-color var(--transition-normal);
+}
+
+.formulario-pago__boton--secundario {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    box-shadow: var(--shadow-small);
+}
+
+.formulario-pago__boton--secundario:hover {
+    color: var(--color-primary);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.formulario-pago__boton--principal {
+    color: var(--color-surface);
+    background-color: var(--color-primary);
+}
+
+.formulario-pago__boton--principal:hover {
+    background-color: var(--color-primary-dark);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.formulario-pago__boton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 550px) {
+
+    .formulario-pago__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .formulario-pago__boton {
+        width: 100%;
+    }
+}

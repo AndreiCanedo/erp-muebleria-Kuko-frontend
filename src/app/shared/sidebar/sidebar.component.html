@@ -2,20 +2,25 @@
     <!-- Logo -->
     <div class="menu__logo">
         <div class="menu__container-img">
-            <img src="../../../assets/img/logo.png" alt="Logo Muebleria" class="menu__img">
+            <img src="assets/img/logo.png" alt="Logo Muebleria" class="menu__img">
         </div>
         <h4 class="menu__title">Mueblerias Kuko</h4>
     </div>
 
     <!-- Menu de navegacion -->
-     <nav class="layout__menu">
+    <nav class="layout__menu" aria-label="Navegación principal">
         <ul class="menu__list">
             
             <li class="menu__option">
                 <h3 class="menu__submenu-title">Inicio</h3>
+
                 <ul class="submenu__list">
                     <li class="submenu__option">
-                        <a href="#" class="submenu__link">
+                        <a routerLink="/dashboard"
+                            routerLinkActive="submenu__link--active"
+                            [routerLinkActiveOptions]="{ exact: true}"
+                            class="submenu__link">
+
                             <i class="submenu__icon fa-solid fa-microchip"></i>
                             <span class="submenu__overlay">DashBoard</span>
                         </a>
@@ -24,53 +29,83 @@
             </li>
 
             <li class="menu__option">
-                <h3 class="menu__submenu-title">Mantenimientos</h3>
+                <h3 class="menu__submenu-title">Catalogos</h3>
+
                 <ul class="submenu__list">
                     <li class="submenu__option">
-                        <a href="#" class="submenu__link">
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Usuarios</span>
-                        </a>
-                    </li>
-                    <li class="submenu__option">
-                        <a routerLink="cliente" class="submenu__link">
+                        <a routerLink="/clientes"
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
                             <i class="submenu__icon fa-solid fa-microchip"></i>
                             <span class="submenu__overlay">Clientes</span>
+                        </a>
+                    </li>
+                    
+                    <li class="submenu__option">
+                        <a routerLink="/muebles"
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
+                            <i class="submenu__icon fa-solid fa-microchip"></i>
+                            <span class="submenu__overlay">Muebles</span>
+                        </a>
+                    </li>
+
+                    <li class="submenu__option">
+                        <a routerLink="/ordenes"
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
+                            <i class="submenu__icon fa-solid fa-microchip"></i>
+                            <span class="submenu__overlay">Ordenes</span>
                         </a>
                     </li>
                 </ul>
             </li>
 
             <li class="menu__option">
-                <h3 class="menu__submenu-title">Datos</h3>
+                <h3 class="menu__submenu-title">Operaciones</h3>
+
                 <ul class="submenu__list">
                     <li class="submenu__option">
-                        <a routerLink="egreso" class="submenu__link">
+                        <a routerLink="presupuesto"
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
+                            <i class="submenu__icon fa-solid fa-microchip"></i>
+                            <span class="submenu__overlay">Presupuesto</span>
+                        </a>
+                    </li>
+
+                    <li class="submenu__option">
+                        <a routerLink="pagos"
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
+                            <i class="submenu__icon fa-solid fa-microchip"></i>
+                            <span class="submenu__overlay">Pagos de Ordenes</span>
+                        </a>
+                    </li>
+
+                    <li class="submenu__option">
+                        <a routerLink="/egresos" 
+                            routerLinkActive="submenu__link--active"
+                            class="submenu__link">
+
                             <i class="submenu__icon fa-solid fa-microchip"></i>
                             <span class="submenu__overlay">Egresos</span>
-                        </a>
-                    </li>
-                    <li class="submenu__option">
-                        <a routerLink="/" class="submenu__link">
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Ingreso</span>
-                        </a>
-                    </li>
-                    <li class="submenu__option">
-                        <a routerLink="/" class="submenu__link">
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Orden De Compra</span>
                         </a>
                     </li>
                 </ul>
             </li>
         </ul>
-     </nav>
+    </nav>
 
-     <!-- salir -->
-      <div class="menu__buttom">
-        <button class="menu__logout">
-            <a routerLink="/login" class="logout__link">Log out</a>
-        </button>
-      </div>
+    <!-- salir -->
+    <div class="menu__buttom">
+        
+        <a routerLink="/login" class="menu__logout logout__link">Log out</a>
+        
+    </div>
 </section>

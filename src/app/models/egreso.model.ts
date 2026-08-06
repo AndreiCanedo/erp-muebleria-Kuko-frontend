@@ -1,32 +1,21 @@
-import { Muebleria } from "./mueblerias.model";
-import { Transaccion } from "./transaccion.model";
-
-
-interface _Egreso{
-    _id:string;
-    nombre:string;
-    motivo:string;
-    justificacion:string;
-    monto:number;
-    cambio:number;
-    formaPago:number;
-    muebleria:Muebleria;
-    transaccones:Transaccion[];
-
-}
+import { EstadoEgreso } from "./estado-egreso.enum";
+import { FormaPago } from "./forma-pago.enum";
 
 export class Egreso{
 
     constructor(
-        public id:string,
-        public nombre:string,
+        public id:number,
+        public nombre:string | null,
         public motivo:string,
-        public justificacion:string,
+        public justificacion:string | null,
+        public efectivoEntregado: number | null,
         public monto:number,
-        public cambio:number,
-        public formaPago:string,
-        public muebleria:Muebleria,
-        public transacciones:Transaccion[]
+        public cambio:number | null,
+        public formaPago:FormaPago,
+        public estado: EstadoEgreso,
+        public fecha:Date | null,
+        public fechaCancelacion: Date | null,
+        public motivoCancelacion: string | null
     ){}
-
 }
+

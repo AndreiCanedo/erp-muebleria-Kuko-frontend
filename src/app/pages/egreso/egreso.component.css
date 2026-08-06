@@ -1,454 +1,369 @@
-.egreso__table{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-}
-
-
-/**********************************************************************************/
-/*********************************TABLA MENU***************************************/
-/**********************************************************************************/
-.table__menu{
-    display: flex;
-    flex-direction: column;
+:host {
+    display: block;
     width: 100%;
-    height: 36rem;
-    margin-right: 2rem;
-    background-color: var(--color-principal);
-    border-radius: 3rem;
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
-    justify-items: center;
+}
+
+.egresos-page {
+    width: 100%;
+}
+
+/**************************************************************************/
+/***************************** ENCABEZADO *********************************/
+/**************************************************************************/
+
+.egresos-page__header {
+    display: flex;
     align-items: center;
-}
-
-.menu__title{
-    margin-top: 2rem;
-    font-size: 2rem;
-}
-
-.menu__crear{
-    cursor: pointer;
-    width: 20rem;
-    height: 7rem;
-    margin-top: 4rem;
-    margin-bottom: 4rem;
-    border-radius: 2rem;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0,162,255, 0.3);
-    transition: all 300ms ease-in-out;
-
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-
-
-.menu__editar, .menu__eliminar{
-    cursor: pointer;
-    width: 20rem;
-    height: 7rem;
-    margin-bottom: 4rem;
-    border-radius: 2rem;
-    border: none;
-    box-shadow: 0 5px 10px rgba(0,162,255, 0.3);
-    transition: all 300ms ease-in-out;
-
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.menu__crear:hover, 
-.menu__editar:hover, 
-.menu__eliminar:hover{
-    background-color: var(--color-background-select);
-    color: var(--color-text-select);
-}
-
-
-
-/**********************************************************************************/
-/*************************************TABLA****************************************/
-/**********************************************************************************/
-
-.table__table{
-    width: 80%;
-    margin-left: 1rem;
-    background-color: var(--color-principal);
-    border-radius: 3rem;
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
-}
-
-.table__table--title{
-    margin-left: 2rem;
-    margin-top: 2rem;
-    font-size: 2rem;
-}
-
-.table__contenido{
-    margin-top: 2rem;
-    margin-left: 2rem;
-    width: 95%;
-    height: 80%;
-    border-radius: 2rem;
-    border-collapse: collapse;
-    overflow: hidden;
-}
-
-.table__contenido th, .table__contenido td { 
-    text-align: center;
-    padding: 8px; 
-}
-
-.table__contenido th { 
-    background-color: #003366;
-    color: #fff; 
-}
-.table__contenido tr{
-    background-color: var(--color-background-select2);
-    /* color:var(--color-text-select); */
-}
-
-.table__contenido tr:nth-child(even) { 
-    background-color: var(--color-background-select); 
-} 
-
-.table__contenido tr:hover { 
-    background-color: #ddd; 
-    color:var(--color-text-select);
-}
-
-/**********************************************************************************/
-/***********************************FORMULARIO*************************************/
-/**********************************************************************************/
-
-
-@keyframes mostrar {
-    from{
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to{
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-@keyframes ocultar {
-    from{
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to{
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-}
-
-.caja__form{
-    position: absolute;
-    top: 1rem;
-    left: 24rem;
-    transform: translateX(-50%);
-    width: 30rem;
-    height: auto; 
-    background-color:var(--color-principal);
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3); 
-    border: 1px solid #ccc; 
-    border-radius: 3rem;
-    padding: 20px; 
-    z-index: 1000;
-    opacity: 0;
-    animation-duration: .5s;
-    animation-fill-mode: forwards;/*Mantiene el estado final de la animacion*/
-}
-
-.caja__form--edit{
-    top: -2rem;
-    height: auto;
-}
-
-.caja__form--crear{
-    top: 1rem;
-    height: 65rem;
-}
-
-.caja__form.show{
-    animation-name: mostrar;
-}
-
-.caja__form.hide{
-    animation-name: ocultar;
-}
-
-.form__header{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.form__title{
-    font-size: 2.1rem;
-    font-weight: bold;
-}
-
-.form-button_salir{
-    width: 3rem;
-    height: 3rem;
-    border-radius: 3rem;
-}
-
-.form__salir{
-    width: 3rem;
-    height: 3rem;
-    border-radius: 3rem;
-    padding-top: 0.8rem;
-    cursor: pointer;
-    transition: all 300ms ease-in-out;
-}
-
-.form__salir:hover{
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
-}
-
-.form__options{
-    display: flex;
-    flex-direction: column;
-}
-
-.options__nombre, 
-.options__cambio,
-.options__justificacion,
-.options__motivo,
-.options__monto,
-.options__formaPago,
-.options__id{
-    margin-bottom: 1rem;
-}
-
-.options__input{
-    height: 3.5rem;
-    margin-left: 2rem;
-    margin-top: .5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    border-radius: 3rem;
-    border:none ; 
-    outline: none;
-    box-shadow: 0 1rem 1rem -8px rgba(0,0,0,0.30);
-    background-color: var(--color-background-box);
-}
-
-.form__button{
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
+
+    gap: 2rem;
+
+    margin-bottom: 1.8rem;
 }
 
-.button__save,
-.button__cancelar,
-.boton__estimado{
+.egresos-page__encabezado {
+    display: flex;
+    align-items: center;
 
-    margin-left: 2rem;
-    margin-right: 2rem;
-    width: 10rem;
-    height: 3.5rem;
-    border-radius: 3.5rem;
-    border: none;
-    box-shadow: 0 5px 10px rgba(0,162,255, 0.3);
-    transition: all 300ms ease-in-out;
-
-    font-weight: bold;
+    gap: 1.6rem;
 }
 
-.button__cancelar:hover,
-.button__save:hover,
-.boton__estimado:hover{
-    background-color: var(--color-background-select);
-    color: var(--color-text-select);
+.egresos-page__header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 6rem;
+    height: 6rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-primary);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 8%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
 }
 
-
-/*************************************************************************/
-/**************************CAJA FORM ELIMINAR*****************************/
-/*************************************************************************/
-
-.caja__form--eliminar{
-    top: 1rem;
-    left: 24rem;
-    width: auto;
-    height: auto; 
+.egresos-page__header-icon i {
+    font-size: 2.8rem;
 }
 
-.caja__form--verificar{
-    top: 1rem;
-    left: 24rem;
-    width: auto;
-    height: auto;
+.egresos-page__title {
+    margin: 0;
+
+    font-size: 2.8rem;
+    font-weight: 700;
+
+    color: var(--color-text);
 }
 
-.form--eliminar__table{
-    margin-top: 2rem;
-    margin-left: 2rem;
-    width: 95%;
-    height: 30%;
-    border-radius: 2rem;
-    border-collapse: collapse;
-    overflow: hidden;
+.egresos-page__subtitle {
+    margin-top: 0.5rem;
+
+    font-size: 1.4rem;
+
+    color: var(--color-text-muted);
 }
 
-.form--eliminar__table th, .form--eliminar__table td { 
-    text-align: center;
-    padding: 8px; 
+.egresos-page__nuevo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.8rem;
+
+    min-height: 4.4rem;
+    padding: 0.9rem 1.8rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-medium);
+
+    box-shadow: var(--shadow-small);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-normal),
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
 }
 
-.form--eliminar__table th { 
-    background-color: #003366;
-    color: #fff; 
-}
-.form--eliminar__table tr{
-    background-color: var(--color-background-select2);
-    /* color:var(--color-text-select); */
-}
+.egresos-page__nuevo:hover {
+    color: var(--color-primary);
 
-.form--eliminar__table tr:nth-child(even) { 
-    background-color: var(--color-background-select); 
-} 
+    transform: translateY(-0.2rem);
 
-.form--eliminar__table tr:hover { 
-    background-color: #ddd; 
-    color:var(--color-text-select);
+    box-shadow: var(--shadow-medium);
 }
 
-.form__title-verificar{
-    width: 95%;
+/**************************************************************************/
+/******************************* RESUMEN **********************************/
+/**************************************************************************/
+
+.egresos-page__resumen {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 1.6rem;
+
+    margin-bottom: 1.8rem;
 }
 
-.form--eliminar__error{
-    margin-left: 3rem;
-    padding-left: 2rem;
+.egreso-resumen-card {
+    display: flex;
+    align-items: center;
+
+    gap: 1.4rem;
+
+    min-height: 10rem;
+    padding: 1.7rem;
+
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
+
+    transition:
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.egreso-resumen-card:hover {
+    transform: translateY(-0.3rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.egreso-resumen-card__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 5.5rem;
+    height: 5.5rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-primary);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 10%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.egreso-resumen-card__icono--success {
+    color: var(--color-success);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-success) 12%,
+            transparent
+        );
+}
+
+.egreso-resumen-card__icono--danger {
+    color: var(--color-danger);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 12%,
+            transparent
+        );
+}
+
+.egreso-resumen-card__icono i {
+    font-size: 2.3rem;
+}
+
+.egreso-resumen-card__label {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
     font-size: 1.3rem;
-    width: 15rem;
-    color: var(--color-text-error);
-    background-color: var(--color-background-error2);
-    box-shadow: 0 0 5px rgba(var(--color-background-error2), 0.3);
-    border-radius: 1rem;
-    animation: fadeOut 3.5s forwards;
+
+    color: var(--color-text-muted);
 }
 
-@keyframes fadeOut{
-    0% { opacity: 1;}
-    100% {opacity: 0;}
+.egreso-resumen-card__valor {
+    display: block;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: var(--color-text);
 }
 
+/**************************************************************************/
+/******************************* FILTROS **********************************/
+/**************************************************************************/
 
+.egresos-page__filtros {
+    display: grid;
 
+    grid-template-columns:
+        minmax(26rem, 1fr)
+        minmax(17rem, auto)
+        minmax(19rem, auto)
+        auto;
 
-/****************************************************************************/
-/****************************************************************************/
-/****************************************************************************/
+    gap: 1rem;
 
-.table__section{
-    display: flex;
-    flex-direction: column;
-    width: 20%;
-    height: 60rem;
-    margin-right: 2rem;
+    margin-bottom: 1.8rem;
+    padding: 1.5rem;
+
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
 }
 
-.table__total{
-    display: flex;
-    flex-direction: column;
+.egresos-page__busqueda {
+    min-width: 0;
+}
+
+.egresos-page__select {
+    min-height: 4.3rem;
+    padding: 0.8rem 1.3rem;
+
+    font-family: inherit;
+    font-size: 1.35rem;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    cursor: pointer;
+
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.egresos-page__select:hover {
+    border-color: var(--color-primary-light);
+}
+
+.egresos-page__select:focus {
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 0.3rem
+        color-mix(
+            in srgb,
+            var(--color-primary) 13%,
+            transparent
+        );
+}
+
+.egresos-page__limpiar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.7rem;
+
+    min-height: 4.3rem;
+    padding: 0.8rem 1.4rem;
+
+    font-family: inherit;
+    font-size: 1.35rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-medium);
+
+    box-shadow: var(--shadow-small);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-normal),
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.egresos-page__limpiar:hover {
+    color: var(--color-primary);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.egresos-page__contenido {
     width: 100%;
-    height: 20rem;
-    margin-right: 2rem;
-    margin-top: 4rem;
-    background-color: var(--color-principal);
-    border-radius: 3rem;
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
-    justify-items: center;
-    align-items: center;
-    text-align: center;
 }
 
-.total__title--section{
-    display: flex;
-    flex-direction: row;
+/**************************************************************************/
+/****************************** RESPONSIVE ********************************/
+/**************************************************************************/
+
+@media (max-width: 1050px) {
+
+    .egresos-page__resumen {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .egresos-page__filtros {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .egresos-page__busqueda {
+        grid-column: 1 / -1;
+    }
 }
 
-.total__icon--title{
-    width: 3rem;
-    height: 3rem;
-    margin-top: 1.3rem;
-    margin-right: 1rem;
-    padding: 1rem;
-    padding-top: .8rem;
-    padding-left: 1.1rem;
-    background-color: var(--color-background-icondollar);
-    border-radius: 3rem;
-    color: var(--color-principal);
+@media (max-width: 700px) {
+
+    .egresos-page__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .egresos-page__encabezado {
+        align-items: flex-start;
+    }
+
+    .egresos-page__nuevo {
+        width: 100%;
+    }
+
+    .egresos-page__resumen,
+    .egresos-page__filtros {
+        grid-template-columns: 1fr;
+    }
+
+    .egresos-page__busqueda {
+        grid-column: auto;
+    }
 }
-
-.title__total{
-    margin: 1rem 2rem;
-    margin-top: 1.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.total__semanal{
-    margin: 1rem 1.5rem;
-    font-size: 3.5rem;
-    font-weight: bold;
-}
-
-.total__datos{
-    display: flex;
-    flex-direction: row;
-}
-
-.total__estimado{
-    font-size: 1.2rem;
-    margin-right: 1.5rem;
-    margin-top: .7rem;
-}
-
-.total__icon{
-    height: 2rem;
-    width: 2rem;
-    padding: 0.2rem;
-    padding-top: 0.5rem;
-    margin-top: .7rem;
-    margin-right: .4rem;
-    font-size: 1.2rem;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--color-background-select);
-    color: var(--color-text-select);
-    border-radius: 2rem;
-}
-
-.total__estipado--efectivo{
-    font-size: 2rem;
-    font-weight: bold;
-    cursor: pointer ;
-}
-
-
-/*************************************************************************/
-/*********************CAJA Actualizar Estimado****************************/
-/*************************************************************************/
-
-.actualizar__estimado{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-}
-
-.options__input--estimado{
-    margin-bottom: 2rem;
-}
-

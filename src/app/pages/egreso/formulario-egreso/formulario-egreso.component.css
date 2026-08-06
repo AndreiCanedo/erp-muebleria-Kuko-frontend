@@ -1,0 +1,195 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.formulario-egreso {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    width: 100%;
+}
+
+.formulario-egreso__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1.5rem;
+}
+
+.formulario-egreso__campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.7rem;
+}
+
+.formulario-egreso__label {
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+}
+
+.formulario-egreso__input {
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 0.9rem 1.3rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal),
+        background-color var(--transition-normal);
+}
+
+.formulario-egreso__textarea {
+    min-height: 10rem;
+
+    resize: vertical;
+}
+
+.formulario-egreso__input:hover {
+    border-color: var(--color-primary-light);
+}
+
+.formulario-egreso__input:focus {
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 0.3rem
+        color-mix(
+            in srgb,
+            var(--color-primary) 13%,
+            transparent
+        );
+}
+
+.formulario-egreso__input:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    background-color: var(--color-surface-muted);
+}
+
+.formulario-egreso__input--readonly {
+    color: var(--color-primary);
+
+    font-weight: 700;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 6%,
+            var(--color-surface)
+        );
+}
+
+.formulario-egreso__error {
+    margin: 0;
+
+    font-size: 1.2rem;
+
+    color: var(--color-danger);
+}
+
+.formulario-egreso__acciones {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 1rem;
+
+    padding-top: 1.5rem;
+
+    border-top: 0.1rem solid var(--color-border);
+}
+
+.formulario-egreso__boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.7rem;
+
+    min-height: 4.3rem;
+    padding: 0.8rem 1.6rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    border-radius: var(--radius-medium);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-normal),
+        background-color var(--transition-normal),
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.formulario-egreso__boton--secundario {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    box-shadow: var(--shadow-small);
+}
+
+.formulario-egreso__boton--secundario:hover {
+    color: var(--color-primary);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.formulario-egreso__boton--principal {
+    color: var(--color-surface);
+    background-color: var(--color-primary);
+}
+
+.formulario-egreso__boton--principal:hover {
+    background-color: var(--color-primary-dark);
+
+    transform: translateY(-0.2rem);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.formulario-egreso__boton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+
+    .formulario-egreso__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario-egreso__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .formulario-egreso__boton {
+        width: 100%;
+    }
+}

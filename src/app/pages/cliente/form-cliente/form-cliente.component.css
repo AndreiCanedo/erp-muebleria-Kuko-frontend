@@ -1,101 +1,136 @@
-.cliente__header{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 2rem;
+
+
+:host {
+    display: block;
 }
 
-.header__title{
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.header__icon{
-    width: 3rem;
-    height: 3rem;
-    padding-left: 1rem;
-    border-radius: 3rem;
-    padding-top: 0.8rem;
-    cursor: pointer;
-    transition: all 300ms ease-in-out;
-}
-
-.header__icon:hover{
-    box-shadow: 0 0 15px rgba(0,162,255, 0.3);
-}
-
-.cliente__form{
+.cliente__form {
     display: flex;
     flex-direction: column;
+    gap: 1.8rem;
 }
 
-.form__text{
-    margin-left: 1.5rem;
-    font-size: 1.5rem;
-}
-
-.form__input{
-    height: 3.5rem;
-    width: calc(100% - 2.5rem);
-    margin-left: 2rem;
-    margin-top: .5rem;
-    margin-bottom: 1rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    border-radius: 3rem;
-    border:none ; 
-    outline: none;
-    box-shadow: 0 1rem 1rem -8px rgba(0,0,0,0.30);
-    background-color: var(--color-background-box);
-}
-
-.form__datos{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.datos__info{
+.form__dato,
+.datos__info,
+.form__rfc {
     display: flex;
     flex-direction: column;
+    gap: 0.6rem;
 }
 
-.form__check{
-    position: relative;
+.form__datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.form__text {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.form__input {
+    width: 100%;
+    min-height: 4.2rem;
+    padding: 0.8rem 1.4rem;
+
+    color: var(--color-text);
+    background-color: var(--color-background);
+
+    border: 0.1rem solid transparent;
+    border-radius: var(--radius-medium);
+
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.form__input:focus {
+    border-color: var(--color-primary);
+    box-shadow:
+        0 0 0 0.3rem
+        color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.form__check {
     display: flex;
-    flex-direction: row;
-    width: 32%;
-    justify-content: space-between;
-}
-
-.check__box{
-    margin-left: 1rem;   
-}
-
-.form__buttons{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
-    margin-top: 2rem;
+    justify-content: space-between;
+
+    width: 100%;
+    min-height: 4.2rem;
+    padding: 0.8rem 1.4rem;
+
+    background-color: var(--color-background);
+    border-radius: var(--radius-medium);
+}
+
+.check__box {
+    width: 1.8rem;
+    height: 1.8rem;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.form__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    margin-top: 0.5rem;
 }
 
 .form__save,
-.form__cancel{
-    margin-left: 2rem;
-    margin-right: 2rem;
-    width: 12rem;
-    height: 3.5rem;
-    border-radius: 3.5rem;
-    border: none;
-    box-shadow: 0 5px 10px rgba(0,162,255, 0.3);
-    transition: all 300ms ease-in-out;
+.form__cancel {
+    min-width: 12rem;
+    min-height: 4rem;
+    padding: 0.8rem 1.5rem;
 
-    font-weight: bold;
+    font-weight: 600;
+
+    border: 0;
+    border-radius: var(--radius-medium);
+
+    cursor: pointer;
+    transition:
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.form__save {
+    color: #fff;
+    background-color: var(--color-primary);
+}
+
+.form__cancel {
+    color: var(--color-text);
+    background-color: var(--color-background);
 }
 
 .form__save:hover,
-.form__cancel:hover{
-    background-color: var(--color-background-select);
-    color: var(--color-text-select);
+.form__cancel:hover {
+    transform: translateY(-0.1rem);
+    box-shadow: var(--shadow-small);
+}
+
+.form__error {
+    margin: 0;
+
+    font-size: 1.2rem;
+    color: var(--color-text-error, #b42318);
+}
+
+@media (max-width: 600px) {
+    .form__datos {
+        grid-template-columns: 1fr;
+    }
+
+    .form__buttons {
+        flex-direction: column-reverse;
+    }
+
+    .form__save,
+    .form__cancel {
+        width: 100%;
+    }
 }

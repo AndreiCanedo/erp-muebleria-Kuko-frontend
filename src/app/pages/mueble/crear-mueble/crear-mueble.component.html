@@ -1,0 +1,8 @@
+<app-form-mueble
+    [muebleForm]="muebleForm"
+    [actualizar]="ui.actualizar"
+    [guardando] = "ui.guardando"
+
+    (submitForm)="guardarMueble()"
+    (cancelar)="cerrarCaja()">
+</app-form-mueble>

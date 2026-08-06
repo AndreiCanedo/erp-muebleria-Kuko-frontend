@@ -1,0 +1,142 @@
+<div class="tabla-egresos__container">
+
+    <div class="tabla-egresos__scroll">
+
+        <table class="tabla-egresos">
+
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Fecha</th>
+                    <th>Nombre</th>
+                    <th>Motivo</th>
+                    <th>Forma de pago</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th class="tabla-egresos__acciones-header"> Acciones </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (egreso of egresos; track egreso.id) {
+
+                    <tr>
+
+                        <td>
+                            <span class="tabla-egresos__folio">
+                                #{{ egreso.id }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            @if (egreso.fecha) {
+
+                                <span class="tabla-egresos__fecha">
+                                    {{ egreso.fecha | date:'dd/MM/yyyy HH:mm'}}
+                                </span>
+
+                            } @else {
+
+                                <span class="tabla-egresos__sin-dato">
+                                    Sin fecha
+                                </span>
+
+                            }
+
+                        </td>
+
+                        <td>
+                            <span class="tabla-egresos__nombre">
+                                {{ egreso.nombre || 'Sin nombre' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="tabla-egresos__motivo">
+                                {{ egreso.motivo }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="tabla-egresos__forma-pago">
+                                {{ egreso.formaPago }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong class="tabla-egresos__monto">
+                                {{ egreso.monto | money }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [class.badge--aplicado]="egreso.estado === estadoEgreso.APLICADO"
+                                [class.badge--cancelado]="egreso.estado === estadoEgreso.CANCELADO">
+
+                                {{ egreso.estado }}
+
+                            </span>
+                        </td>
+
+                        <td class="tabla-egresos__acciones">
+
+                            <button type="button"
+                                class="acciones__boton"
+                                aria-label="Mostrar acciones"
+                                [appContextMenuTrigger]="'egreso-' + egreso.id">
+
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+                            </button>
+
+                            <div class="acciones__menu"
+                                [appContextMenu]="'egreso-' + egreso.id">
+
+                                <button type="button"
+                                    class="acciones__opcion"
+                                    (click)="emitirDetalle(egreso)">
+
+                                    <i class="fa-solid fa-eye"></i>
+                                    Ver detalle
+
+                                </button>
+
+                                @if (egreso.estado === estadoEgreso.APLICADO) {
+
+                                    <button type="button"
+                                        class="acciones__opcion"
+                                        (click)="emitirEditar(egreso)">
+
+                                        <i class="fa-solid fa-pen"></i>
+                                        Editar
+
+                                    </button>
+
+                                    <button type="button"
+                                        class="acciones__opcion acciones__opcion--cancelar"
+                                        (click)="emitirCancelar(egreso)">
+
+                                        <i class="fa-solid fa-ban"></i>
+                                        Cancelar
+
+                                    </button>
+
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>

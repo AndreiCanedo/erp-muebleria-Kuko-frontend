@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
+import { map, Observable, Subject} from 'rxjs';
+
 import { SharedService } from './shared.service';
-import { Observable, Subject } from 'rxjs';
+
+import { ClienteDTO } from '../models/interface-models/clienteDTO.interface';
+import { ClienteMapper } from '../mappers/cliente.mapper';
 import { Cliente } from '../models/cliente.model';
 
 @Injectable({
@@ -10,8 +14,7 @@ export class ClienteService {
 
   private sharedServices = inject(SharedService)
 
-  private endpoint = '/cliente';
-  private respField = 'cliente';
+  private endpoint = '/clientes';
   private clienteCreadoSourse = new Subject<void>();
 
   clienteCreado$ =  this.clienteCreadoSourse.asObservable();
@@ -21,24 +24,45 @@ export class ClienteService {
   }
 
   cargarCliente():Observable<Cliente[]>{
-
-    return this.sharedServices.get<Cliente>(this.endpoint,this.respField);
+    return this.sharedServices.get<ClienteDTO>(this.endpoint)
+      .pipe(
+        map((dtos) => dtos.map(ClienteMapper.fromDTO))
+      );
   }
 
-  cargarClienteById(id:string):Observable<Cliente>{
-    return this.sharedServices.getById<Cliente>(`${this.endpoint}/${id}`, this.respField)
+  buscarClientes(texto: string): Observable<Cliente[]>{
+    return this.sharedServices.get<ClienteDTO>(`${this.endpoint}/buscar`,{ texto: texto.trim() })
+      .pipe(
+        map((dtos) => dtos.map(ClienteMapper.fromDTO))
+      );
+  }
+
+  cargarClienteById(id:number):Observable<Cliente>{
+    return this.sharedServices.getById<ClienteDTO>(`${this.endpoint}/${id}`)
+      .pipe(
+        map(dto => ClienteMapper.fromDTO(dto))
+      );
   }
 
   crearCliente(cliente:Cliente):Observable<Cliente>{
-    return this.sharedServices.post<Cliente>(this.endpoint,cliente)
+    return this.sharedServices.post<ClienteDTO>(this.endpoint, ClienteMapper.toDTO(cliente))
+      .pipe(
+        map(dto => ClienteMapper.fromDTO(dto))
+      );
   }
 
-  actualizarCliente(cliente:Cliente, id:String):Observable<Cliente>{
-    return this.sharedServices.put<Cliente>(`${this.endpoint}/${id}`,cliente)
+  actualizarCliente(cliente:Cliente, id:number):Observable<Cliente>{
+    return this.sharedServices.put<ClienteDTO>(`${this.endpoint}/${id}`, ClienteMapper.toDTO(cliente))
+      .pipe(
+          map(dto => ClienteMapper.fromDTO(dto))
+        );
   }
 
-  eliminarCliente(id:string):Observable<Cliente>{
-    return this.sharedServices.delete<Cliente>(`${this.endpoint}/${id}` )
+  eliminarCliente(id:number):Observable<Cliente>{
+    return this.sharedServices.delete<ClienteDTO>(`${this.endpoint}/${id}`)
+      .pipe(
+        map(dto => ClienteMapper.fromDTO(dto))
+      );
   }
 
 }

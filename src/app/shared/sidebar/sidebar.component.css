@@ -1,0 +1,143 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.aside__menu {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background-color: var(--color-surface);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-medium);
+}
+
+.menu__logo {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    min-height: 9rem;
+    padding: 1.5rem 2rem;
+}
+
+.menu__container-img {
+    flex: 0 0 auto;
+    width: 5.5rem;
+    height: 5.5rem;
+}
+
+.menu__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.menu__title {
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: var(--color-title);
+}
+
+.layout__menu {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+}
+
+.menu__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.menu__option {
+    width: 100%;
+}
+
+.menu__submenu-title {
+    margin-bottom: 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+.submenu__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.submenu__link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 0.8rem 1.5rem;
+
+    color: var(--color-text);
+    border-radius: var(--radius-medium);
+
+    transition:
+        color var(--transition-normal),
+        background-color var(--transition-normal),
+        transform var(--transition-fast);
+}
+
+.submenu__link:hover {
+    color: var(--color-primary-light);
+    background-color: var(--color-primary-soft);
+    transform: translateX(0.3rem);
+}
+
+.submenu__link--active {
+    color: var(--color-primary-light);
+    background-color: var(--color-primary-soft);
+}
+
+.submenu__icon {
+    width: 2rem;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.submenu__overlay {
+    font-size: 1.5rem;
+}
+
+.menu__buttom {
+    padding: 1.5rem 2rem;
+}
+
+.menu__logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 4rem;
+
+    font-weight: 500;
+    color: var(--color-text);
+
+    background-color: var(--color-surface);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-small);
+
+    transition:
+        color var(--transition-normal),
+        background-color var(--transition-normal);
+}
+
+.menu__logout:hover {
+    color: var(--color-primary-light);
+    background-color: var(--color-primary-soft);
+}

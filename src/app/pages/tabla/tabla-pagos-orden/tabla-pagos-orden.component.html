@@ -1,0 +1,158 @@
+<div class="tabla-pagos__container">
+
+    <div class="tabla-pagos__scroll">
+
+        <table class="tabla-pagos">
+
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Orden</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Forma de pago</th>
+                    <th>Referencia</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th class="tabla-pagos__acciones-header"> Acciones </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (pago of pagos; track pago.id) {
+
+                    <tr>
+
+                        <td>
+                            <span class="tabla-pagos__folio">
+                                #{{ pago.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <button type="button"
+                                class="tabla-pagos__orden"
+                                (click)="emitirVerOrden(pago)">
+
+                                OC-{{ pago.ordenId }}
+
+                            </button>
+                        </td>
+
+                        <td>
+                            @if (pago.fechaRegistro) {
+
+                                <span class="tabla-pagos__fecha">
+                                    {{ pago.fechaRegistro | date:'dd/MM/yyyy HH:mm'}}
+                                </span>
+
+                            } @else {
+
+                                <span class="tabla-pagos__sin-dato">
+                                    Sin fecha
+                                </span>
+
+                            }
+                        </td>
+
+                        <td>
+                            <span class="badge badge--tipo"
+                                [attr.data-tipo]="pago.tipoPago">
+
+                                {{ pago.tipoPago }}
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="tabla-pagos__forma">
+                                {{ pago.formaPago }}
+                            </span>
+                        </td>
+
+                        <td>
+                            @if (pago.referencia) {
+
+                                <span class="tabla-pagos__referencia">
+                                    {{ pago.referencia }}
+                                </span>
+
+                            } @else {
+
+                                <span class="tabla-pagos__sin-dato">
+                                    Sin referencia
+                                </span>
+
+                            }
+                        </td>
+
+                        <td>
+                            <strong class="tabla-pagos__monto">
+                                {{ pago.monto | money }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [class.badge--aplicado]="pago.estado === 'APLICADO'"
+                                [class.badge--cancelado]="pago.estado === 'CANCELADO'">
+
+                                {{ pago.estado }}
+
+                            </span>
+                        </td>
+
+                        <td class="tabla-pagos__acciones-cell">
+
+                            <div class="tabla-pagos__acciones">
+
+                                <button type="button"
+                                    class="tabla-pagos__accion"
+                                    title="Ver detalle"
+                                    aria-label="Ver detalle del pago"
+                                    (click)="emitirVerDetalle(pago)">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+                                @if (esAplicado(pago)) {
+
+                                    <button type="button"
+                                        class="tabla-pagos__accion"
+                                        title="Editar pago"
+                                        aria-label="Editar pago"
+                                        (click)="emitirEditar(pago)">
+
+                                        <i class="fa-solid fa-pen"></i>
+
+                                    </button>
+
+                                    <button type="button"
+                                        class=" tabla-pagos__accion tabla-pagos__accion--cancelar"
+                                        title="Cancelar pago"
+                                        aria-label="Cancelar pago"
+                                        (click)="emitirCancelar(pago)">
+
+                                        <i class="fa-solid fa-ban"></i>
+
+                                    </button>
+
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

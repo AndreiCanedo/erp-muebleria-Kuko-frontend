@@ -1,8 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { Egreso } from '../models/egreso.model';
-import { catchError, Observable, Subject, throwError } from 'rxjs';
+import { map, Observable, Subject} from 'rxjs';
+
 import { SharedService } from './shared.service';
-import { HttpErrorResponse } from '@angular/common/http';
+
+import { Egreso } from '../models/egreso.model';
+import { EgresoDTO } from '../models/interface-models/egresoDTO.interface';
+import { EgresoMapper } from '../mappers/egreso.mapper';
+import { CrearEgresoRequest } from '../models/request/crear-egreso.request';
+import { ActualizarEgresoRequest } from '../models/request/actualizar-egreso.request';
+import { CancelarEgresoRequest } from '../models/request/cancelar-egreso.request';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +17,7 @@ export class EgresoService {
 
   private sharedServices = inject(SharedService)
 
-  private endpoint = '/factura/egresos'
-  private respField = 'egreso';
+  private endpoint = '/egresos';
   private egresoCreadoSource = new Subject<void>();
 
   egresoCreado$ = this.egresoCreadoSource.asObservable();
@@ -22,39 +27,40 @@ export class EgresoService {
   }
 
   cargarEgresos():Observable<Egreso[]>{
-    return this.sharedServices.get<Egreso>(this.endpoint,this.respField)
+    return this.sharedServices.get<EgresoDTO>(this.endpoint)
+      .pipe(
+        map((dtos) => dtos.map(EgresoMapper.fromDTO))
+      );
   }
 
-  cargarEgresoById(id:string):Observable<Egreso>{
-    return this.sharedServices.getById<Egreso>(`${this.endpoint}/${id}`,this.respField)
+  cargarEgresoById(id:number):Observable<Egreso>{
+    return this.sharedServices.getById<EgresoDTO>(`${this.endpoint}/${id}`)
+      .pipe(
+        map(dtos => {
+          return EgresoMapper.fromDTO(dtos)
+        })
+      );
   }
 
-  crearEgreso(egreso:Egreso):Observable<Egreso>{
-    console.log('egreso => ',egreso)
-    return this.sharedServices.post<Egreso>(`${this.endpoint}`,egreso)
-        .pipe(
-          catchError((error:HttpErrorResponse):Observable<Egreso> => {
-            console.error('Error al crear Egreso', error.message)
-            return throwError(error)
-          })
-        )
+  crearEgreso(request:CrearEgresoRequest):Observable<Egreso>{
+    return this.sharedServices.post<EgresoDTO>(`${this.endpoint}`, request)
+      .pipe(
+        map(dto => EgresoMapper.fromDTO(dto))
+      );
   }
 
-  actualizarEgreso(egreso:Egreso, id:string):Observable<Egreso>{
-    return this.sharedServices.put<Egreso>(`${this.endpoint}/${id}`,egreso)
+  actualizarEgreso(request:ActualizarEgresoRequest, id:number):Observable<Egreso>{
+    return this.sharedServices.put<EgresoDTO>(`${this.endpoint}/${id}`, request)
+      .pipe(
+        map(dto => EgresoMapper.fromDTO(dto))
+      );
   }
 
-  eliminarEgreso(id:string):Observable<Egreso>{
-    return this.sharedServices.delete<Egreso>(`${this.endpoint}/${id}`)
+  cancelarEgreso(request:CancelarEgresoRequest, id:number):Observable<Egreso>{
+    return this.sharedServices.patch<EgresoDTO>(`${this.endpoint}/${id}/cancelar`, request)
+      .pipe(
+        map(dto => EgresoMapper.fromDTO(dto))
+      );
   }
 
-
-
-  /*
-  egreso:{ nombre:string, 
-           motivo:string, 
-           justificacion:string, monto:number, 
-           cambio:number, formaPago:string, 
-           muebleria:Muebleria, transacciones:Transaccion[]} )
-  */
 }

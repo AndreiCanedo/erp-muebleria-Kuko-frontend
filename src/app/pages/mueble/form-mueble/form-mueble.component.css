@@ -1,0 +1,203 @@
+
+/**************************************************/
+/******************* MUEBLE FORM ******************/
+/**************************************************/
+
+:host {
+    display: block;
+}
+
+.mueble-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+/******************************************************************************/
+/*********************************** CAMPOS ***********************************/
+/******************************************************************************/
+
+.mueble-form__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.mueble-form__label {
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+}
+
+.mueble-form__input {
+    width: 100%;
+    min-height: 4.2rem;
+
+    padding: 0.8rem 1.4rem;
+
+    color: var(--color-text);
+
+    background-color: var(--color-background);
+
+    border: 0.1rem solid transparent;
+    border-radius: var(--radius-medium);
+
+    transition:
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.mueble-form__input:focus {
+    outline: none;
+
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 .3rem
+        color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.mueble-form__input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.mueble-form__input--invalid {
+    border-color: var(--color-danger);
+}
+
+/******************************************************************************/
+/*********************************** PRECIO ***********************************/
+/******************************************************************************/
+
+.mueble-form__precio {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+.mueble-form__moneda {
+    position: absolute;
+
+    left: 1.4rem;
+
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text-muted);
+
+    pointer-events: none;
+}
+
+.mueble-form__input--precio {
+    padding-left: 3rem;
+}
+
+/* Oculta flechas del input number */
+
+.mueble-form__input--precio::-webkit-outer-spin-button,
+.mueble-form__input--precio::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.mueble-form__input--precio {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/******************************************************************************/
+/*********************************** ERRORES **********************************/
+/******************************************************************************/
+
+.mueble-form__error {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+
+    margin-top: .2rem;
+
+    font-size: 1.2rem;
+
+    color: var(--color-danger);
+}
+
+.mueble-form__error i {
+    flex-shrink: 0;
+}
+
+/******************************************************************************/
+/*********************************** BOTONES **********************************/
+/******************************************************************************/
+
+.mueble-form__acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    margin-top: .5rem;
+}
+
+.mueble-form__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+
+    min-width: 12rem;
+    min-height: 4rem;
+
+    padding: .8rem 1.5rem;
+
+    font-weight: 600;
+
+    border: 0;
+    border-radius: var(--radius-medium);
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.mueble-form__button--guardar {
+    color: #fff;
+
+    background-color: var(--color-primary);
+}
+
+.mueble-form__button--cancelar {
+    color: var(--color-text);
+
+    background-color: var(--color-background);
+}
+
+.mueble-form__button:hover:not(:disabled) {
+    transform: translateY(-.1rem);
+
+    box-shadow: var(--shadow-small);
+}
+
+.mueble-form__button:disabled {
+    opacity: .6;
+
+    cursor: not-allowed;
+}
+
+/******************************************************************************/
+/******************************** RESPONSIVE **********************************/
+/******************************************************************************/
+
+@media (max-width:600px) {
+
+    .mueble-form__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .mueble-form__button {
+        width: 100%;
+    }
+
+}

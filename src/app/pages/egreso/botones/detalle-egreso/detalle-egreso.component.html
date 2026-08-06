@@ -1,0 +1,234 @@
+<section class="detalle-egreso">
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando detalle del egreso">
+
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="reintentar()">
+
+        </app-state>
+
+    } @else if (egreso) {
+
+
+        <div class="detalle-egreso__contenido">
+
+            <header class="detalle-egreso__header">
+    
+                <div class="detalle-egreso__identidad">
+    
+                    <span class="detalle-egreso__icono">
+                        <i class="fa-solid fa-receipt"></i>
+                    </span>
+    
+                    <div>
+                        <span class="detalle-egreso__folio">
+                            Egreso #{{ egreso.id }}
+                        </span>
+    
+                        <h3 class="detalle-egreso__titulo">
+                            {{ egreso.nombre || 'Sin nombre' }}
+                        </h3>
+                    </div>
+    
+                </div>
+    
+                <span
+                    class="detalle-egreso__badge"
+                    [class.detalle-egreso__badge--aplicado]="egreso.estado === estadoEgreso.APLICADO"
+                    [class.detalle-egreso__badge--cancelado]="egreso.estado === estadoEgreso.CANCELADO">
+    
+                    {{ egreso.estado }}
+    
+                </span>
+    
+            </header>
+    
+            <section class="detalle-egreso__seccion">
+    
+                <h3 class="detalle-egreso__seccion-titulo">
+                    Informacion general
+                </h3>
+    
+                <div class="detalle-egreso__grid">
+    
+                    <article class="detalle-egreso__campo">
+                        <span>Folio</span>
+                        <strong>#{{ egreso.id }}</strong>
+                    </article>
+    
+                    <article class="detalle-egreso__campo">
+                        <span>Fecha</span>
+    
+                        <strong>
+                            @if (egreso.fecha) {
+                                {{ egreso.fecha | date:'dd/MM/yyyy HH:mm'}}
+                            } @else {
+                                Sin fecha
+                            }
+                        </strong>
+                    </article>
+    
+                    <article class="detalle-egreso__campo">
+                        <span>Nombre o proveedor</span>
+    
+                        <strong>
+                            {{ egreso.nombre || 'Sin nombre' }}
+                        </strong>
+                    </article>
+    
+                    <article class="detalle-egreso__campo">
+                        <span>Motivo</span>
+                        <strong>{{ egreso.motivo }}</strong>
+                    </article>
+    
+                    <article class="detalle-egreso__campo">
+                        <span>Forma de pago</span>
+                        <strong>{{ egreso.formaPago }}</strong>
+                    </article>
+    
+                </div>
+    
+            </section>
+    
+            <section class="detalle-egreso__seccion">
+    
+                <h3 class="detalle-egreso__seccion-titulo">
+                    Justificacion
+                </h3>
+    
+                <p class="detalle-egreso__justificacion">
+                    {{ egreso.justificacion || 'Sin justificacion registrada'}}
+                </p>
+    
+            </section>
+    
+            <section class="detalle-egreso__importes">
+    
+                <article class="detalle-egreso__importe-card">
+    
+                    <span>Monto</span>
+    
+                    <strong>
+                        {{ egreso.monto | money }}
+                    </strong>
+    
+                </article>
+    
+                <article class="detalle-egreso__importe-card">
+    
+                    <span>Efectivo entregado</span>
+    
+                    <strong>
+                        @if (egreso.efectivoEntregado !== null) {
+                            {{ egreso.efectivoEntregado | money }}
+                        } @else {
+                            No aplica
+                        }
+                    </strong>
+    
+                </article>
+    
+                <article class="detalle-egreso__importe-card">
+    
+                    <span>Cambio</span>
+    
+                    <strong>
+                        @if (egreso.cambio !== null) {
+                            {{ egreso.cambio | money }}
+                        } @else {
+                            No aplica
+                        }
+                    </strong>
+    
+                </article>
+    
+            </section>
+    
+            @if (egreso.estado === estadoEgreso.CANCELADO) {
+    
+                <section class="detalle-egreso__cancelacion">
+    
+                    <header class="detalle-egreso__cancelacion-header">
+    
+                        <span class="detalle-egreso__cancelacion-icono">
+                            <i class="fa-solid fa-ban"></i>
+                        </span>
+    
+                        <div>
+                            <h3>Informacion de cancelacion</h3>
+    
+                            <p>
+                                Este egreso fue cancelado y permanece en el historial
+                            </p>
+                        </div>
+    
+                    </header>
+    
+                    <div class="detalle-egreso__grid">
+    
+                        <article class="detalle-egreso__campo">
+    
+                            <span>Fecha de cancelacion</span>
+    
+                            <strong>
+                                @if (egreso.fechaCancelacion) {
+                                    {{ egreso.fechaCancelacion | date:'dd/MM/yyyy HH:mm'}}
+                                } @else {
+                                    Sin fecha
+                                }
+                            </strong>
+    
+                        </article>
+    
+                        <article class="detalle-egreso__campo detalle-egreso__campo--completo">
+    
+                            <span>Motivo de cancelacion</span>
+    
+                            <p>
+                                {{egreso.motivoCancelacion || 'Sin motivo registrado'}}
+                            </p>
+    
+                        </article>
+    
+                    </div>
+    
+                </section>
+    
+            }
+
+        </div>
+
+
+        
+    } @else {
+        
+        <app-state state="empty"
+            icon="fa-solid fa-receipt"
+            message="No hay informacion del egreso">
+
+        </app-state>
+
+    }
+
+    <footer class="detalle-egreso__acciones">
+
+        <button type="button"
+            class="detalle-egreso__regresar"
+            (click)="cerrar()">
+            
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+        </button>
+
+    </footer>
+
+</section>

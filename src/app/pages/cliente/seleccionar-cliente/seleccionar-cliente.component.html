@@ -1,0 +1,79 @@
+
+<section class="seleccion-cliente">
+
+    <app-search-box placeholder="Buscar Cliente ..."
+        [value]="textoBusqueda"
+        (search)="buscar($event)">
+        
+    </app-search-box>
+
+    @if(ui.cargando) {
+        
+        <app-state state="loading"
+            message="Cargando clientes ...">
+        
+        </app-state>
+
+    } @else if(ui.error){
+
+        <app-state state="error"
+            [message]="ui.error"
+            (retry)="buscarClientes()">
+            
+        </app-state>
+
+    } @else if(clientes.length === 0){
+
+        <app-state state="empty"
+            icon="fa-solid fa-users"
+            message="No hay clientes registrados">
+            
+        </app-state>
+
+    } @else {
+
+        <ul class="seleccion-cliente__lista">
+            @for(cliente of clientes; track cliente.id){
+                <li class="seleccion-cliente__item">
+    
+                    <button type="button" 
+                            (click)="seleccionarCliente(cliente)" 
+                            class="seleccion-cliente__cliente">
+                    
+                        <span class="seleccion-cliente__icono">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+    
+                        <span class="seleccion-cliente__informacion">
+                            <strong class="seleccion-cliente__nombre">
+                                {{ cliente.nombre }}
+                            </strong>
+                            
+                            <span class="seleccion-cliente__detalle">
+                                {{ cliente.telefono || cliente.correo || 'Sin informacion de contacto'}}
+                            </span>
+                        </span>
+    
+                        <i class="fa-solid fa-chevron-right seleccion-cliente__flecha"></i>
+    
+                    </button>
+    
+                </li>
+            }
+        </ul>
+    }
+
+
+    <div class="seleccion-cliente__acciones">
+
+        <button type="button" 
+                class="seleccion-cliente__crear"
+                (click)="mostrarCrearCliente()">
+
+            <i class="fa-solid fa-plus"></i>
+            Nuevo Cliente
+        </button>
+
+    </div>
+
+</section>

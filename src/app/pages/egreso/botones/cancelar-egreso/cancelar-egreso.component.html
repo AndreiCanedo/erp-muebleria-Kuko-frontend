@@ -1,0 +1,149 @@
+@if (ui.cargando) {
+
+    <app-state state="loading"
+        message="Cargando informacion del egreso">
+
+    </app-state>
+
+} @else if (ui.error && !egreso) {
+
+    <app-state state="error"
+        [message]="ui.error"
+        buttonText="Reintentar"
+        (retry)="reintentar()">
+
+    </app-state>
+
+} @else if (egreso) {
+
+    <section class="cancelar-egreso">
+
+        <span class="cancelar-egreso__icono">
+            <i class="fa-solid fa-ban"></i>
+        </span>
+
+        <p class="cancelar-egreso__mensaje">
+
+            Se cancelara el egreso
+            <strong>#{{ egreso.id }}</strong>.
+
+        </p>
+
+        <dl class="cancelar-egreso__resumen">
+
+            <div class="cancelar-egreso__dato">
+
+                <dt>Nombre o proveedor</dt>
+
+                <dd>
+                    {{ egreso.nombre || 'Sin nombre' }}
+                </dd>
+
+            </div>
+
+            <div class="cancelar-egreso__dato">
+
+                <dt>Motivo</dt>
+
+                <dd>
+                    {{ egreso.motivo }}
+                </dd>
+
+            </div>
+
+            <div class="cancelar-egreso__dato">
+
+                <dt>Monto</dt>
+
+                <dd>
+                    {{ egreso.monto | money }}
+                </dd>
+
+            </div>
+
+        </dl>
+
+        <div class="cancelar-egreso__advertencia">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+            <span>
+                La cancelacion revertira el movimiento financiero asociado.
+                El registro permanecera disponible en el historial
+            </span>
+
+        </div>
+
+        <form
+            class="cancelar-egreso__form"
+            [formGroup]="cancelarForm"
+            (ngSubmit)="confirmarCancelacion()">
+
+            <div class="cancelar-egreso__campo">
+
+                <label for="motivoCancelacionEgreso">
+                    Motivo de cancelación
+                </label>
+
+                <textarea id="motivoCancelacionEgreso"
+                    rows="4"
+                    formControlName="motivo"
+                    [disabled]="ui.cancelando"
+                    placeholder="Describe el motivo de la cancelacion">
+
+                </textarea>
+
+                @if (motivoInvalido) {
+
+                    <p class="cancelar-egreso__error">
+
+                        @if (cancelarForm.controls.motivo.errors?.['required']) {
+                            El motivo de cancelacion es obligatorio
+                        }
+
+                        @if (cancelarForm.controls.motivo.errors?.['minlength']) {
+                            El motivo debe contener al menos 3 caracteres
+                        }
+
+                    </p>
+
+                }
+
+            </div>
+
+            <footer class="cancelar-egreso__acciones">
+
+                <button type="button"
+                    class="cancelar-egreso__boton cancelar-egreso__boton--secundario"
+                    [disabled]="ui.cancelando"
+                    (click)="cerrarCaja()">
+
+                    Regresar
+
+                </button>
+
+                <button type="submit"
+                    class="cancelar-egreso__boton cancelar-egreso__boton--danger"
+                    [disabled]="cancelarForm.invalid || ui.cancelando">
+
+                    @if (ui.cancelando) {
+
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Cancelando...
+
+                    } @else {
+
+                        <i class="fa-solid fa-ban"></i>
+                        Confirmar cancelacion
+
+                    }
+
+                </button>
+
+            </footer>
+
+        </form>
+
+    </section>
+
+}

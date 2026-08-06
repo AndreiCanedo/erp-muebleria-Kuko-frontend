@@ -1,0 +1,100 @@
+
+
+
+
+<form [formGroup]="muebleForm" (ngSubmit)="onSubmit()" class="mueble-form">
+
+    <div class="mueble-form__campo">
+            
+        <label for="descripcion" class="mueble-form__label">Descripcion: </label>
+
+        <input type="text" 
+            id="descripcion" 
+            class="mueble-form__input" 
+            formControlName="descripcion"
+            autocomplete="off"
+            placeholder="Ej. Mesa parota"
+            [class.mueble-form__input--invalid]="isInvalid('descripcion')"
+            autofocus>
+            
+        @if (isInvalid('descripcion')) {
+
+            <div class="mueble-form__error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                
+                <span>
+                    @if (f.descripcion.errors?.['required']) { La descripcion es obligatoria }
+                    @if (f.descripcion.errors?.['whitespace']) { no puede estar vacio }
+                </span>
+            </div>
+        }
+
+    </div>
+
+    <div class="mueble-form__campo">
+    
+        
+        <label for="precioReferencia" class="mueble-form__label">Precio de referencia </label>
+        
+        <div class="mueble-form__precio">
+            <span class="mueble-form__moneda">$</span>
+
+            <input type="number" 
+                id="precioReferencia" 
+                class="mueble-form__input mueble-form__input--precio" 
+                formControlName="precioReferencia"
+                min="1"
+                step="0.01"
+                placeholder="0.00"
+                [class.mueble-form__input--invalid]="isInvalid('precioReferencia')">
+        </div>
+        
+
+        @if (isInvalid('precioReferencia')) {
+
+            <div class="mueble-form__error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>
+                    @if (f.precioReferencia.errors?.['required']) { El Precio es obligatorio }
+                    @if (f.precioReferencia.errors?.['min']) { El precio tiene que ser mayor de cero }
+                </span>
+            </div>
+        }
+
+    </div>
+
+        <div class="mueble-form__acciones">
+
+            <button type="submit" 
+                class="mueble-form__button mueble-form__button--guardar"
+                [disabled]="guardando">
+                
+                @if (guardando) {
+                        
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                
+                    <span>
+                        {{ actualizar ? 'Actualizando...' : 'Guardando...'}}
+                    </span>
+                }@else{
+                    <i class="fa-solid" [class.fa-flappy-disk]="actualizar" [class.fa-plus]="!actualizar"></i>
+                    
+                    <span>
+                        {{ actualizar ? 'Actualizar' : 'Crear Mueble'}}
+                    </span>
+                }
+                
+            </button>
+            
+            <button type="button" 
+                class="mueble-form__button mueble-form__button--cancelar"
+                (click)="cerrarCaja()">
+
+                Cancelar
+            </button>
+            
+        </div>
+
+</form>
+
+

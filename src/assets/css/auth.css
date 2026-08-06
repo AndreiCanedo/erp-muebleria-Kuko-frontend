@@ -1,0 +1,148 @@
+.layout-login__layout {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    background-image: url("../img/fondo.png");
+    background-size: cover;
+    background-position: center 50%;
+    background-repeat: no-repeat;
+}
+
+.layout-login {
+    width: 33%;
+    min-width: 40rem;
+    height: 100vh;
+    margin-left: auto;
+    overflow: hidden;
+
+    background-image: url("../img/fondo3.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-radius: 4rem 0 0 4rem;
+    box-shadow: -1rem -1rem 5rem rgb(255 255 255 / 50%);
+}
+
+.layout__menu {
+    min-width: 30rem;
+    min-height: 100%;
+
+    color: var(--color-text);
+    text-align: center;
+}
+
+.menu__title {
+    margin-top: 9rem;
+    margin-bottom: 2rem;
+}
+
+.title__text {
+    font-size: 3.6rem;
+}
+
+.title__subtitile {
+    font-size: 1.5rem;
+}
+
+.menu__login {
+    position: relative;
+}
+
+.login__form,
+.login__buttom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.login__box {
+    display: block;
+
+    width: 75%;
+    min-height: 4rem;
+    padding: 1rem 1.2rem;
+    margin-bottom: 2rem;
+
+    font-size: 1.5rem;
+    line-height: 2.1rem;
+
+    background-color: var(--color-surface-muted);
+    border: none;
+    border-radius: var(--radius-medium);
+    box-shadow: 0 1rem 1rem -0.8rem rgb(0 0 0 / 30%);
+}
+
+.login__title {
+    display: flex;
+    align-items: flex-start;
+    transition: var(--transition-normal);
+}
+
+.login__check {
+    display: flex;
+    align-items: center;
+    width: 75%;
+}
+
+.check__box {
+    margin-right: 0.4rem;
+    border: 0.1rem solid var(--color-text);
+    box-shadow: 0 1rem 1rem -0.8rem rgb(0 0 0 / 30%);
+}
+
+.check__title {
+    font-size: 1.4rem;
+}
+
+.login__forget {
+    margin-left: 8rem;
+}
+
+.buttom__loguear,
+.login__google {
+    width: 75%;
+    min-height: 4rem;
+
+    border: none;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 1rem 1rem -0.8rem rgb(0 0 0 / 30%);
+
+    transition:
+        color var(--transition-normal),
+        background-color var(--transition-normal);
+}
+
+.buttom__loguear:hover,
+.login__google:hover {
+    color: var(--color-primary-light);
+    background-color: var(--color-primary-soft);
+}
+
+.menu__option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.option__text {
+    font-size: 1.4rem;
+}
+
+.option__login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+}
+
+.footer__link {
+    color: var(--color-primary-light);
+    cursor: pointer;
+}

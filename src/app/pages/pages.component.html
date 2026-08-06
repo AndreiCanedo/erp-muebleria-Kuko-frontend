@@ -1,21 +1,25 @@
-<div>
+
+
     <div class="layout">
+        
         <!-- Menu Lateral -->
         <aside class="layout__aside">
             <app-sidebar></app-sidebar>
         </aside>
-        <aside class="layout__left">
+
+        <div class="layout__content">
             
             <!-- Menu Horizontal -->
-            <aside class="layout__nav">
+            <header class="layout__nav">
                 <app-header></app-header>
-            </aside>
+            </header>
 
             <!-- Hoja principal -->
-            <aside class="layout__dashboard">
+            <main class="layout__dashboard">
                 <router-outlet></router-outlet>
-            </aside>
-        </aside>
+            </main>
+        </div>
+
     </div>
 
-</div>
+

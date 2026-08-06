@@ -1,0 +1,300 @@
+<section class="ordenes-page">
+
+    <header class="ordenes-page__header">
+
+        <div class="ordenes-page__encabezado">
+
+            <span class="ordenes-page__header-icon">
+                <i class="fa-solid fa-file-invoice"></i>
+            </span>
+
+            <div>
+                <h1 class="ordenes-page__title">
+                    Ordenes
+                </h1>
+
+                <p class="ordenes-page__subtitle">
+                    Consulta y administra presupuestos y ordenes de compra.
+                </p>
+            </div>
+
+        </div>
+
+    </header>
+
+    <div class="ordenes-page__search">
+
+        <app-search-box placeholder="Buscar por folio, cliente, estado, proceso, pago o entrega"
+            [value]="busqueda"
+            (search)="buscar($event)">
+        
+        </app-search-box>
+    
+    </div>
+
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando órdenes">
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarOrdenes()">
+        </app-state>
+
+    } @else if (ordenesFiltradas.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-file-invoice"
+            message="No hay órdenes creadas">
+        </app-state>
+
+    } @else {
+
+        <section class="ordenes-page__contenido">
+
+            <app-tabla-ordenes [ordenes]="ordenesFiltradas"
+                (verDetalle)="verDetalle($event)"
+                (editar)="editarOrden($event)"
+                (confirmar)="confirmarOrden($event)"
+                (cancelar)="cancelarOrden($event)">
+            </app-tabla-ordenes>
+
+        </section>
+
+    }
+
+</section>
+
+<!-- Detalle -->
+
+<app-modal [visible]="mostrarDetalleOrden"
+    title="Detalle de la orden"
+    size="xl"
+    (cerrar)="cerrarDetalleOrden()">
+
+    <app-detalle-orden [ordenId]="ordenSeleccionadaId"
+        (cancelar)="cerrarDetalleOrden()">
+    </app-detalle-orden>
+
+</app-modal>
+
+<!-- Editar -->
+
+<app-modal [visible]="monstrarEditarOrden"
+    title="Editar orden de compra"
+    size="xl"
+    (cerrar)="cerrarEditarOrden()">
+
+    @if (monstrarEditarOrden) {
+
+        <app-formulario-editar-orden [ordenId]="ordenEditarId"
+            (ordenActualizada)="ordenActualizada()"
+            (cancelar)="cerrarEditarOrden()">
+
+        </app-formulario-editar-orden>
+
+    }
+
+</app-modal>
+
+<!-- Confirmar -->
+
+<app-modal [visible]="mostrarConfirmarOrden"
+    title="Confirmar orden"
+    size="sm"
+    [closeOnBackdrop]="!confirmandoOrden"
+    [closeOnEsc]="!confirmandoOrden"
+    (cerrar)="cerrarConfirmarOrden()">
+
+    @if (mostrarConfirmarOrden && ordenAccionSeleccionada) {
+
+        <section class="accion-orden accion-orden--confirmar">
+
+            <div class="accion-orden__icono">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="accion-orden__contenido">
+
+                <p class="accion-orden__mensaje">
+                    ¿Deseas confirmar la orden
+                    <strong>
+                        #{{ ordenAccionSeleccionada.id }}
+                    </strong>?
+                </p>
+
+                <dl class="accion-orden__resumen">
+
+                    <div class="accion-orden__dato">
+                        <dt>Cliente</dt>
+                        <dd>
+                            {{ ordenAccionSeleccionada.cliente }}
+                        </dd>
+                    </div>
+
+                    <div class="accion-orden__dato">
+                        <dt>Total</dt>
+                        <dd>
+                            {{ordenAccionSeleccionada.total | money }}
+                        </dd>
+                    </div>
+
+                </dl>
+
+                <p class="accion-orden__aviso">
+                    Una vez confirmada, dejara de ser una cotizacion editable
+                </p>
+
+                @if (ui.error) {
+
+                    <p class="accion-orden__error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ ui.error }}
+                    </p>
+
+                }
+
+            </div>
+
+            <footer class="accion-orden__acciones">
+
+                <button type="button"
+                    class="accion-orden__boton accion-orden__boton--secundario"
+                    [disabled]="confirmandoOrden"
+                    (click)="cerrarConfirmarOrden()">
+
+                    Regresar
+
+                </button>
+
+                <button type="button"
+                    class="accion-orden__boton accion-orden__boton--confirmar"
+                    [disabled]="confirmandoOrden"
+                    (click)="ejecutarConfirmarOrden()">
+
+                    @if (confirmandoOrden) {
+
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Confirmando...
+
+                    } @else {
+
+                        <i class="fa-solid fa-check"></i>
+                        Confirmar orden
+
+                    }
+
+                </button>
+
+            </footer>
+
+        </section>
+
+    }
+
+</app-modal>
+
+<!-- Cancelar -->
+
+<app-modal [visible]="mostrarCancelarOrden"
+    title="Cancelar orden"
+    size="sm"
+    [closeOnBackdrop]="!cancelandoOrden"
+    [closeOnEsc]="!cancelandoOrden"
+    (cerrar)="cerrarCancelarOrden()">
+
+    @if (mostrarCancelarOrden && ordenAccionSeleccionada) {
+
+        <section class="accion-orden accion-orden--cancelar">
+
+            <div class="accion-orden__icono">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+
+            <div class="accion-orden__contenido">
+
+                <p class="accion-orden__mensaje">
+                    Se cancelara la orden
+                    <strong>
+                        #{{ ordenAccionSeleccionada.id }}
+                    </strong>.
+                </p>
+
+                <dl class="accion-orden__resumen">
+
+                    <div class="accion-orden__dato">
+                        <dt>Cliente</dt>
+                        <dd>
+                            {{ ordenAccionSeleccionada.cliente }}
+                        </dd>
+                    </div>
+
+                </dl>
+
+                <div class="accion-orden__campo">
+
+                    <label for="motivoCancelacionOrden"> Motivo de cancelacion </label>
+
+                    <textarea id="motivoCancelacionOrden"
+                        rows="4"
+                        [(ngModel)]="motivoCancelacion"
+                        [disabled]="cancelandoOrden"
+                        placeholder="Escribe el motivo de la cancelación">
+                    </textarea>
+
+                </div>
+
+                @if (ui.error) {
+
+                    <p class="accion-orden__error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ ui.error }}
+                    </p>
+
+                }
+
+            </div>
+
+            <footer class="accion-orden__acciones">
+
+                <button type="button"
+                    class="accion-orden__boton accion-orden__boton--secundario"
+                    [disabled]="cancelandoOrden"
+                    (click)="cerrarCancelarOrden()">
+
+                    Regresar
+
+                </button>
+
+                <button type="button"
+                    class="accion-orden__boton accion-orden__boton--peligro"
+                    [disabled]=" cancelandoOrden || !motivoCancelacion.trim()"
+                    (click)="ejecutarCancelacionOrden()">
+
+                    @if (cancelandoOrden) {
+
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Cancelando...
+
+                    } @else {
+
+                        <i class="fa-solid fa-ban"></i>
+                        Confirmar cancelación
+
+                    }
+
+                </button>
+
+            </footer>
+
+        </section>
+
+    }
+
+</app-modal>

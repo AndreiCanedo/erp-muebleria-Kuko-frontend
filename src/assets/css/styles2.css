@@ -14,6 +14,12 @@
     --color-background-error:#f3afaf;
     --color-background-error2:#f5d4d4;
     --color-background-icondollar: #f6d861;
+    --color-text-success: #1ea672;
+    --color-background-table-th:#0069a6;
+    --color-table-row: #F4FAFD;
+    --color-table-row-alt: #E7F3FA;
+    --color-text-select-table: #0077CC;
+    --color-table-hover: #CFE8F6;
         
 }
 /*Posicion Relativa es que ese cuadro no dependa de otro*/
@@ -166,10 +172,25 @@ h1, h2, h3, h4, h5, h6{
 
 .submenu__link{
     display: flex;  
-    flex-direction: row;
-    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 4rem;
+    padding: 0 2rem;
+    border-radius: 0 2rem 2rem 0;
+    /*flex-direction: row;
+    justify-content: center;*/
     color: var(--color-secundary);
-    transition: all 300ms ease-in-out;
+    transition: 
+        background-color 200ms ease,
+        color 200ms ease,
+        transform 200ms ease;
+}
+
+.submenu__link:hover,
+.submenu__link--active {
+    background-color: var(--color-background-select);
+    color: var(--color-text-select);
+    transform: translateX(0.5rem);
 }
 
 .submenu__icon{
@@ -178,7 +199,7 @@ h1, h2, h3, h4, h5, h6{
 }
 
 .submenu__option:hover,
-.submenu__option:hover .submenu__link{
+.submenu__option:hover{
     background-color: var(--color-background-select);
     border-radius: 0 2rem 2rem 0;
     color: var(--color-text-select);

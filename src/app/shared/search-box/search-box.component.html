@@ -1,0 +1,23 @@
+<div class="search-box"
+    [class.search-box--disabled]="disabled">
+
+    <i class="fa-solid fa-magnifying-glass search-box__icon"></i>
+
+    <input type="search"
+        class="search-box__input"
+        [formControl]="searchControl"
+        [placeholder]="placeholder"
+        [attr.aria-label]="placeholder">
+
+    @if (searchControl.value) {
+
+        <button type="button"
+            class="search-box__clear"
+            aria-label="Limpiar búsqueda"
+            (click)="limpiar()">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+    }
+</div>

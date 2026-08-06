@@ -1,51 +1,26 @@
 
-<form *ngIf="!idExist" class="form__options--buscarID"
-    [formGroup]="egresoId"
-    (ngSubmit)="buscarIdEgreso()">
-    <div class="options__id">
-        <label for="inputIdFound" class="options__text">Id Factura</label>
-        <input id="inputIdFound" type="number" class="options__input" formControlName="idFound">
-    </div>
-    <p *ngIf="existeErrorBuscarID" class="form--eliminar__error">El Id no existe</p>
-    <div class="form__button">
-        <button type="submit" class="button__save" [disabled]="egresoId.invalid">Buscar ID</button>
-        <button type="button" (click)="cerrarCaja()" class="button__cancelar">Cancelar</button>
-    </div>
-</form>
-<form *ngIf="idExist" class="form__options"
-              [formGroup] = "egresoForm"
-              (ngSubmit)="guardarEgreso()">
+@if (ui.cargando) { 
+    <app-state state="loading"
+        message="Cargando egreso">
 
-    <div class="options__id">
-        <label for="inputId" class="options__text">Id Factura</label>
-        <input id="inputId" type="number" [readonly]="idExist" class="options__input options__input--id" formControlName="id">
-    </div>
-    <div class="options__nombre">
-        <label for="inputName" class="options__text">Nombre</label>
-        <input id="inputName" type="text" class="options__input" formControlName="nombre">
-    </div>
-    <div class="options__motivo">
-        <label for="inputMotivo" class="options__text">Motivo</label>
-        <input id="inputMotivo" type="text" class="options__input" formControlName="motivo">
-    </div>
-    <div class="options__justificacion">
-        <label for="inputJustificacion" class="options__text">Justificacion</label>
-        <input id="inputJustificacion" type="text" class="options__input" formControlName="justificacion">
-    </div>
-    <div class="options__monto">
-        <label for="inputMonto" class="options__text">Monto</label>
-        <input id="inputMonto" type="text" class="options__input" formControlName="monto">
-    </div>
-    <div class="options__cambio">
-        <label for="inputCambio" class="options__text">Cambio</label>
-        <input id="inputCambio" type="text" class="options__input" formControlName="cambio">
-    </div>
-    <div class="options__formaPago">
-        <label for="inputFormaPago" class="options__text">Forma de Pago</label>
-        <input id="inputFormaPago" type="text" class="options__input"  formControlName="formaPago">
-    </div>
-    <div class="form__button">
-        <button type="submit" class="button__save" [disabled]="egresoForm.invalid">Actualizar</button>
-        <button type="button" (click)="regresarCaja()" class="button__cancelar">Regresar</button>
-    </div>
-</form>
+    </app-state>
+
+} @else if (ui.error && !egresoSeleccionado) {
+
+    <app-state state="error"
+        [message]="ui.error">
+
+    </app-state>
+
+} @else if (egresoSeleccionado) {
+
+    <app-formulario-egreso [egresoForm]="egresoForm"
+        [actualizar]="true"
+        [cargando]="ui.guardando"
+
+        (submitForm)="actualizarEgreso()"
+        (cancelar)="cerrarCaja()">
+    
+    </app-formulario-egreso>
+
+}

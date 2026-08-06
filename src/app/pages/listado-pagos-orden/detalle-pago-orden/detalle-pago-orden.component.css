@@ -1,0 +1,452 @@
+:host {
+    display: block;
+}
+
+.detalle-pago {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.detalle-pago__contenido{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    max-height: 54rem;
+    margin: 0;
+    padding: 0.3rem;
+
+    overflow-y: auto;
+    list-style: none;
+}
+
+/**************************************************************************/
+/******************************** HEADER *********************************/
+/**************************************************************************/
+
+.detalle-pago__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 2rem;
+
+    margin-bottom: 1.8rem;
+}
+
+.detalle-pago__identidad {
+    display: flex;
+    align-items: center;
+
+    gap: 1.4rem;
+}
+
+.detalle-pago__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 5.4rem;
+    height: 5.4rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-primary);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 8%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.detalle-pago__icono i {
+    font-size: 2.4rem;
+}
+
+.detalle-pago__folio {
+    display: block;
+
+    margin-bottom: 0.3rem;
+
+    font-size: 1.3rem;
+    font-weight: 600;
+
+    color: var(--color-primary);
+}
+
+.detalle-pago__titulo {
+    margin: 0;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-pago__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 3rem;
+    padding: 0.5rem 1.2rem;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    border-radius: var(--radius-pill);
+}
+
+.detalle-pago__badge--aplicado {
+    color: var(--color-success);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-success) 14%,
+            transparent
+        );
+}
+
+.detalle-pago__badge--cancelado {
+    color: var(--color-danger);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 14%,
+            transparent
+        );
+}
+
+/**************************************************************************/
+/******************************* SECCIONES ********************************/
+/**************************************************************************/
+
+.detalle-pago__seccion {
+    width: 100%;
+    margin-bottom: 1.8rem;
+    padding: 1.8rem;
+
+    background-color: var(--color-surface);
+
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
+}
+
+.detalle-pago__seccion-titulo {
+    margin: 0 0 1.5rem;
+
+    font-size: 1.7rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-pago__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.2rem;
+}
+
+.detalle-pago__campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+
+    min-width: 0;
+    padding: 1.3rem;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 5%,
+            transparent
+        );
+
+    border-radius: var(--radius-medium);
+}
+
+.detalle-pago__campo--completo {
+    grid-column: 1 / -1;
+}
+
+.detalle-pago__campo span {
+    font-size: 1.2rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-pago__campo strong {
+    overflow-wrap: anywhere;
+
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-pago__campo p {
+    margin: 0;
+
+    font-size: 1.35rem;
+    line-height: 1.6;
+
+    color: var(--color-text);
+}
+
+.detalle-pago__enlace {
+    color: var(--color-primary) !important;
+}
+
+/**************************************************************************/
+/******************************** MONTO ***********************************/
+/**************************************************************************/
+
+.detalle-pago__monto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 2rem;
+
+    margin-bottom: 1.8rem;
+    padding: 1.6rem 1.8rem;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 8%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.detalle-pago__monto-label {
+    display: block;
+
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-pago__monto-description {
+    margin-top: 0.3rem;
+
+    font-size: 1.25rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-pago__monto strong {
+    flex-shrink: 0;
+
+    font-size: 2.2rem;
+    font-weight: 700;
+
+    color: var(--color-primary);
+}
+
+/**************************************************************************/
+/***************************** OBSERVACIONES ******************************/
+/**************************************************************************/
+
+.detalle-pago__observaciones {
+    margin: 0;
+    padding: 1.4rem;
+
+    font-size: 1.4rem;
+    line-height: 1.7;
+
+    color: var(--color-text);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 4%,
+            transparent
+        );
+
+    border-radius: var(--radius-medium);
+}
+
+/**************************************************************************/
+/***************************** CANCELACIÓN ********************************/
+/**************************************************************************/
+
+.detalle-pago__cancelacion {
+    width: 100%;
+    padding: 1.8rem;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 5%,
+            var(--color-surface)
+        );
+
+    border: 0.1rem solid
+        color-mix(
+            in srgb,
+            var(--color-danger) 22%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.detalle-pago__cancelacion-header {
+    display: flex;
+    align-items: center;
+
+    gap: 1.2rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.detalle-pago__cancelacion-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 4.8rem;
+    height: 4.8rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-danger);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 13%,
+            transparent
+        );
+
+    border-radius: 50%;
+}
+
+.detalle-pago__cancelacion-icono i {
+    font-size: 2rem;
+}
+
+.detalle-pago__cancelacion-header h3 {
+    margin: 0;
+
+    font-size: 1.6rem;
+    font-weight: 700;
+
+    color: var(--color-danger);
+}
+
+.detalle-pago__cancelacion-header p {
+    margin-top: 0.3rem;
+
+    font-size: 1.25rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-pago__cancelacion .detalle-pago__campo {
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 7%,
+            transparent
+        );
+}
+
+.detalle-pago__acciones {
+    display: flex;
+    justify-content: flex-end;
+
+    padding-top: 1.5rem;
+
+    background-color: var(--color-surface);
+    border-top: 0.1rem solid var(--color-border);
+}
+
+.detalle-pago__regresar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+
+    min-height: 4.4rem;
+    padding: 0.9rem 1.8rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-small);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-normal),
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.detalle-pago__regresar:hover {
+    color: var(--color-primary);
+
+    transform: translateY(-0.2rem);
+    box-shadow: var(--shadow-medium);
+}
+
+/**************************************************************************/
+/****************************** RESPONSIVE ********************************/
+/**************************************************************************/
+
+@media (max-width: 800px) {
+
+    .detalle-pago__grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 550px) {
+
+    .detalle-pago__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .detalle-pago__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-pago__campo--completo {
+        grid-column: auto;
+    }
+
+    .detalle-pago__monto {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .detalle-pago__cancelacion-header {
+        align-items: flex-start;
+    }
+}

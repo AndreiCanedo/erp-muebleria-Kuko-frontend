@@ -1,0 +1,222 @@
+<section class="detalle-pago">
+    @if (pago) {
+
+        <div class="detalle-pago__contenido">
+            
+            <header class="detalle-pago__header">
+    
+                <div class="detalle-pago__identidad">
+    
+                    <span class="detalle-pago__icono">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </span>
+    
+                    <div>
+                        <span class="detalle-pago__folio">
+                            Pago #{{ pago.id }}
+                        </span>
+    
+                        <h3 class="detalle-pago__titulo">
+                            Orden OC-{{ pago.ordenId }}
+                        </h3>
+                    </div>
+    
+                </div>
+    
+                <span class="detalle-pago__badge"
+                    [class.detalle-pago__badge--aplicado]="pago.estado === 'APLICADO'"
+                    [class.detalle-pago__badge--cancelado]="pago.estado === 'CANCELADO'">
+    
+                    {{ pago.estado }}
+    
+                </span>
+    
+            </header>
+    
+            <section class="detalle-pago__seccion">
+    
+                <h3 class="detalle-pago__seccion-titulo">
+                    Informacion del pago
+                </h3>
+    
+                <div class="detalle-pago__grid">
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Folio del pago</span>
+    
+                        <strong>
+                            #{{ pago.id }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Orden relacionada</span>
+    
+                        <strong class="detalle-pago__enlace">
+                            OC-{{ pago.ordenId }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Fecha de registro</span>
+    
+                        <strong>
+                            @if (pago.fechaRegistro) {
+    
+                                {{ pago.fechaRegistro | date:'dd/MM/yyyy HH:mm'}}
+    
+                            } @else {
+    
+                                Sin fecha
+    
+                            }
+                        </strong>
+    
+                    </article>
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Tipo de pago</span>
+    
+                        <strong>
+                            {{ pago.tipoPago }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Forma de pago</span>
+    
+                        <strong>
+                            {{ pago.formaPago }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="detalle-pago__campo">
+    
+                        <span>Referencia</span>
+    
+                        <strong>
+                            {{ pago.referencia || 'Sin referencia' }}
+                        </strong>
+    
+                    </article>
+    
+                </div>
+    
+            </section>
+    
+            <section class="detalle-pago__monto">
+    
+                <div>
+    
+                    <span class="detalle-pago__monto-label">
+                        Monto del pago
+                    </span>
+    
+                    <p class="detalle-pago__monto-description">
+                        Importe registrado en la orden relacionada
+                    </p>
+    
+                </div>
+    
+                <strong>
+                    {{ pago.monto | money }}
+                </strong>
+    
+            </section>
+    
+            <section class="detalle-pago__seccion">
+    
+                <h3 class="detalle-pago__seccion-titulo">
+                    Observaciones
+                </h3>
+    
+                <p class="detalle-pago__observaciones">
+                    {{ pago.observaciones || 'Sin observaciones registradas' }}
+                </p>
+    
+            </section>
+    
+            @if (pago.estado === 'CANCELADO') {
+    
+                <section class="detalle-pago__cancelacion">
+    
+                    <header class="detalle-pago__cancelacion-header">
+    
+                        <span class="detalle-pago__cancelacion-icono">
+                            <i class="fa-solid fa-ban"></i>
+                        </span>
+    
+                        <div>
+                            <h3>Informacion de cancelacion</h3>
+    
+                            <p> Este pago fue cancelado y ya no se considera aplicado </p>
+                        </div>
+    
+                    </header>
+    
+                    <div class="detalle-pago__grid">
+    
+                        <article class="detalle-pago__campo">
+    
+                            <span>Fecha de cancelacion</span>
+    
+                            <strong>
+                                @if (pago.fechaCancelacion) {
+    
+                                    {{ pago.fechaCancelacion | date:'dd/MM/yyyy HH:mm'}}
+    
+                                } @else {
+    
+                                    Sin fecha
+    
+                                }
+                            </strong>
+    
+                        </article>
+    
+                        <article class="detalle-pago__campo detalle-pago__campo--completo">
+    
+                            <span>Motivo de cancelacion</span>
+    
+                            <p>
+                                {{ pago.motivoCancelacion || 'Sin motivo registrado'}}
+                            </p>
+    
+                        </article>
+    
+                    </div>
+    
+                </section>
+    
+            }
+        </div>
+        
+    } @else {
+        <app-state state="empty"
+            icon="fa-solid fa-money-bill-transfer"
+            message="No hay informacion del pago">
+    
+        </app-state>
+
+    }
+    <footer class="detalle-pago__acciones">
+        <button type="button"
+            class="detalle-pago__regresar"
+            (click)="cerrar()">
+        
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+
+        </button>
+    </footer>
+</section>
+

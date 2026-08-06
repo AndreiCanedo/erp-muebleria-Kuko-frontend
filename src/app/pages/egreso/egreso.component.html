@@ -1,88 +1,279 @@
-<section class="egreso__table">
-    
-    <div class="table__section">
-        <aside class="table__menu">
-            <h2 class="menu__title">Menu</h2>
-            <button (click)="mostrarCajaCrear()" class="menu__crear">Crear Factura</button>
-            <button (click)="mostrarCajaEdit()" class="menu__editar">Editar Factura</button>
-            <button (click)="mostrarCajaEliminar()" class="menu__eliminar">Eliminar Factura</button>
-        </aside>
+<section class="egresos-page">
 
-        <aside class="table__total">
-            <div class="total__title--section">
-                <h2 class="title__total">Gasto semanal</h2>
-                <i class="total__icon--title fa-solid fa-dollar"></i>
-            </div>
-            <h1 class="total__semanal">{{ egresoSemanaActual }}</h1>
-            <div class="total__datos">
-                <p class="total__estimado">Gasto semanal</p>
-                <i class="total__icon fa-solid fa-arrow-trend-up"></i>
-                <h5 (click)="cajaEstimado()" class="total__estipado--efectivo">{{ estimadoSemanal }}</h5>
+    <header class="egresos-page__header">
+
+        <div class="egresos-page__encabezado">
+
+            <span class="egresos-page__header-icon">
+                <i class="fa-solid fa-receipt"></i>
+            </span>
+
+            <div>
+                <h1 class="egresos-page__title">
+                    Egresos
+                </h1>
+
+                <p class="egresos-page__subtitle">
+                    Registra y administra los gastos operativos de la empresa
+                </p>
             </div>
 
-        </aside>
-    </div>
-    
-    <aside class="table__table">
-        <h2 class="table__table--title">Tabla de Facturas Egresos</h2>
-        
-        <app-tabla [columnas]="columns" [datos]="egresos"></app-tabla>
-    
-    </aside>
-
-    <!-- Caja formulario -->
-    <aside *ngIf="mostrarCajaForm" 
-            class="caja__form" 
-            [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaForm, 'caja__form--edit': cajaEdit, 'caja__form--crear': cajaCrear }">
-
-        <div class="form__header">
-            <h2 class="form__title">
-                {{ cajaEdit ? 'Modificar Factura Egreso' : 'Nueva Factura Egreso'}}
-            </h2>
-            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>    
-        </div>
-        
-
-            <app-egreso-crear *ngIf="cajaCrear" (cancelar)="cerrarCaja()"></app-egreso-crear>
-            <app-egreso-edit *ngIf="cajaEdit" (cancelar)="cerrarCaja()"></app-egreso-edit>
- 
-    </aside>
-    
-
-    <!-- Caja Eliminar  -->
-    <aside *ngIf="mostrarCajaFormEliminar" 
-        class="caja__form" 
-        [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaEliminar, 'caja__form--eliminar': mostrarCajaEliminar, 'caja__form--verificar': mostrarTablaEliminar}">
-        <div class="form__header">
-            <h2 class="form__title" [ngClass]="{'form__title-verificar':mostrarTablaEliminar}">
-                Eliminar Factura Egresos
-            </h2>
-            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>
         </div>
 
-        <app-egreso-eliminar (cancelar)="cerrarCaja()"></app-egreso-eliminar>
-       
-    </aside>
+        <button type="button"
+            class="egresos-page__nuevo"
+            (click)="registrarEgreso()">
 
-    <!-- Caja Estimado -->
-    <aside *ngIf="mostrarCajaEstimado"
-        class="caja__form" 
-        [ngClass]="{ 'show': !animacion, 'hide': animacion && !mostrarCajaEstimado }">
+            <i class="fa-solid fa-plus"></i>
 
-        <div class="form__header">
-            <h2 class="form__title">
-                Gasto Estimado Semanal
-            </h2>
-            <i (click)="cerrarCaja()" class="fa-solid fa-x form__salir"></i>
-        </div>
+            Registrar egreso
 
-        <form [formGroup]="estimadoForm" 
-            class="actualizar__estimado"
-            (submit)="actualizarEstimado()">
-            <input type="number" formControlName = "estimado" class="options__input options__input--estimado">
-            <button type="submit" class="boton__estimado">Agregar</button>
-        </form>
+        </button>
 
-    </aside>
+    </header>
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando egresos">
+
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarEgresos()">
+
+        </app-state>
+
+    } @else {
+
+        <section class="egresos-page__resumen">
+
+            <article class="egreso-resumen-card">
+
+                <span class="egreso-resumen-card__icono">
+                    <i class="fa-solid fa-calendar-week"></i>
+                </span>
+
+                <div>
+                    <span class="egreso-resumen-card__label">
+                        Egresos de la semana
+                    </span>
+
+                    <strong class="egreso-resumen-card__valor">
+                        {{ totalSemana | money }}
+                    </strong>
+                </div>
+
+            </article>
+
+            <article class="egreso-resumen-card">
+
+                <span class="egreso-resumen-card__icono">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+
+                <div>
+                    <span class="egreso-resumen-card__label">
+                        Egresos del mes
+                    </span>
+
+                    <strong class="egreso-resumen-card__valor">
+                        {{ totalMes | money }}
+                    </strong>
+                </div>
+
+            </article>
+
+            <article class="egreso-resumen-card">
+
+                <span class="egreso-resumen-card__icono egreso-resumen-card__icono--success">
+                    <i class="fa-solid fa-circle-check"></i>
+                </span>
+
+                <div>
+                    <span class="egreso-resumen-card__label">
+                        Aplicados
+                    </span>
+
+                    <strong class="egreso-resumen-card__valor">
+                        {{ cantidadAplicados }}
+                    </strong>
+                </div>
+
+            </article>
+
+            <article class="egreso-resumen-card">
+
+                <span class="egreso-resumen-card__icono egreso-resumen-card__icono--danger">
+                    <i class="fa-solid fa-ban"></i>
+                </span>
+
+                <div>
+                    <span class="egreso-resumen-card__label">
+                        Cancelados
+                    </span>
+
+                    <strong class="egreso-resumen-card__valor">
+                        {{ cantidadCancelados }}
+                    </strong>
+                </div>
+
+            </article>
+
+        </section>
+
+        <section class="egresos-page__filtros">
+
+            <div class="egresos-page__busqueda">
+
+                <app-search-box placeholder="Buscar por folio, nombre, motivo o justificacion"
+                    [value]="busqueda"
+                    (search)=" busqueda = $event; aplicarFiltros()">
+
+                </app-search-box>
+
+            </div>
+
+            <select class="egresos-page__select"
+                [(ngModel)]="estadoSeleccionado"
+                (ngModelChange)="aplicarFiltros()">
+
+                <option value="">
+                    Todos los estados
+                </option>
+
+                <option value="APLICADO">
+                    Aplicado
+                </option>
+
+                <option value="CANCELADO">
+                    Cancelado
+                </option>
+
+            </select>
+
+            <select class="egresos-page__select"
+                [(ngModel)]="formaPagoSeleccionada"
+                (ngModelChange)="aplicarFiltros()">
+
+                <option value="">
+                    Todas las formas de pago
+                </option>
+
+                <option value="EFECTIVO">
+                    Efectivo
+                </option>
+
+                <option value="TARJETA">
+                    Tarjeta
+                </option>
+
+                <option value="TRANSFERENCIA">
+                    Transferencia
+                </option>
+
+            </select>
+
+            <button type="button"
+                class="egresos-page__limpiar"
+                (click)="limpiarFiltros()">
+
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+
+                Limpiar
+
+            </button>
+
+        </section>
+
+        @if (egresos.length === 0) {
+
+            <app-state state="empty"
+                icon="fa-solid fa-receipt"
+                message="No hay egresos registrados">
+
+            </app-state>
+
+        } @else if (egresosFiltrados.length === 0) {
+
+            <app-state state="empty"
+                icon="fa-solid fa-magnifying-glass"
+                message="No se encontraron egresos con los filtros seleccionados">
+
+            </app-state>
+
+        } @else {
+
+            <section class="egresos-page__contenido">
+
+                <app-tabla-egresos [egresos]="egresosFiltrados"
+                    (verDetalle)="verDetalle($event)"
+                    (editar)="editarEgreso($event)"
+                    (cancelar)="solicitarCancelacion($event)">
+
+                </app-tabla-egresos>
+
+            </section>
+
+        }
+
+    }
 
 </section>
+
+<app-modal [visible]="ui.modalVisible"
+    size="md"
+    [title]="ui.modo === 'crear' ? 'Registrar egreso' 
+        : ui.modo === 'editar' ? 'Actualizar egreso'
+        : ui.modo === 'detalle' ? 'Detalle del egreso'
+        : ui.modo === 'cancelar' ? 'Cancelar egreso'
+        : ''"
+    (cerrar)="onModalCerrado()">
+
+    @switch (ui.modo) {
+
+        @case ('crear') {
+
+            <app-egreso-crear 
+                (egresoCreado)="operacionExitosa('Egreso registrado correctamente')"
+                (cancelar)="cerrarModal()">
+
+            </app-egreso-crear>
+
+        }
+
+        @case ('editar') {
+
+            <app-egreso-edit [egresoId]="ui.egresoSeleccionadoId"
+                (egresoActualizado)="operacionExitosa('Egreso actualizado correctamente')"
+                (cancelar)="cerrarModal()">
+
+            </app-egreso-edit>
+
+        }
+
+        @case ('detalle') {
+
+            <app-detalle-egreso [egresoId]="ui.egresoSeleccionadoId"
+                (cancelar)="cerrarModal()">
+
+            </app-detalle-egreso>
+
+        }
+
+        @case ('cancelar') {
+
+            <app-cancelar-egreso [egresoId]="ui.egresoSeleccionadoId"
+                (egresoCancelado)="operacionExitosa('Egreso cancelado correctamente')"
+                (cancelar)="cerrarModal()">
+            </app-cancelar-egreso>
+
+        }
+
+    }
+
+</app-modal>

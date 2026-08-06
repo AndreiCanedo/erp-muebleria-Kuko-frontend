@@ -1,0 +1,188 @@
+<div class="tabla-ordenes__container">
+
+    <div class="tabla-ordenes__scroll">
+
+        <table class="tabla-ordenes">
+
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Entrega</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Proceso</th>
+                    <th>Pago</th>
+                    <th>Entrega</th>
+                    <th class="tabla-ordenes__acciones-header">
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (orden of ordenes; track orden.id) {
+
+                    <tr>
+
+                        <td>
+                            <span class="tabla-ordenes__folio">
+                                #{{ orden.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="tabla-ordenes__cliente">
+                                {{ orden.cliente }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="tabla-ordenes__fecha">
+                                @if (orden.fecha) {
+                                    {{ orden.fecha | date:'dd/MM/yyyy' }}
+                                } @else {
+                                    Sin fecha
+                                }
+                            </span>
+                        </td>
+
+                        <td>
+                            @if (orden.fechaEntrega) {
+
+                                <span class="tabla-ordenes__fecha">
+                                    {{orden.fechaEntrega | date:'dd/MM/yyyy'}}
+                                </span>
+
+                            } @else {
+
+                                <span class="tabla-ordenes__sin-dato">
+                                    Sin programar
+                                </span>
+
+                            }
+                        </td>
+
+                        <td>
+                            <strong class="tabla-ordenes__total">
+                                {{ orden.total | money }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [ngClass]="'badge--orden-' + orden.estadoOrden.toLowerCase()">
+
+                                {{ orden.estadoOrden }}
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [ngClass]=" 'badge--proceso-' + orden.proceso.toLowerCase()">
+
+                                {{ orden.proceso }}
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [ngClass]=" 'badge--pago-' + orden.estadoPago.toLowerCase()">
+
+                                {{ orden.estadoPago }}
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge"
+                                [ngClass]=" 'badge--entrega-' + orden.estadoEntrega.toLowerCase()">
+
+                                {{ orden.estadoEntrega }}
+
+                            </span>
+                        </td>
+
+                        <td class="tabla-ordenes__acciones">
+
+                            <button type="button"
+                                class="acciones__boton"
+                                aria-label="Mostrar acciones"
+                                [appContextMenuTrigger]="'orden-' + orden.id">
+
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+
+                            </button>
+
+                            <div class="acciones__menu" 
+                                [appContextMenu]="'orden-' + orden.id">
+
+                                <button type="button"
+                                    class="acciones__opcion"
+                                    role="menuitem"
+                                    (click)="verOrden(orden)">
+
+                                    <i class="fa-solid fa-eye"></i>
+                                    Ver detalle
+
+                                </button>
+
+                                @if (orden.estadoOrden === estadoOrdenCompra.COTIZACION) {
+
+                                    <button type="button"
+                                        class="acciones__opcion"
+                                        role="menuitem"
+                                        (click)="editarOrden(orden)">
+
+                                        <i class="fa-solid fa-pen"></i>
+                                        Editar
+
+                                    </button>
+
+                                    <button type="button"
+                                        class="acciones__opcion acciones__opcion--confirmar"
+                                        role="menuitem"
+                                        (click)="confirmarOrden(orden)">
+
+                                        <i class="fa-solid fa-check"></i>
+                                        Confirmar
+
+                                    </button>
+
+                                }
+
+                                @if ( orden.estadoOrden !== estadoOrdenCompra.CANCELADA 
+                                    && orden.estadoOrden !== estadoOrdenCompra.FINALIZADA 
+                                    && orden.estadoOrden !== estadoOrdenCompra.COTIZACION) {
+
+                                    <button type="button"
+                                        class="acciones__opcion acciones__opcion--cancelar"
+                                        role="menuitem"
+                                        (click)="cancelarOrden(orden)">
+
+                                        <i class="fa-solid fa-ban"></i>
+                                        Cancelar
+
+                                    </button>
+
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

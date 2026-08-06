@@ -1,0 +1,55 @@
+:root {
+  /* Colores principales */
+    --color-primary: #0077cc;
+    --color-primary-dark: #0069a6;
+    --color-primary-light: #00a2ff;
+    --color-primary-soft: #cce9ed;
+
+  /* Fondos */
+    --color-background: #e9f3f6;
+    --color-surface: #ffffff;
+    --color-surface-muted: #efe8e8;
+    --color-surface-selected: #bdd1ef;
+
+  /* Texto */
+    --color-text: #171717;
+    --color-text-muted: #6a6868;
+    --color-text-light: #e2dfdf;
+    --color-title: #111111;
+
+  /* Estados */
+    --color-success: #1ea672;
+    --color-danger: #ff5353;
+    --color-danger-background: #f3afaf;
+    --color-danger-background-soft: #f5d4d4;
+    --color-warning: #f6d861;
+
+  /* Tablas */
+    --color-table-header: #0069a6;
+    --color-table-row: #f4fafd;
+    --color-table-row-alt: #e7f3fa;
+    --color-table-hover: #cfe8f6;
+    --color-table-link: #0077cc;
+
+  /* Bordes */
+    --color-border: #d5e9f1;
+
+  /* Sombras */
+    --shadow-small: 0 0.4rem 1.2rem rgb(0 162 255 / 18%);
+    --shadow-medium: 0 0.6rem 1.8rem rgb(0 162 255 / 25%);
+    --shadow-large: 0 1rem 2.5rem rgb(0 162 255 / 28%);
+
+  /* Radios */
+    --radius-small: 0.8rem;
+    --radius-medium: 1.5rem;
+    --radius-large: 2rem;
+    --radius-pill: 999rem;
+
+  /* Layout */
+    --sidebar-width: 29rem;
+    --header-height: 6rem;
+
+  /* Transiciones */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}

@@ -1,0 +1,37 @@
+
+
+<table class="table__contenido">
+  <thead>
+    <tr>
+      @for (columna of columnas; track tracketByColumn($index, columna)) {
+        <th>{{columna}}</th>
+      }
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (item of paginatedData; track tracketByIndex($index)) {
+      <tr>
+        @for (columna of columnas; track tracketByColumn($index, columna)) {
+          <td>{{ item[columna] }}</td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="table__paginacion">
+  
+  <button class="table__anterior" (click)="prevPage()" [disabled]="currentPage == 1">
+    Anterior
+  </button>
+  
+  <span class="table__page">
+    Página {{currentPage}} de {{totalPages}}
+  </span>
+  
+  <button class="tabla__siguiente" (click)="nextPage()" [disabled]="currentPage === totalPages">
+    Siguiente
+  </button>
+
+</div>

@@ -11,12 +11,13 @@ export type ChartOptions ={
 }
 
 @Component({
-  selector: 'app-grafica',
-  templateUrl: './grafica.component.html',
-  styles: ``
+    selector: 'app-grafica',
+    templateUrl: './grafica.component.html',
+    styles: ``,
+    standalone: false
 })
-export class GraficaComponent implements OnInit, OnChanges {
-  @Input() facturasEgreso: { [key:string]:number } = {}
+export class GraficaComponent {
+  /*@Input() facturasEgreso: { [key:string]:number } = {}
   @Input() facturasIngreso: { [key:string]:number } = {}
 
   public facturasEgresoN: { [key:string]:number } = {}
@@ -80,5 +81,5 @@ export class GraficaComponent implements OnInit, OnChanges {
     };
 
     this.cdr.detectChanges();
-  }
+  }*/
 }

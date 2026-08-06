@@ -1,1 +1,10 @@
-<app-form-cliente [clienteForm]="clienteForm" (submitForm)="actualizarCliente()" (cancelar)="cerrarCaja()" [actualizar]="actualizar" [mostrarRFC] = "mostrarRFC"></app-form-cliente>
+
+<app-form-cliente 
+    [clienteForm]="clienteForm" 
+    [mostrarRFC] = "ui.mostrarRFC"
+    [actualizar]="actualizar" 
+    
+    (submitForm)="actualizarCliente()" 
+    (cancelar)="cerrarCaja()" 
+    (toggleRFCEvent)="toggleRFC($event)"
+    ></app-form-cliente>

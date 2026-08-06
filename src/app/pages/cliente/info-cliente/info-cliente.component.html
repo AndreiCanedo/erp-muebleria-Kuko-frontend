@@ -1,0 +1,363 @@
+
+<!--------------------------------->
+<!-------INFORMACION CLIENTE------->
+<!--------------------------------->
+
+<section class="expediente">
+
+    <div class="expediente__contenido">
+
+        @if(ui.cargando) {
+            <app-state state="loading"
+                message="Cargando expediente del cliente">
+                
+            </app-state>
+        } @else if(cliente){
+
+            <header class="expediente__header">
+
+                <div class="expediente__identidad">
+
+                    <span class="expediente__icono">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+
+                    <div>
+                        <span class="expediente__folio">
+                            Cliente #{{ cliente.id }}
+                        </span>
+
+                        <h3 class="expediente__nombre">
+                            {{ cliente.nombre }}
+                        </h3>
+                    </div>
+
+                </div>
+
+                <span class="expediente__dato"
+                    [class.expediente__estado--pendiente]="tieneSaldoPendiente"
+                    [class.expediente__estado--sin-pendiente]="!tieneSaldoPendiente">
+                    
+                    {{tieneSaldoPendiente ? 'Con saldo pendiente' : 'Sin saldo pendiente'}}
+                </span>
+
+            </header>
+
+<!------------------------------------------------------------>
+<!------------------- DATOS DEL CLIENTE ---------------------->
+<!------------------------------------------------------------>
+
+            <section class="expediente__seccion">
+
+                <h3 class="expediente__seccion-tittle">
+                    Informacion del cliente
+                </h3>
+
+                <div class="expediente__datos">
+
+                    <article class="expediente__campo">
+
+                        <span class="expediente__campo-label">
+                            Nombre
+                        </span>
+
+                        <strong class="expediente__campo-value">
+                            {{cliente.nombre || 'Sin informacion'}}
+                        </strong>
+
+                    </article>
+
+                    <article class="expediente__campo">
+
+                        <span class="expediente__campo-label">
+                            Telefono
+                        </span>
+
+                        <strong class="expediente__campo-value">
+                            {{cliente.telefono || 'Sin informacion'}}
+                        </strong>
+
+                    </article>
+
+                    <article class="expediente__campo">
+
+                        <span class="expediente__campo-label">
+                            Correo electronico
+                        </span>
+
+                        <strong class="expediente__campo-value">
+                            {{cliente.correo || 'Sin informacion'}}
+                        </strong>
+
+                    </article>
+
+                    <article class="expediente__campo">
+
+                        <span class="expediente__campo-label">
+                            RFC
+                        </span>
+
+                        <strong class="expediente__campo-value">
+                            {{cliente.rfc || 'Sin informacion'}}
+                        </strong>
+
+                    </article>
+
+                    <article class="expediente__campo expediente__campo--completo">
+
+                        <span class="expediente__campo-label">
+                            Direccion
+                        </span>
+
+                        <strong class="expediente__campo-value">
+                            {{cliente.direccion || 'Sin informacion'}}
+                        </strong>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+<!------------------------------------------------------------>
+<!------------------- RESUMEN DE CLIENTE --------------------->
+<!------------------------------------------------------------>            
+
+            <section class="expediente__resumen">
+
+                <article class="resumen__item">
+
+                    <span class="resumen__icono">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </span>
+
+                    <div>
+
+                        <span class="resumen__label">
+                            Total de ordenes
+                        </span>
+
+                        <strong class="resumen__value">
+                            {{totalOrdenes}}
+                        </strong>
+
+                    </div>
+
+                </article>
+
+                <article class="resumen__item">
+
+                    <span class="resumen__icono">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </span>
+
+                    <div>
+
+                        <span class="resumen__label">
+                            Ultima compra
+                        </span>
+
+                        <strong class="resumen__value">
+                            @if(ultimaCompra){
+                                {{ ultimaCompra | date:'dd/MM/yyyy' }}
+                            } @else {
+                                Sin compras registradas
+                            }
+                        </strong>
+
+                    </div>
+                </article>
+
+                <article class="resumen__item">
+
+                    <span class="resumen__icono">
+                        <i class="fa-solid fa-wallet"></i>
+                    </span>
+
+                    <div>
+
+                        <span class="resumen__label">
+                            Estado financiero
+                        </span>
+
+                        <strong class="resumen__value"
+                            [class.resumen__value--danger]="tieneSaldoPendiente"
+                            [class.resumen__value--success]="!tieneSaldoPendiente">
+                            
+                            {{tieneSaldoPendiente ? 'Con saldo pendiente' : 'Al corriente'}}
+                        </strong>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+<!------------------------------------------------------------>
+<!------------------- ORDENES DEL CLIENTE -------------------->
+<!------------------------------------------------------------>
+
+            <section class="expediente__ordenes">
+
+                <header class="expediente__ordenes-header">
+
+                    <div>
+
+                        <h3 class="ordenes__title">
+                            Ordenes de compra
+                        </h3>
+
+                        <p class="ordenes__subtitle">
+                            Historial de presupuesto y ordenes asociadas al cliente
+                        </p>
+
+                    </div>
+
+                    <span class="ordenes__cantidad">
+                        {{totalOrdenes}}
+                    </span>
+
+                </header>
+
+                @if(ordenes.length === 0){
+                    <div class="ordenes__empty">
+                        <i class="fa-solid fa-file-invoice"></i>
+
+                        <p>Este cliente todavia no tiene ordenes registrados</p>
+                    </div>
+                }@else {
+                    <div class="ordenes__tabla-container">
+
+                        <div class="ordenes__scroll">
+
+                            <table class="ordenes__tabla">
+    
+                                <thead>
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Fecha</th>
+                                        <th>Entrega</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Pago</th>
+                                        <th>Entrega</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+    
+                                    @for(orden of ordenes; track orden.id){
+                                        <tr>
+                                            <td>
+                                                <button type="button" 
+                                                    class="ordenes__folio"
+                                                    (click)="verDetalleOrden(orden.id)">
+
+                                                    #{{ orden.id }}
+                                                </button>
+                                            </td>
+    
+                                            <td>
+                                                @if(orden.fecha) {
+                                                    <span class="ordenes__fecha">
+                                                        {{ orden.fecha | date:'dd/MM/yyyy' }}
+                                                    </span>
+                                                } @else {
+                                                    <span class="ordenes__sin-dato">
+                                                        Sin fecha
+                                                    </span>
+                                                }
+                                            </td>
+    
+                                            <td>
+                                                @if(orden.fechaEntrega){
+                                                    <span class="ordenes__fecha">
+                                                        {{ orden.fechaEntrega | date:'dd/MM/yyyy' }}
+                                                    </span>
+                                                }@else {
+                                                    <span class="ordenes__sin-dato">
+                                                        Sin programar
+                                                    </span>
+                                                }
+                                            </td>
+    
+                                            <td>
+                                                <strong class="ordenes__total">
+                                                    {{ orden.total | money }}
+                                                </strong>
+                                            </td>
+    
+                                            <td>
+                                                <span class="badge"
+                                                    [ngClass]="'badge--orden-'" + orden.estadoOrden.toLowerCase()>
+    
+                                                    {{ orden.estadoOrden }}
+                                                </span>
+                                            </td>
+    
+                                            <td>
+                                                <span class="badge"
+                                                    [ngClass]="'badge--pago-'" + orden.estadoPago.toLowerCase()>
+    
+                                                    {{ orden.estadoPago }}
+                                                </span>
+                                            </td>
+    
+                                            <td>
+                                                <span class="badge"
+                                                    [ngClass]="'badge--entrega-'" + orden.estadoEntrega.toLowerCase()>
+    
+                                                    {{ orden.estadoEntrega }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+    
+                                </tbody>
+    
+                            </table>
+
+                        </div>
+
+                    </div>
+                }
+
+            </section>
+
+        } @else {
+
+            <app-state state="empty"
+                icon="fa-solid fa-user"
+                message="No hay informacion disponible del cliente"></app-state>
+
+        }
+
+    </div>
+
+    <footer class="expediente__acciones">
+        <button type="button"
+            class="expediente__regresar"
+            (click)="cerrarCaja()">
+            
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+        </button>
+    </footer>
+    
+</section>
+
+<app-modal [visible]="mostrarDetalleOrden"
+    title="Detalle de la orden"
+    size="xl"
+    (cerrar)="cerrarDetalleOrden()">
+    
+    @if(mostrarDetalleOrden && ordenSeleccionadaId !== null){
+
+        <app-detalle-orden [ordenId]="ordenSeleccionadaId"
+            (cancelar)="cerrarDetalleOrden()">
+            
+        </app-detalle-orden>
+
+    }
+
+</app-modal>

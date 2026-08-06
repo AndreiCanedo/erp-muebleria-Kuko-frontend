@@ -1,0 +1,83 @@
+
+<div class="selector-mueble">
+
+    <app-search-box placeholder="Buscar Mueble ..."
+        [value]="textoBusqueda"
+        (search)="buscar($event)">
+        
+    </app-search-box>
+
+    @if (ui.cargando){
+        <div class="selector-mueble__estado">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Cargando muebles ....</p>
+        </div>
+    } @else if(ui.error){
+        <div class="selector-mueble__estado selector-mueble__estado--error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+            <p>{{ ui.error }}</p>
+
+            <button type="button"  
+                class="selector-mueble__reintentar" 
+                (click)="buscarMuebles()">
+                
+                Reintentar
+            </button>
+
+        </div>
+    } @else if(muebles.length === 0){
+        <div class="selector-mueble__estado selector-mueble__estado--vacio">
+            
+            <i class="fa-solid fa-couch"></i>
+            <p>
+                No hay muebles registrados
+            </p>
+        </div>
+    } @else {
+        <div class="selector-mueble__lista">
+            @for(mueble of muebles; track mueble.id){
+            
+                <button type="button" 
+                    class="selector-mueble__item"
+                    (click)="seleccionarMueble(mueble)">
+
+                    <span class="selector-mueble__icono">
+                        <i class="fa-solid fa-couch"></i>
+                    </span>
+
+                    <span class="selector-mueble__contenido">
+                        <span class="selector-mueble__descripcion">
+                            {{ mueble.descripcion }}
+                        </span>
+
+                        <span class="selector-mueble__precio">
+                            Precio de referencia: {{ mueble.precioReferencia | money}}
+                        </span>
+
+                    </span>
+
+                    <span class="selector-mueble__arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+
+                </button>
+
+            }
+        </div>
+    }
+
+    <div class="selector-mueble__acciones">
+
+        <button type="button" 
+            class="selector-mueble__crear"
+            (click)="mostrarCrearMueble()">
+
+            <i class="fa-solid fa-plus"></i>
+                Nuevo Mueble
+        </button>
+
+    </div>
+
+</div>
+

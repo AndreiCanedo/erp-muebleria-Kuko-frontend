@@ -1,11 +1,10 @@
-interface _Muebleria{
-    _id:string;
-    neto:number;
-}
+
 
 export class Muebleria{
     constructor(
-        public uid: string,
-        public neto: number
+        public id: number,
+        public neto: number,
+        public totalIngreso: number,
+        public totalEgreso: number,
     ){}
 }

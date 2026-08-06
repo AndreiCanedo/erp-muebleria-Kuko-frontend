@@ -1,0 +1,410 @@
+:host {
+    display: block;
+}
+
+.detalle-egreso {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.detalle-egreso__contenido{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    max-height: 54rem;
+    margin: 0;
+    padding: 0.3rem;
+
+    overflow-y: auto;
+    list-style: none;
+}
+
+.detalle-egreso__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 2rem;
+
+    margin-bottom: 1.8rem;
+}
+
+.detalle-egreso__identidad {
+    display: flex;
+    align-items: center;
+
+    gap: 1.4rem;
+}
+
+.detalle-egreso__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 5.4rem;
+    height: 5.4rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-primary);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 8%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.detalle-egreso__icono i {
+    font-size: 2.4rem;
+}
+
+.detalle-egreso__folio {
+    display: block;
+
+    margin-bottom: 0.3rem;
+
+    font-size: 1.3rem;
+    font-weight: 600;
+
+    color: var(--color-primary);
+}
+
+.detalle-egreso__titulo {
+    margin: 0;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-egreso__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 3rem;
+    padding: 0.5rem 1.2rem;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    border-radius: var(--radius-pill);
+}
+
+.detalle-egreso__badge--aplicado {
+    color: var(--color-success);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-success) 14%,
+            transparent
+        );
+}
+
+.detalle-egreso__badge--cancelado {
+    color: var(--color-danger);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 14%,
+            transparent
+        );
+}
+
+.detalle-egreso__seccion {
+    margin-bottom: 1.8rem;
+    padding: 1.8rem;
+
+    background-color: var(--color-surface);
+
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
+}
+
+.detalle-egreso__seccion-titulo {
+    margin: 0 0 1.5rem;
+
+    font-size: 1.7rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-egreso__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.2rem;
+}
+
+.detalle-egreso__campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+
+    min-width: 0;
+    padding: 1.3rem;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 5%,
+            transparent
+        );
+
+    border-radius: var(--radius-medium);
+}
+
+.detalle-egreso__campo--completo {
+    grid-column: 1 / -1;
+}
+
+.detalle-egreso__campo span {
+    font-size: 1.2rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-egreso__campo strong {
+    overflow-wrap: anywhere;
+
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.detalle-egreso__campo p {
+    margin: 0;
+
+    font-size: 1.35rem;
+    line-height: 1.6;
+
+    color: var(--color-text);
+}
+
+.detalle-egreso__justificacion {
+    margin: 0;
+    padding: 1.4rem;
+
+    font-size: 1.4rem;
+    line-height: 1.7;
+
+    color: var(--color-text);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-primary) 4%,
+            transparent
+        );
+
+    border-radius: var(--radius-medium);
+}
+
+.detalle-egreso__importes {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.4rem;
+
+    margin-bottom: 1.8rem;
+}
+
+.detalle-egreso__importe-card {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.6rem;
+
+    padding: 1.6rem;
+
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
+}
+
+.detalle-egreso__importe-card span {
+    font-size: 1.3rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-egreso__importe-card strong {
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    color: var(--color-primary);
+}
+
+.detalle-egreso__cancelacion {
+    padding: 1.8rem;
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 5%,
+            var(--color-surface)
+        );
+
+    border: 0.1rem solid
+        color-mix(
+            in srgb,
+            var(--color-danger) 22%,
+            transparent
+        );
+
+    border-radius: var(--radius-large);
+}
+
+.detalle-egreso__cancelacion-header {
+    display: flex;
+    align-items: center;
+
+    gap: 1.2rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.detalle-egreso__cancelacion-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 4.8rem;
+    height: 4.8rem;
+
+    flex-shrink: 0;
+
+    color: var(--color-danger);
+
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 13%,
+            transparent
+        );
+
+    border-radius: 50%;
+}
+
+.detalle-egreso__cancelacion-icono i {
+    font-size: 2rem;
+}
+
+.detalle-egreso__cancelacion-header h3 {
+    margin: 0;
+
+    font-size: 1.6rem;
+    font-weight: 700;
+
+    color: var(--color-danger);
+}
+
+.detalle-egreso__cancelacion-header p {
+    margin-top: 0.3rem;
+
+    font-size: 1.25rem;
+
+    color: var(--color-text-muted);
+}
+
+.detalle-egreso__cancelacion .detalle-egreso__campo {
+    background-color:
+        color-mix(
+            in srgb,
+            var(--color-danger) 7%,
+            transparent
+        );
+}
+
+.detalle-egreso__acciones{
+    display: flex;
+    justify-content: flex-end;
+
+    padding-top: 1.5rem;
+
+    background-color: var(--color-surface);
+    border-top: 0.1rem solid var(--color-border);
+}
+
+.detalle-egreso__regresar{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+
+    min-height: 4.4rem;
+    padding: 0.9rem 1.8rem;
+
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--color-text);
+    background-color: var(--color-surface);
+
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-small);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-normal),
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
+}
+
+.detalle-egreso__regresar:hover{
+    color: var(--color-primary);
+
+    transform: translateY(-0.2rem);
+    box-shadow: var(--shadow-medium);
+}
+
+@media (max-width: 800px) {
+
+    .detalle-egreso__grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .detalle-egreso__importes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+
+    .detalle-egreso__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .detalle-egreso__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-egreso__campo--completo {
+        grid-column: auto;
+    }
+}

@@ -1,0 +1,91 @@
+<form class="formulario-pago"
+    [formGroup]="formulario"
+    (ngSubmit)="enviar()">
+
+    <div class="formulario-pago__campo">
+
+        <label for="formaPago"> Forma de pago </label>
+
+        <select id="formaPago"
+            formControlName="formaPago"
+            [disabled]="guardando">
+
+            <option value="">
+                Selecciona una forma de pago
+            </option>
+
+            <option value="EFECTIVO">Efectivo</option>
+            <option value="TRANSFERENCIA">Transferencia</option>
+            <option value="TARJETA">Tarjeta</option>
+            <option value="DEPOSITO">Deposito</option>
+
+        </select>
+
+        @if (formulario.controls['formaPago'].touched && formulario.controls['formaPago'].invalid) {
+
+            <small class="formulario-pago__error">
+                Selecciona una forma de pago
+            </small>
+
+        }
+
+    </div>
+
+    <div class="formulario-pago__campo">
+
+        <label for="referencia"> Referencia </label>
+
+        <input id="referencia"
+            type="text"
+            formControlName="referencia"
+            [disabled]="guardando"
+            placeholder="Numero, folio o referencia">
+
+    </div>
+
+    <div class="formulario-pago__campo">
+
+        <label for="observaciones"> Observaciones </label>
+
+        <textarea id="observaciones"
+            rows="4"
+            formControlName="observaciones"
+            [disabled]="guardando"
+            placeholder="Información adicional del pago">
+
+        </textarea>
+
+    </div>
+
+    <footer class="formulario-pago__acciones">
+
+        <button type="button"
+            class="formulario-pago__boton formulario-pago__boton--secundario"
+            [disabled]="guardando"
+            (click)="cerrar()">
+
+            Cancelar
+
+        </button>
+
+        <button type="submit"
+            class="formulario-pago__boton formulario-pago__boton--principal"
+            [disabled]="guardando || formulario.invalid">
+
+            @if (guardando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Guardando...
+
+            } @else {
+
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar cambios
+
+            }
+
+        </button>
+
+    </footer>
+
+</form>

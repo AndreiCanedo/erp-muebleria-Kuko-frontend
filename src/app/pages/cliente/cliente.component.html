@@ -1,56 +1,253 @@
-<section class="cliente__table">
 
-    <ul class="clientes__cajas">
+<section class="clientes">
+    <header class="clientes__header">
+
+      <div class="clientes__encabezado">
         
-        <li class="caja__cliente">
-            <div class="caja__header">
-                <i class="caja__icon--trespuntos fa-solid fa-ellipsis-vertical" (click)="abrirCajaTresPuntos('nuevoCliente')"></i>
-            </div>
-            <div class="caja__icon--carpeta" (click)="abrirCajaCrear()">
-                <i class="icon--carpeta__containe fa-solid fa-square-plus"></i>
-            </div>
-            <p class="caja__nombre">Agregar Nuevo Cliente</p>
-        </li>
+        <span class="clientes__header-icon">
+          <i class="fa-solid fa-users"></i>
+        </span>
         
-        <li class="caja__cliente" *ngFor="let cliente of clientes; let i = index">
-            <div class="caja__header">
-                <i class="caja__icon--trespuntos fa-solid fa-ellipsis-vertical" (click)="abrirCajaTresPuntos(i)"></i>
-                <ul class="trespuntos__caja" [ngClass]="[getTresPuntosClass(i), animacionTresPuntos[i]]" *ngIf="cajaTresPuntos[i]">
-                    <li class="trespuntos__elementos">
-                        <h5 class="elementos__title" (click)="actualizarClienteForm(i,cliente.id)">Actualizar</h5>
-                    </li>
-                    <li class="trespuntos__elementos" (click)="eliminarCliente(i,cliente.id)">
-                        <h5 class="elementos__title">Eliminar</h5>
-                    </li>
-                    <li class="trespuntos__elementos" (click)="cerrarCaja(i)">
-                        <h5 class="elementos__title">Cancelar</h5>
-                    </li>
-                </ul>
-            </div>
-            <div class="caja__icon--carpeta">
-                <i class="icon--carpeta__containe fa-solid fa-folder"></i>
-            </div>
-            <p class="caja__nombre">{{ cliente.nombre }}</p>
-        </li>
-    </ul>
-</section>
-
-<!------------------------------------------------------------------------>
-<!----------------- Crear y Actualizar Cliente --------------------------->
-<!------------------------------------------------------------------------>
+        <div>
+          <h1 class="clientes__title">Clientes</h1>
+  
+          <p class="clientes__subtitle">
+            Administra los clientes y consulta sus expedientes
+          </p>
+  
+        </div>
+      </div>
 
 
-<section class="cliente__crear" [ngClass]="animacionCajaIndividual" *ngIf="cajaCrearCliente">
-    <app-crear *ngIf="!cajaActualizarCliente" (cancelar)="cerrarCajaForm()"></app-crear>
-    <app-actualizar-cliente *ngIf="cajaActualizarCliente" (cancelar)="cerrarCajaForm()" [idActualizar]="idActualizar"></app-actualizar-cliente>
+      <button type="button" 
+        class="clientes__new-button" 
+        (click)="mostrarCrear()">
+        
+        <i class="fa-solid fa-plus"></i>
+        
+        Nuevo Cliente
+      </button>
+    </header>
     
+    <div class="cliente__search">
+
+      <app-search-box placeholder="Busacar por nombre, telefono, correo o RFC ..."
+        [value]="textoBusqueda"
+        (search)="buscar($event)">
+        
+      </app-search-box>
+      
+    </div>
+
 </section>
 
+@if(ui.cargando){
+
+  <app-state state="loading" 
+    message="Cargando clientes ...">
+  
+  </app-state>
+
+} @else if(ui.error){
+
+  <app-state state="error"
+    [message]="ui.error"
+    buttonText="Reintentar"
+    (retry)="cargarClientes(textoBusqueda)">
+  
+  </app-state>
+
+} @else if(clientesView.length === 0){
+
+  <app-state state="empty"
+    icon="fa-solid fa-users"
+    [message] = "textoBusqueda
+      ? 'No se encontraron clientes para esta búsqueda'
+      : 'No hay clientes registrados'">
+    
+  </app-state>
+
+} @else {
+
+  <section class="clientes__table">
+  
+    <ul class="clientes__cajas">
+  
+      <!------------------------------------------------------------------------>
+      <!------------------------- CLIENTE NUEVO -------------------------------->
+      <!------------------------------------------------------------------------>
+      
+      @if(!textoBusqueda){
+        
+        <li class="caja__cliente caja__cliente--nuevo">
+    
+          <div class="caja__header">
+            
+            <button type="button" 
+              class="caja__menu-button" 
+              aria-label="Abrir opciones"
+              [appContextMenuTrigger]="'cliente-nuevo'">
+              
+              <i class="caja__menu-icon fa-solid fa-ellipsis-vertical"></i>
+
+            </button>
+            
+            <ul class="trespuntos__caja" 
+              [appContextMenu]="'cliente-nuevo'">
+  
+              <li class="trespuntos__elementos">
+
+                <button type="button" 
+                  class="elementos__button" 
+                  role="menuitem"
+                  (click)="mostrarCrear()">
+
+                  Crear
+                
+                </button>
+              </li>
+            
+              <li class="trespuntos__elementos">
+
+                <button type="button" 
+                  class="elementos__button"
+                  role="menuitem" 
+                  (click)="cerrarMenuContextual()">
+
+                  Cancelar
+                
+                </button>
+              </li>
+  
+            </ul>
+
+          </div>
+    
+          <div class="caja__icon--carpeta" (click)="mostrarCrear()">
+            <i class="icon--carpeta__containe fa-solid fa-square-plus"></i>
+          </div>
+          
+          <p class="caja__nombre">Agregar Nuevo Cliente</p>
+        
+        </li>
+      }
+
+  
+      <!------------------------------------------------------------------------>
+      <!------------------------------CLIENTES---------------------------------->
+      <!------------------------------------------------------------------------>
+  
+      @for (cliente of clientesView; track cliente.id; let i = $index) {
+  
+        <li class="caja__cliente">
+  
+          <div class="caja__header">
+  
+            <button type="button" 
+              class="caja__menu-button" 
+              aria-label="Abrir opciones"
+              [appContextMenuTrigger]="'cliente-' + cliente.id">
+              
+              <i class="caja__menu-icon fa-solid fa-ellipsis-vertical"></i>
+            
+            </button>
+            
+            <ul class="trespuntos__caja" 
+              [appContextMenu]="'cliente-' + cliente.id">
+
+              <li class="trespuntos__elementos">
+
+                <button type="button" 
+                  class="elementos__button"
+                  role="menuitem"
+                  (click)="mostrarEditar(cliente.id, i)">
+
+                  Actualizar
+                </button>
+              </li>
+
+              <li class="trespuntos__elementos">
+
+                <button type="button" 
+                  class="elementos__button elementos__button--danger"
+                  role="menuitem" 
+                  (click)="eliminarCliente(cliente.id)">
+                  
+                  Eliminar
+                </button>
+              </li>
+
+              <li class="trespuntos__elementos">
+
+                <button type="button" 
+                  class="elementos__button" 
+                  role="menuitem"
+                  (click)="cerrarMenuContextual()">
+
+                  Cancelar
+                </button>
+              </li>
+            </ul>
+
+          </div>
+  
+          <div class="caja__icon--carpeta" 
+            (click)="mostrarInfo(cliente.id, i)">
+
+            <i class="icon--carpeta__containe fa-solid fa-folder" ></i>
+          </div>
+  
+          <p class="caja__nombre">{{ cliente.nombre }}</p>
+        </li>
+      }
+    </ul>
+  </section>
+
+}
+
+
 
 <!------------------------------------------------------------------------>
-<!------------------------ Ver Cliente informacion ----------------------->
+<!----------------- Crear, Actualizar e info Cliente --------------------->
 <!------------------------------------------------------------------------>
 
-<!-- <section class="cliente__info" [ngClass]="animacionCajaIndividual">
 
-</section> -->
+<app-modal [visible]="ui.modalVisible"
+    [size]="ui.modo === 'info' ? 'xl' : 'md'"
+    [title]="ui.modo === 'crear' ? 'Crear Cliente' : 
+            ui.modo === 'editar' ? 'Actualizar Cliente' :
+            ui.modo === 'info' ? 'Expediente Cliente' : '' "
+    (cerrar)="onModalCerrado()">
+
+
+@switch (ui.modo) {
+  
+  @case ('crear') {
+    
+    <app-crear (cancelar)="cerrarModal()"></app-crear>
+    
+  }
+  
+  @case('editar'){
+    
+    <app-actualizar-cliente (cancelar)="cerrarModal()" 
+      [idActualizar]="ui.clienteSeleccionado.id">
+
+    </app-actualizar-cliente>
+    
+  }
+  
+  @case('info'){
+    
+    <app-info-cliente (cancelar)="cerrarModal()" 
+      [idInfo]="ui.clienteSeleccionado.id" 
+      [keyInfo]="ui.clienteSeleccionado.index">
+
+    </app-info-cliente>
+  }
+  
+  
+}
+</app-modal>
+
+

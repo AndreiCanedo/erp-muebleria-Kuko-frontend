@@ -1,0 +1,105 @@
+
+<div class="detalle-table__container">
+
+    <div class="detalle-table__scroll">
+
+        <table class="detalle-table">
+
+            <thead>
+                <tr>
+                    <th>Cantidad</th>
+                    <th>Mueble</th>
+                    <th>Precio unitario</th>
+                    <th>Total</th>
+                    <th class="detalle-table__actions-header"> Accion </th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for ( detalle of detalles; track $index) {
+
+                    <tr>
+
+                        <td>
+
+                            <input type="number"
+                                min="1"
+                                step="1"
+                                class="detalle-table__input detalle-table__input--cantidad"
+                                [(ngModel)]="detalle.cantidad"
+                                (ngModelChange)="actualizarFila($index)">
+
+                        </td>
+
+                        <td>
+
+                            <span class="detalle-table__descripcion">
+                                {{ detalle.descripcion }}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <div class="detalle-table__money-input">
+
+                                <span>$</span>
+
+                                <input type="number"
+                                    min="0.01"
+                                    step="0.01"
+                                    class="detalle-table__input detalle-table__input--precio"
+                                    [(ngModel)]="detalle.precioUnitario"
+                                    (ngModelChange)="actualizarFila($index)">
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            <strong class="detalle-table__total">
+                                {{ detalle.precioTotal | money }}
+                            </strong>
+
+                        </td>
+
+                        <td class="detalle-table__actions">
+
+                            <button type="button"
+                                class="detalle-table__delete"
+                                aria-label="Eliminar mueble"
+                                title="Eliminar mueble"
+                                (click)="eliminarFila($index)">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <footer class="detalle-table__footer">
+
+        <button type="button"
+            class="detalle-table__add"
+            (click)="agregarFila()">
+
+            <i class="fa-solid fa-plus"></i>
+            Agregar mueble
+
+        </button>
+
+    </footer>
+
+</div>

@@ -1,0 +1,259 @@
+<form class="formulario-egreso"
+    [formGroup]="egresoForm"
+    (ngSubmit)="onSubmit()">
+
+    <div class="formulario-egreso__campo">
+
+        <label for="inputNombre"
+            class="formulario-egreso__label">
+
+            Nombre o proveedor
+
+        </label>
+
+        <input id="inputNombre"
+            type="text"
+            class="formulario-egreso__input"
+            formControlName="nombre"
+            [disabled]="cargando"
+            placeholder="Ej. Ferretería Central"
+            autofocus>
+
+    </div>
+
+    <div class="formulario-egreso__campo">
+
+        <label for="inputMotivo"
+            class="formulario-egreso__label">
+
+            Motivo
+
+        </label>
+
+        <input id="inputMotivo"
+            type="text"
+            class="formulario-egreso__input"
+            formControlName="motivo"
+            [disabled]="cargando"
+            placeholder="Ej. Compra de sellador">
+
+        @if (isInvalid('motivo')) {
+
+            <p class="formulario-egreso__error">
+
+                @if (f['motivo'].errors?.['required']) {
+                    El motivo es obligatorio
+                }
+
+                @if (f['motivo'].errors?.['whitespace']) {
+                    El motivo no puede estar vacio
+                }
+
+            </p>
+
+        }
+
+    </div>
+
+    <div class="formulario-egreso__campo">
+
+        <label for="inputJustificacion"
+            class="formulario-egreso__label">
+
+            Justificacion
+
+        </label>
+
+        <textarea id="inputJustificacion"
+            rows="3"
+            class="formulario-egreso__input formulario-egreso__textarea"
+            formControlName="justificacion"
+            [disabled]="cargando"
+            placeholder="Describe por que fue necesario realizar el gasto">
+
+        </textarea>
+
+    </div>
+
+    <div class="formulario-egreso__grid">
+
+        <div class="formulario-egreso__campo">
+
+            <label for="inputFormaPago"
+                class="formulario-egreso__label">
+
+                Forma de pago
+
+            </label>
+
+            <select id="inputFormaPago"
+                class="formulario-egreso__input"
+                formControlName="formaPago"
+                [disabled]="cargando">
+
+                <option [ngValue]="formaPagoEnum.EFECTIVO">
+                    Efectivo
+                </option>
+
+                <option [ngValue]="formaPagoEnum.TARJETA">
+                    Tarjeta
+                </option>
+
+                <option [ngValue]="formaPagoEnum.TRANSFERENCIA">
+                    Transferencia
+                </option>
+
+            </select>
+
+            @if (isInvalid('formaPago')) {
+
+                <p class="formulario-egreso__error">
+                    La forma de pago es obligatoria
+                </p>
+
+            }
+
+        </div>
+
+        <div class="formulario-egreso__campo">
+
+            <label for="inputMonto"
+                class="formulario-egreso__label">
+
+                Monto
+
+            </label>
+
+            <input id="inputMonto"
+                type="number"
+                min="0.01"
+                step="0.01"
+                class="formulario-egreso__input"
+                formControlName="monto"
+                [disabled]="cargando">
+
+            @if (isInvalid('monto')) {
+
+                <p class="formulario-egreso__error">
+
+                    @if (f['monto'].errors?.['required']) {
+                        El monto es obligatorio
+                    }
+
+                    @if (f['monto'].errors?.['min']) {
+                        El monto debe ser mayor a cero
+                    }
+
+                </p>
+
+            }
+
+        </div>
+
+    </div>
+
+    @if (esEfectivo) {
+
+        <div class="formulario-egreso__grid">
+
+            <div class="formulario-egreso__campo">
+
+                <label for="inputEfectivoEntregado"
+                    class="formulario-egreso__label">
+
+                    Efectivo entregado
+
+                </label>
+
+                <input id="inputEfectivoEntregado"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    class="formulario-egreso__input"
+                    formControlName="efectivoEntregado"
+                    [disabled]="cargando">
+
+                @if (isInvalid('efectivoEntregado')) {
+
+                    <p class="formulario-egreso__error">
+
+                        @if (f['efectivoEntregado'].errors?.['required']) {
+                            El efectivo entregado es obligatorio
+                        }
+
+                        @if (f['efectivoEntregado'].errors?.['min']) {
+                            Debe ser mayor a cero
+                        }
+
+                        @if (f['efectivoEntregado'].errors?.['efectivoInsuficiente']) {
+                            El efectivo entregado es menor que el monto
+                        }
+
+                    </p>
+
+                }
+
+            </div>
+
+            <div class="formulario-egreso__campo">
+
+                <label for="inputCambio"
+                    class="formulario-egreso__label">
+
+                    Cambio
+
+                </label>
+
+                <input id="inputCambio"
+                    type="number"
+                    class="formulario-egreso__input formulario-egreso__input--readonly"
+                    formControlName="cambio"
+                    readonly>
+
+                @if (f['cambio'].value !== null && f['cambio'].value < 0) {
+
+                    <p class="formulario-egreso__error">
+                        El efectivo entregado es menor que el monto
+                    </p>
+
+                }
+
+            </div>
+
+        </div>
+
+    }
+
+    <footer class="formulario-egreso__acciones">
+
+        <button type="button"
+            class="formulario-egreso__boton formulario-egreso__boton--secundario"
+            [disabled]="cargando"
+            (click)="cerrar()">
+
+            Cancelar
+
+        </button>
+
+        <button type="submit"
+            class="formulario-egreso__boton formulario-egreso__boton--principal"
+            [disabled]="egresoForm.invalid || cargando">
+
+            @if (cargando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Guardando...
+
+            } @else {
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                {{ actualizar ? 'Actualizar egreso' : 'Registrar egreso' }}
+
+            }
+
+        </button>
+
+    </footer>
+
+</form>

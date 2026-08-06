@@ -1,108 +1,838 @@
-<section class="dashboard__graficas">
-    <aside class="grafica__semanal">
-        <div class="grafica__title">
-            <div class="grafica__acomodo">
-                <h3 class="grafica__text">Egresos e ingresos</h3>
+
+<section class="dashboard-page">
+
+    <!------------------------------------------------------------------------>
+    <!----------------------------- ENCABEZADO ------------------------------->
+    <!------------------------------------------------------------------------>
+
+    <header class="dashboard-page__header">
+
+        <div class="dashboard-page__encabezado">
+
+            <span class="dashboard-page__header-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+
+            <div>
+                <h1 class="dashboard-page__title">
+                    Dashboard
+                </h1>
+
+                <p class="dashboard-page__subtitle">
+                    Consulta el rendimiento financiero y operativo de la empresa
+                </p>
             </div>
-            <div class="grafica__option">
-                <i class="fa-solid fa-ellipsis-vertical grafica__icon"></i>
+
+        </div>
+
+        <button type="button"
+            class="dashboard-page__actualizar"
+            [disabled]="ui.cargando"
+            (click)="cargarDashboard()">
+
+            @if (ui.cargando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Actualizando...
+
+            } @else {
+
+                <i class="fa-solid fa-rotate"></i>
+                Actualizar
+
+            }
+
+        </button>
+
+    </header>
+
+    <!------------------------------------------------------------------------>
+    <!------------------------- SELECTOR DE PERIODO --------------------------->
+    <!------------------------------------------------------------------------>
+
+    <section class="dashboard-periodo">
+
+        <div class="dashboard-periodo__rapidos">
+
+            <button type="button"
+                class="dashboard-periodo__opcion"
+                [class.dashboard-periodo__opcion--activa]=" periodoSeleccionado === 'HOY'"
+                [disabled]="ui.cargando"
+                (click)="seleccionarPeriodo('HOY')">
+
+                Hoy
+
+            </button>
+
+            <button type="button"
+                class="dashboard-periodo__opcion"
+                [class.dashboard-periodo__opcion--activa]="periodoSeleccionado === 'SEMANA'"
+                [disabled]="ui.cargando"
+                (click)="seleccionarPeriodo('SEMANA')">
+
+                Semana
+
+            </button>
+
+            <button type="button"
+                class="dashboard-periodo__opcion"
+                [class.dashboard-periodo__opcion--activa]="periodoSeleccionado === 'MES'"
+                [disabled]="ui.cargando"
+                (click)="seleccionarPeriodo('MES')">
+
+                Mes
+
+            </button>
+
+        </div>
+
+        <div class="dashboard-periodo__personalizado">
+
+            <div class="dashboard-periodo__campo">
+
+                <label for="dashboardFechaInicio">
+                    Desde
+                </label>
+
+                <input id="dashboardFechaInicio"
+                    type="date"
+                    [(ngModel)]="fechaInicio"
+                    [disabled]="ui.cargando"
+                    (ngModelChange)="usarPeriodoPersonalizado()">
+
             </div>
+
+            <span class="dashboard-periodo__separador">
+                <i class="fa-solid fa-arrow-right"></i>
+            </span>
+
+            <div class="dashboard-periodo__campo">
+
+                <label for="dashboardFechaFin">
+                    Hasta
+                </label>
+
+                <input id="dashboardFechaFin"
+                    type="date"
+                    [(ngModel)]="fechaFin"
+                    [disabled]="ui.cargando"
+                    (ngModelChange)="usarPeriodoPersonalizado()">
+
+            </div>
+
+            <button type="button"
+                class="dashboard-periodo__consultar"
+                [disabled]=" ui.cargando || !fechaInicio || !fechaFin"
+                (click)="cargarDashboard()">
+
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                Consultar
+
+            </button>
+
         </div>
-        <div class="grafica__grafica-barras">
-            <app-grafica
-                [facturasEgreso]='trasaccionesPorSemanaEgreso'
-                [facturasIngreso]='trasaccionesPorSemanaIngreso'>
-            </app-grafica>
-        </div>
-    </aside>
-    <aside class="grafica__estado">
-        <div class="estado__capital">
-            <h4 class="capital__text">Estado Capital</h4>
-            <div class="estado__acomodo">
-                <div class="capital__info">
-                    <h3 class="capital__precio">{{neto}}</h3>
-                    <div class="capital__comparacion">
-                        <i class="comparacion__subida fa-solid fa-arrow-trend-up"></i>
-                        <span class="caomparacion__porcentaje">9% </span>
-                        <h5 class="comparacion__tiempo">la ultima semana</h5>
-                    </div>
-                    <div class="capital__datos">
-                        <div class="datos__ingreso">
-                            <i class="fa-solid fa-circle ingreso__punto"></i>
-                            <span class="ingreso__text">Ingreso</span>
-                        </div>
-                        <div class="datos__egreso">
-                            <i class="fa-solid fa-circle egreso__punto"></i>
-                            <span class="egreso__text">Egreso</span>
-                        </div>
-                    </div>
+
+    </section>
+
+    <!------------------------------------------------------------------------>
+    <!------------------------------- ESTADOS -------------------------------->
+    <!------------------------------------------------------------------------>
+
+    @if (ui.cargando && !dashboard) {
+
+        <app-state state="loading"
+            message="Cargando información del dashboard">
+
+        </app-state>
+
+    } @else if (ui.error && !dashboard) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarDashboard()">
+
+        </app-state>
+
+    } @else if (dashboard) {
+
+        <!-------------------------------------------------------------------->
+        <!------------------------------ PERIODO ----------------------------->
+        <!-------------------------------------------------------------------->
+
+        <section class="dashboard-page__periodo-actual">
+
+            <i class="fa-regular fa-calendar"></i>
+
+            <span>
+                Informacion del
+                <strong>
+                    {{ dashboard.periodo.inicio | date:'dd/MM/yyyy' }}
+                </strong>
+
+                al
+
+                <strong>
+                    {{ dashboard.periodo.fin | date:'dd/MM/yyyy' }}
+                </strong>
+            </span>
+
+        </section>
+
+        <!-------------------------------------------------------------------->
+        <!-------------------------------- KPIS ------------------------------>
+        <!-------------------------------------------------------------------->
+
+        <section class="dashboard-kpis">
+
+            <!---------------------------- VENTAS ---------------------------->
+
+            <article class="dashboard-kpi-card">
+
+                <div class="dashboard-kpi-card__header">
+
+                    <span class="dashboard-kpi-card__icono">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Ventas
+                    </span>
+
                 </div>
-                <div class="capital__grafica">
-                    
+
+                <strong class="dashboard-kpi-card__valor">
+                    {{ dashboard.kpis.ventas | money }}
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__tendencia"
+                        [class.dashboard-kpi-card__tendencia--positiva]=" dashboard.kpis.tendenciaVentas > 0"
+                        [class.dashboard-kpi-card__tendencia--negativa]=" dashboard.kpis.tendenciaVentas < 0"
+                        [class.dashboard-kpi-card__tendencia--neutral]=" dashboard.kpis.tendenciaVentas === 0">
+
+                        @if (dashboard.kpis.tendenciaVentas > 0) {
+
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+
+                        } @else if (dashboard.kpis.tendenciaVentas < 0) {
+
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+
+                        } @else {
+
+                            <i class="fa-solid fa-minus"></i>
+
+                        }
+
+                        {{ dashboard.kpis.tendenciaVentas | number:'1.0-2' }}%
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__comparacion">
+                        vs. periodo anterior
+                    </span>
+
                 </div>
-            </div>
-        </div>
 
-        <div class="estado__ventas">
-            <div class="ventas__header">
-                <h4 class="ventas__title">Ventas semanales</h4>
-                <i class="ventas__icon fa-solid fa-dollar-sign"></i>
-            </div>
-            <h3 class="ventas__ultima">$6,000.00</h3>
-            <div class="ventas__compracion">
-                <i class="ventas__subida fa-solid fa-arrow-trend-up"></i>
-                <span class="comparacion__porcentaje">9% </span>
-                <h5 class="comparacion__tiempo">ultima venta</h5>
-            </div>
-            <div class="ventas__grafica">
+            </article>
 
-            </div>
-        </div>
-    </aside>
-</section>
-<section class="dashboard__transacciones">
-    <aside class="transacciones__resientes">
-        <h3 class="transacciones__title">Ultimas Transacciones</h3>
-        <div *ngFor="let transaccion of transacciones" class="transacciones__registro">
-            <h4 class="registro__fecha">{{ transaccion.fecha| date:'shortTime' }}</h4>
-            <div class="registro__centro">
-                <i class="registro__icon fa-solid fa-circle"></i>
-            </div>
-            <span class="registro__information">factura {{ transaccion.tipo }} de {{ calcularTransaccion(transaccion) }}</span>
-        </div>       
-         
+            <!--------------------------- INGRESOS --------------------------->
 
-    </aside>
+            <article class="dashboard-kpi-card">
 
-    <aside class="registro__deudas">
-        <h4 class="deudas__title">Registro de pagos pendientes</h4>
-        <table class="deudas__table">
-            <thead>
-                <tr>
-                    <th>Imagen</th>
-                    <th>Perfil</th>
-                    <th>Deuda</th>
-                    <th>Ultimo Pago</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td>sayer</td>
-                    <td>30000</td>
-                    <td>10000</td>
-                    <td>30/agos/2024</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>sayer</td>
-                    <td>30000</td>
-                    <td>10000</td>
-                    <td>30/agos/2024</td>
-                </tr>
-            </tbody>
+                <div class="dashboard-kpi-card__header">
 
-        </table>
-    </aside>
+                    <span class="dashboard-kpi-card__icono dashboard-kpi-card__icono--success">
+
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Ingresos
+                    </span>
+
+                </div>
+
+                <strong class="dashboard-kpi-card__valor">
+                    {{ dashboard.kpis.ingresos | money }}
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__tendencia"
+                        [class.dashboard-kpi-card__tendencia--positiva]="dashboard.kpis.tendenciaIngresos > 0"
+                        [class.dashboard-kpi-card__tendencia--negativa]="dashboard.kpis.tendenciaIngresos < 0"
+                        [class.dashboard-kpi-card__tendencia--neutral]="dashboard.kpis.tendenciaIngresos === 0">
+
+                        @if (dashboard.kpis.tendenciaIngresos > 0) {
+
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+
+                        } @else if (dashboard.kpis.tendenciaIngresos < 0) {
+
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+
+                        } @else {
+
+                            <i class="fa-solid fa-minus"></i>
+
+                        }
+
+                        {{ dashboard.kpis.tendenciaIngresos | number:'1.0-2' }}%
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__comparacion">
+                        vs. periodo anterior
+                    </span>
+
+                </div>
+
+            </article>
+
+            <!---------------------------- EGRESOS --------------------------->
+
+            <article class="dashboard-kpi-card">
+
+                <div class="dashboard-kpi-card__header">
+
+                    <span class="dashboard-kpi-card__icono dashboard-kpi-card__icono--danger">
+
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Egresos
+                    </span>
+
+                </div>
+
+                <strong class="dashboard-kpi-card__valor">
+                    {{ dashboard.kpis.egresos | money }}
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__tendencia"
+                        [class.dashboard-kpi-card__tendencia--positiva]="dashboard.kpis.tendenciaEgresos < 0"
+                        [class.dashboard-kpi-card__tendencia--negativa]="dashboard.kpis.tendenciaEgresos > 0"
+                        [class.dashboard-kpi-card__tendencia--neutral]="dashboard.kpis.tendenciaEgresos === 0">
+
+                        @if (dashboard.kpis.tendenciaEgresos > 0) {
+
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+
+                        } @else if (dashboard.kpis.tendenciaEgresos < 0) {
+
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+
+                        } @else {
+
+                            <i class="fa-solid fa-minus"></i>
+
+                        }
+
+                        {{ dashboard.kpis.tendenciaEgresos | number:'1.0-2' }}%
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__comparacion">
+                        vs. periodo anterior
+                    </span>
+
+                </div>
+
+            </article>
+
+            <!---------------------------- BALANCE --------------------------->
+
+            <article class="dashboard-kpi-card">
+
+                <div class="dashboard-kpi-card__header">
+
+                    <span class="dashboard-kpi-card__icono dashboard-kpi-card__icono--balance">
+
+                        <i class="fa-solid fa-scale-balanced"></i>
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Balance
+                    </span>
+
+                </div>
+
+                <strong class="dashboard-kpi-card__valor"
+                    [class.dashboard-kpi-card__valor--danger]="dashboard.kpis.balance < 0">
+
+                    {{ dashboard.kpis.balance | money }}
+
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__descripcion">
+                        Ingresos menos egresos
+                    </span>
+
+                </div>
+
+            </article>
+
+            <!---------------------- SALDO PENDIENTE ------------------------->
+
+            <article class="dashboard-kpi-card">
+
+                <div class="dashboard-kpi-card__header">
+
+                    <span class="dashboard-kpi-card__icono dashboard-kpi-card__icono--warning">
+
+                        <i class="fa-solid fa-hourglass-half"></i>
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Saldo pendiente
+                    </span>
+
+                </div>
+
+                <strong class="dashboard-kpi-card__valor">
+                    {{ dashboard.kpis.saldoPendiente | money }}
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__descripcion">
+                        Total pendiente por cobrar
+                    </span>
+
+                </div>
+
+            </article>
+
+            <!----------------------- ÓRDENES ACTIVAS ------------------------>
+
+            <article class="dashboard-kpi-card">
+
+                <div class="dashboard-kpi-card__header">
+
+                    <span class=" dashboard-kpi-card__icono dashboard-kpi-card__icono--orders">
+
+                        <i class="fa-solid fa-clipboard-list"></i>
+
+                    </span>
+
+                    <span class="dashboard-kpi-card__label">
+                        Ordenes activas
+                    </span>
+
+                </div>
+
+                <strong class="dashboard-kpi-card__valor">
+                    {{ dashboard.kpis.ordenesActivas }}
+                </strong>
+
+                <div class="dashboard-kpi-card__footer">
+
+                    <span class="dashboard-kpi-card__descripcion">
+                        Ordenes pendientes de finalizar
+                    </span>
+
+                </div>
+
+            </article>
+
+        </section>
+
+        <!-------------------------------------------------------------------->
+        <!------------------------- SECCIÓN PRINCIPAL ------------------------->
+        <!-------------------------------------------------------------------->
+
+        <section class="dashboard-page__principal">
+
+            <!---------------------- GRÁFICA FINANCIERA ---------------------->
+
+            <article class="dashboard-panel dashboard-panel--finanzas">
+
+                <header class="dashboard-panel__header">
+
+                    <div>
+
+                        <span class="dashboard-panel__eyebrow">
+                            Rendimiento financiero
+                        </span>
+
+                        <h2 class="dashboard-panel__title">
+                            Ingresos y egresos
+                        </h2>
+
+                        <p class="dashboard-panel__subtitle">
+                            Comportamiento financiero durante el periodo
+                            seleccionado
+                        </p>
+
+                    </div>
+
+                    <div class="dashboard-panel__leyenda">
+
+                        <span class="dashboard-panel__leyenda-item">
+
+                            <span class="dashboard-panel__leyenda-color dashboard-panel__leyenda-color--ingresos">
+                            </span>
+
+                            Ingresos
+
+                        </span>
+
+                        <span class="dashboard-panel__leyenda-item">
+
+                            <span class="dashboard-panel__leyenda-color dashboard-panel__leyenda-color--egresos">
+                            </span>
+
+                            Egresos
+
+                        </span>
+
+                        <span class="dashboard-panel__leyenda-item">
+
+                            <span class="dashboard-panel__leyenda-color dashboard-panel__leyenda-color--balance">
+                            </span>
+
+                            Balance
+
+                        </span>
+
+                    </div>
+
+                </header>
+
+                <div class="dashboard-panel__grafica">
+
+                    <!-- Aquí se integrará Chart.js o ng2-charts -->
+
+                    <div class="dashboard-grafica__placeholder">
+
+                        <i class="fa-solid fa-chart-area"></i>
+
+                        <p>
+                            La grafica financiera se integrara en el siguiente
+                            paso.
+                        </p>
+
+                        <span>
+                            {{ dashboard.finanzas.length }}
+                            puntos disponibles
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <!--------------------------- COBRANZA --------------------------->
+
+            <article class="dashboard-panel dashboard-panel--cobranza">
+
+                <header class="dashboard-panel__header">
+
+                    <div>
+
+                        <span class="dashboard-panel__eyebrow">
+                            Cobranza general
+                        </span>
+
+                        <h2 class="dashboard-panel__title">
+                            Estado de cobranza
+                        </h2>
+
+                    </div>
+
+                    <span class="dashboard-cobranza__porcentaje">
+
+                        {{ dashboard.cobranza.porcentajeCobrado | number:'1.0-2' }}%
+
+                    </span>
+
+                </header>
+
+                <div class="dashboard-cobranza__progreso">
+
+                    <div class="dashboard-cobranza__barra">
+
+                        <span class="dashboard-cobranza__avance"
+                            [style.width.%]="dashboard.cobranza.porcentajeCobrado">
+                        </span>
+
+                    </div>
+
+                    <div class="dashboard-cobranza__leyenda">
+
+                        <span>
+                            Cobrado
+                        </span>
+
+                        <strong>
+                            {{ dashboard.cobranza.totalCobrado | money }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div class="dashboard-cobranza__resumen">
+
+                    <article class="dashboard-cobranza__item">
+
+                        <span>
+                            Total vendido
+                        </span>
+
+                        <strong>
+                            {{ dashboard.cobranza.totalVendido | money }}
+                        </strong>
+
+                    </article>
+
+                    <article class="dashboard-cobranza__item">
+
+                        <span>
+                            Total cobrado
+                        </span>
+
+                        <strong class="dashboard-cobranza__valor--success">
+                            {{ dashboard.cobranza.totalCobrado | money }}
+                        </strong>
+
+                    </article>
+
+                    <article class="dashboard-cobranza__item">
+
+                        <span>
+                            Por cobrar
+                        </span>
+
+                        <strong class="dashboard-cobranza__valor--warning">
+                            {{ dashboard.cobranza.saldoPendiente | money }}
+                        </strong>
+
+                    </article>
+
+                </div>
+
+            </article>
+
+        </section>
+
+        <!-------------------------------------------------------------------->
+        <!--------------------------- ÓRDENES -------------------------------->
+        <!-------------------------------------------------------------------->
+
+        <section class="dashboard-page__ordenes">
+
+            <article class="dashboard-panel dashboard-panel--ordenes">
+
+                <header class="dashboard-panel__header">
+
+                    <div>
+
+                        <span class="dashboard-panel__eyebrow">
+                            Operacion
+                        </span>
+
+                        <h2 class="dashboard-panel__title">
+                            Resumen de ordenes
+                        </h2>
+
+                        <p class="dashboard-panel__subtitle">
+                            Estado actual de las ordenes de compra
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div class="dashboard-ordenes__resumen">
+
+                    <article class="dashboard-ordenes__estado">
+
+                        <span class="dashboard-ordenes__estado-icono">
+                            <i class="fa-regular fa-clock"></i>
+                        </span>
+
+                        <div>
+                            <span>
+                                Pendientes
+                            </span>
+
+                            <strong>
+                                {{ dashboard.ordenes.pendientes }}
+                            </strong>
+                        </div>
+
+                    </article>
+
+                    <article class="dashboard-ordenes__estado">
+
+                        <span class="dashboard-ordenes__estado-icono dashboard-ordenes__estado-icono--production">
+
+                            <i class="fa-solid fa-hammer"></i>
+
+                        </span>
+
+                        <div>
+                            <span>
+                                En produccion
+                            </span>
+
+                            <strong>
+                                {{ dashboard.ordenes.produccion }}
+                            </strong>
+                        </div>
+
+                    </article>
+
+                    <article class="dashboard-ordenes__estado">
+
+                        <span class="dashboard-ordenes__estado-icono dashboard-ordenes__estado-icono--ready">
+
+                            <i class="fa-solid fa-box-open"></i>
+
+                        </span>
+
+                        <div>
+                            <span>
+                                Listas para entregar
+                            </span>
+
+                            <strong>
+                                {{ dashboard.ordenes.listasParaEntregar }}
+                            </strong>
+                        </div>
+
+                    </article>
+
+                    <article class="dashboard-ordenes__estado">
+
+                        <span class="dashboard-ordenes__estado-icono dashboard-ordenes__estado-icono--danger">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        </span>
+
+                        <div>
+                            <span>
+                                Atrasadas
+                            </span>
+
+                            <strong>
+                                {{ dashboard.ordenes.atrasadas }}
+                            </strong>
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </article>
+
+            <!------------------------ PRÓXIMAS ÓRDENES ----------------------->
+
+            <article class="dashboard-panel dashboard-panel--proximas">
+
+                <header class="dashboard-panel__header">
+
+                    <div>
+
+                        <span class="dashboard-panel__eyebrow">
+                            Entregas
+                        </span>
+
+                        <h2 class="dashboard-panel__title">
+                            Proximas ordenes
+                        </h2>
+
+                    </div>
+
+                </header>
+
+                @if (dashboard.ordenes.proximas.length === 0) {
+
+                    <app-state state="empty"
+                        icon="fa-regular fa-calendar-check"
+                        message="No hay órdenes próximas a entregar">
+
+                    </app-state>
+
+                } @else {
+
+                    <div class="dashboard-proximas">
+
+                        @for (orden of dashboard.ordenes.proximas; track orden.id) {
+
+                            <article class="dashboard-proximas__item">
+
+                                <div class="dashboard-proximas__identidad">
+
+                                    <span class="dashboard-proximas__folio">
+                                        #{{ orden.id }}
+                                    </span>
+
+                                    <div>
+
+                                        <strong class="dashboard-proximas__cliente">
+                                            {{ orden.cliente }}
+                                        </strong>
+
+                                        <span class="dashboard-proximas__fecha">
+
+                                            @if (orden.fechaEntrega) {
+
+                                                <i class="fa-regular fa-calendar"></i>
+
+                                                {{ orden.fechaEntrega | date:'dd/MM/yyyy HH:mm' }}
+
+                                            } @else {
+
+                                                Sin fecha programada
+
+                                            }
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="dashboard-proximas__detalle">
+
+                                    <span class="dashboard-proximas__proceso">
+                                        {{ orden.proceso }}
+                                    </span>
+
+                                    <strong>
+                                        {{ orden.total | money }}
+                                    </strong>
+
+                                </div>
+
+                            </article>
+
+                        }
+
+                    </div>
+
+                }
+
+            </article>
+
+        </section>
+
+    }
+
 </section>

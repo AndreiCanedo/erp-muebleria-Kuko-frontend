@@ -1,192 +1,246 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { EgresoService } from '../../services/egreso.service';
+
 import { Egreso } from '../../models/egreso.model';
-import { Subscription } from 'rxjs';
-import { StorageServiceService } from '../../services/storage-service.service';
-import { UtilService } from '../../services/util.service';
-import { TransaccionService } from '../../services/transaccion.service';
-import { Transaccion } from '../../models/transaccion.model';
-import moment from 'moment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
+import { EstadoEgreso } from '../../models/estado-egreso.enum';
+import Swal from 'sweetalert2';
+import { ordenarPorFechaDescendente } from '../../shared/utils/sort.util';
 
 @Component({
-  selector: 'app-egreso',
-  templateUrl: './egreso.component.html',
-  styleUrl: './egreso.component.css'
+    selector: 'app-egreso',
+    templateUrl: './egreso.component.html',
+    styleUrl: './egreso.component.css',
+    standalone: false
 })
-export class EgresoComponent implements OnInit, OnDestroy {
+export class EgresoComponent implements OnInit {
 
-  private fb = inject(FormBuilder)
-  private utilServices = inject(UtilService)
-  private egresoServices = inject(EgresoService)
-  private transaccionServices = inject(TransaccionService)
+  private readonly egresoServices = inject(EgresoService);
+  private readonly destroyRef = inject(DestroyRef);
   
+  public egresos: Egreso[] = []
+  public egresosFiltrados: Egreso[] = [];
 
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////Datos para tabla////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  public egresos: any[] = []
-  public egresosTemp: any[] = []
-  public columns:string[] = ['id', 'nombre', 'motivo', 'justificacion', 'monto', 'cambio', 'formaPago']
-  
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////Datos Egresos semanal////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////
-  private subscription!: Subscription ;
-  public transaccionesTotales:Transaccion[] =[]
-  public egresoSemanaActual:string = '';
+  public busqueda = '';
+  public estadoSeleccionado = '';
+  public formaPagoSeleccionada = '';
 
-  ////////////////////////////TODO/////////////////////////////////////////////
-  //////////////////////Estimado gasto Semanal////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////
-  public estimadoForm!:FormGroup;
-  public estimadoSemanal:string= this.utilServices.formatCurrency(138200);
-  public estimadoError:boolean = false;
-  
-  /////////////////////////////////////////////////////////////////////////
-  /////////////////////Variables para cerrar y abrir cajas///////////////////////////////
-  /////////////////////////////////////////////////////////////////////////
-  public cajaEdit = false;
-  public cajaCrear = false;
-  public animacion:boolean = false;
-  public gastoSemanalActual:string = '0';
-  public mostrarCajaForm:boolean = false;
-  public mostrarTablaEliminar:boolean = false;
-  public mostrarCajaFormEliminar:boolean = false;
-  public mostrarCajaEstimado:boolean = false;
+  public ui = {
+    cargando: false,
+    error: '',
 
-  constructor(){ this.resetForm()}
+    modalVisible: false,
+    modo: 'none' as 
+      | 'crear'
+      | 'editar'
+      | 'detalle'
+      | 'cancelar'
+      | 'none',
+
+    egresoSeleccionadoId: 0,
+    mensajeExito: ''
+  };
   
   ngOnInit(): void {
-    this.subscription = this.egresoServices.egresoCreado$.subscribe(() => this.cargarEgresos());
-    
     this.cargarEgresos();
-    
-    this.transaccionServices.cargarTransaccion()
-      .subscribe(transacciones => {
-        const agrupadas = this.transaccionServices.agruparTransaccionPorSemana(transacciones)
-        this.transaccionesTotales = agrupadas.egresos
-        this.transaccionSemanal();
+    this.initSubscriptions();
+  }
+
+  private initSubscriptions(): void{
+    this.egresoServices.egresoCreado$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cargarEgresos();
       })
   }
 
-  ngOnDestroy():void {
-    this.subscription.unsubscribe();
-  }
+/***************************************************/
+/*******************CARGAR EGRESO*******************/
+/***************************************************/
 
-  cargarEgresos(){
+  public cargarEgresos(): void{
+
+    this.ui.cargando = true;
+    this.ui.error = '';
+
+
     this.egresoServices.cargarEgresos()
-      .subscribe(egresos => {
-        this.egresos = egresos.map(egreso => ({
-          id:egreso.id,
-          nombre: egreso.nombre,
-          motivo: egreso.motivo,
-          justificacion: egreso.justificacion,
-          monto: this.utilServices.formatCurrency(egreso.monto),
-          cambio: this.utilServices.formatCurrency(egreso.cambio),
-          formaPago: egreso.formaPago
-        }));
-        this.egresosTemp = [... this.egresos]
-      })
+      .pipe(takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.ui.cargando = false)
+      )
+      .subscribe({
+        next: egresos => {
+          this.egresos = ordenarPorFechaDescendente(egresos, egreso => egreso.fecha);
+
+          this.aplicarFiltros();
+
+        },
+        error: (err: Error) => {
+          console.error(err.message);
+
+          this.egresos = [];
+
+          this.egresosFiltrados = [];
+
+          this.ui.error = 'No fue posible cargar los egresos'
+        }
+      });
+  }
+
+/***************************************************/
+/*******************FILTROS EGRESO******************/
+/***************************************************/
+
+  public aplicarFiltros(): void{
+    const termino = this.busqueda.trim().toLowerCase();
+
+    this.egresosFiltrados = this.egresos.filter(egreso => {
+
+      const coincideBusqueda = !termino 
+        || egreso.id.toString().includes(termino)
+        || egreso.nombre?.toLowerCase().includes(termino)
+        || egreso.motivo.toLowerCase().includes(termino)
+        || egreso.justificacion?.toLowerCase().includes(termino)
+        || false;
+
+      const coincideEstado = !this.estadoSeleccionado 
+        || egreso.estado === this.estadoSeleccionado;
+
+      const coincideFormaPago = !this.formaPagoSeleccionada 
+        || egreso.formaPago === this.formaPagoSeleccionada
+
+      return( coincideBusqueda && coincideEstado && coincideFormaPago);
+    });
+  }
+
+  public limpiarFiltros(): void{
+    this.busqueda = '';
+    this.estadoSeleccionado = '';
+    this.formaPagoSeleccionada = '';
+
+    this.aplicarFiltros();
+  }
+
+/***************************************************/
+/***************** ACCIONES EGRESO *****************/
+/***************************************************/
+
+  public registrarEgreso(): void {
+    this.ui.egresoSeleccionadoId = 0;
+    this.abrirModal('crear');
+  }
+
+  public editarEgreso(egreso: Egreso): void{
+    this.ui.egresoSeleccionadoId = egreso.id;
+    this.abrirModal('editar');
+  }
+
+  public verDetalle(egreso: Egreso): void {
+    this.ui.egresoSeleccionadoId = egreso.id;
+    this.abrirModal('detalle');
+  }
+
+  public solicitarCancelacion(egreso: Egreso): void {
+    this.ui.egresoSeleccionadoId = egreso.id;
+    this.abrirModal('cancelar');
   }
 
 
+/***************************************************/
+/****************** RESUMEN EGRESO *****************/
+/***************************************************/
+
+  public get totalSemana(): number{
+    const inicioSemana = this.obtenerInicioDeSemana(new Date());
+
+    return this.egresos.filter(egreso => 
+
+      egreso.estado === EstadoEgreso.APLICADO 
+        && egreso.fecha !== null 
+        && egreso.fecha >= inicioSemana
+
+    )
+    .reduce((total, egreso) => total + Number(egreso.monto), 0);
+  }
+
+  public get totalMes(): number{
+    const hoy = new Date();
+
+    return this.egresos.filter(egreso => 
+      egreso.estado === EstadoEgreso.APLICADO 
+      && egreso.fecha !== null
+      && egreso.fecha.getFullYear() === hoy.getFullYear()
+      && egreso.fecha.getMonth() === hoy.getMonth()
+    )
+    .reduce((total, egreso) => total + Number(egreso.monto), 0);
+  }
+
+  public get cantidadAplicados(): number {
+    return this.egresos.filter(egreso => 
+      egreso.estado === EstadoEgreso.APLICADO
+    ).length;
+  }
+
+  public get cantidadCancelados(): number {
+    return this.egresos.filter(egreso => 
+      egreso.estado === EstadoEgreso.CANCELADO
+    ).length;
+  }
+
+/***************************************************/
+/********************** HELPERS ********************/
+/***************************************************/
+
+
+  public obtenerInicioDeSemana(fecha: Date): Date{
     
-  formatCurrency(value: number): string { 
-    return this.utilServices.formatCurrency(value)
+    const inicio = new Date(fecha);
+
+    const dia = inicio.getDay();
+
+    const diferencia = dia === 0 ? -6 : 1 - dia;
+
+    inicio.setDate(inicio.getDate() + diferencia);
+
+    inicio.setHours(0,0,0,0);
+
+    return inicio;
+    
   }
 
-  transaccionSemanal(){
-    console.log(this.transaccionesTotales)
-    const semanaActual = moment().startOf('week').format('YYYY-MM-DD')
-    const semanas = Object.keys(this.transaccionesTotales)
-    const value = Object.values(this.transaccionesTotales)
-    const ultimaSemana = value.length - 1 
+  private abrirModal( modo: 'crear' | 'editar' | 'detalle' | 'cancelar'): void {
 
-    let egresoSemanaActual = 0
+    this.ui.modo = modo;
+    this.ui.modalVisible = true;
 
-    if(semanas.includes(semanaActual)){
-      egresoSemanaActual = Number(value[ultimaSemana])
-    }else{
-      egresoSemanaActual = 0;
+  }
+
+  cerrarModal(): void {
+    this.ui.modalVisible = false;
+  }
+
+  onModalCerrado(): void {
+    const mensajeExito = this.ui.mensajeExito;
+
+    this.ui.modalVisible = false;
+    this.ui.modo = 'none';
+    this.ui.egresoSeleccionadoId = 0;
+    this.ui.mensajeExito = '';
+
+    if(mensajeExito){
+      Swal.fire({
+        title: mensajeExito,
+        icon: 'success'
+      });
     }
-
-    this.egresoSemanaActual = this.utilServices.formatCurrency(egresoSemanaActual);
   }
 
-  ////////////////////////////////TODOOOO/////////////////////////////////////
-  actualizarEstimado(){
-    if(this.estimadoForm.valid){
-      let estimado = this.estimadoForm.get('estimado')?.value
-      if(estimado != 0){
-        this.estimadoSemanal = this.utilServices.formatCurrency(estimado);
-        this.cerrarCaja()
-      }else{
-          this.estimadoError = true
-      }
+  public operacionExitosa(mensaje: string): void {
+    this.ui.mensajeExito = mensaje;
 
-    }
-  }
-
-  resetForm(){
-    this.estimadoForm = this.fb.group({
-      estimado:['',Validators.required]
-    })
-  }
-
-
-
-  /***********************************************************************/
-  /*****************************Cajas CSS*********************************/
-  /***********************************************************************/
-  mostrarCajaEdit(){
-    this.cajaEdit = true;
-    this.cajaCrear = false;
-    this.mostrarCajaFormEliminar =false;
-    this.mostrarTablaEliminar = false
-    this.mostrarCaja();
-  }
-
-  mostrarCajaCrear(){
-    this.cajaEdit=false;
-    this.cajaCrear = true;
-    this.mostrarCajaFormEliminar =false;
-    this.mostrarTablaEliminar = false
-    this.mostrarCaja();
-  }
-
-  mostrarCajaEliminar(){
-    this.animacion = true
-    this.cajaEdit=false;
-    this.cajaCrear =false;
-    this.mostrarCajaForm = false;
-    this.mostrarCajaFormEliminar = true;
-    setTimeout(()=> this.animacion = false, 300);
-  }
-
-  // MONSTRAR CAJA
-  mostrarCaja(){
-    this.animacion = true;
-    this.mostrarCajaForm = true;
-    setTimeout(()=> this.animacion = false, 100);
-  }
-
-  //OCULTAR CAJA
-  cerrarCaja(){
-    this.animacion=true;
-    setTimeout(()=>{
-      this.animacion = false;
-      this.mostrarCajaForm = false;
-      this.cajaCrear = false;
-      this.cajaEdit = false;
-      this.mostrarCajaFormEliminar =false;
-      this.mostrarTablaEliminar = false;
-      this.mostrarCajaEstimado = false;
-    }, 500);
-  }
-
-  cajaEstimado(){
-    this.mostrarCajaEstimado = true;
+    this.cerrarModal();
   }
 
 }

@@ -6,9 +6,10 @@ import Swal from 'sweetalert2';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css',
+    standalone: false
 })
 export class LoginComponent implements OnInit{
 

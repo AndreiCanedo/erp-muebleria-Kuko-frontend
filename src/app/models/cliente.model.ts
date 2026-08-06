@@ -1,12 +1,13 @@
+import { ClienteDTO } from "./interface-models/clienteDTO.interface";
+
 export class Cliente{
 
     constructor(
-        id:string,
-        nombre:string,
-        direccion:string,
-        correo:string,
-        telefono:string,
-        rfc:string
+        public id:number,
+        public nombre:string,
+        public direccion:string,
+        public telefono:string,
+        public correo:string,
+        public rfc:string | null
     ){}
-
 }

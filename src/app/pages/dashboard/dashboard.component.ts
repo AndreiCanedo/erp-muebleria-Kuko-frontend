@@ -1,109 +1,155 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { MuebleriaService } from '../../services/muebleria.service';
-import { TransaccionService } from '../../services/transaccion.service';
-import { Transaccion } from '../../models/transaccion.model';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { DashboardService } from '../../services/dashboard.service';
+import { DashboardView } from '../../models/interface-dashboard/dashboard-view.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 
-import { StorageServiceService } from '../../services/storage-service.service';
-import { UtilService } from '../../services/util.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.css',
+    standalone: false
 })
-export class DashboardComponent implements OnInit, OnDestroy{
-  private muebleriaServices = inject(MuebleriaService)
-  private transaccionServices = inject(TransaccionService)
-  private storageServices = inject(StorageServiceService)
-  private utilServices = inject(UtilService)
+export class DashboardComponent implements OnInit{
   
-  
-  public neto!:string
-  public transacciones:Transaccion[] = []
-  public trasaccionesPorSemanaIngreso:any = {}
-  public trasaccionesPorSemanaEgreso:any = {}
-  public transaccionesTotal:Transaccion[]=[]
-  
-  constructor(){
-  }
+  private readonly dashboardService = inject(DashboardService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.cargarDatos();
-    const idMuebleria = "1";
-    this.muebleriaServices.obtennerMuebleriaById(idMuebleria)
-      .subscribe(muebleria => {
-        this.neto = this.utilServices.formatCurrency(muebleria.neto);
-      })
+  public dashboard: DashboardView | null = null;
+
+  public fechaInicio = '';
+  public fechaFin = '';
+
+  public periodoSeleccionado:
+  'HOY' | 'SEMANA' | 'MES' | 'PERSONALIZADO' = 'MES';
+
+  public ui = {
+    cargando: false,
+    error: ''
+  };
+
+  public ngOnInit(): void {
+    this.establecerPeriodoMesActual();
+    this.cargarDashboard();
+  }
+  /*************************************************************/
+  /*********************** CARGAR DASHBOARD ********************/
+  /*************************************************************/
+  public cargarDashboard(): void {
+
+    const inicio = this.convertirFechaInput(this.fechaInicio);
+    const fin = this.convertirFechaInput(this.fechaFin);
+
     
-    this.transaccionServices.cargarTransaccion()
-      .subscribe(transacciones =>{
-        this.transaccionesTotal = transacciones;
-        const agrupadas = this.transaccionServices.agruparTransaccionPorSemana(transacciones)
-        this.trasaccionesRecientes(transacciones)
-        this.trasaccionesPorSemanaEgreso = agrupadas.egresos
-        this.trasaccionesPorSemanaIngreso = agrupadas.ingresos
-        this.actualizarDatosGrafica()
-      }) 
+    if (!inicio || !fin) {
+      this.ui.error = 'Selecciona un periodo válido';
+      return;
+    }
     
-  }
-  //Para no acomular informacion en mi localStorage
-  ngOnDestroy(): void {
-      // this.limpiarDatos();
-  }
-
-  //Cargar Datos Desde el LocalStorage
-  private cargarDatos():void{
-    const egreso = this.storageServices.cargarDatos('trasaccionesPorSemanaEgreso')
-    const ingreso = this.storageServices.cargarDatos('trasaccionesPorSemanaIngreso')
-
-    if(egreso){
-      try{
-        this.trasaccionesPorSemanaEgreso = JSON.parse(egreso)
-      }catch(e){
-         this.trasaccionesPorSemanaEgreso = egreso
-      }
+    if (inicio.getTime() > fin.getTime()) {
+      this.ui.error ='La fecha de inicio no puede ser posterior a la fecha final';return;
     }
-    if(ingreso){
-      try{
-        this.trasaccionesPorSemanaIngreso = JSON.parse(ingreso)
-      }catch(e){
-        this.trasaccionesPorSemanaIngreso = ingreso
-      }
+
+    this.ui.cargando = true;
+    this.ui.error = '';
+
+    this.dashboardService.obtenerDashboard(inicio, fin)
+      .pipe(takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.ui.cargando = false)
+      )
+      .subscribe({
+        next: dashboard => {
+          this.dashboard = dashboard;
+        },
+        error: error => {
+          console.error('Error al cargar el dashboard:', error);
+
+          this.dashboard = null;
+          this.ui.error = 'No fue posible cargar la información del dashboard';
+        }
+      });
+  }
+
+  /********************************************************************/
+  /*********************** CONVERCIONES DE FECHA **********************/
+  /********************************************************************/
+
+  private establecerPeriodoMesActual(): void {
+    const hoy = new Date();
+
+    const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+    this.fechaInicio = this.formatearFechaInput(inicioMes);
+
+    this.fechaFin = this.formatearFechaInput(hoy);
+  }
+
+  private convertirFechaInput(fecha: string): Date | null {
+
+    if (!fecha) return null;
+
+    const [year, month, day] = fecha.split('-').map(Number);
+
+    return new Date( year, month - 1, day);
+  }
+
+  private formatearFechaInput(fecha: Date): string {
+
+    const year = fecha.getFullYear();
+
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+
+    const day = String(fecha.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  /********************************************************************/
+  /*********************** SELECCION DE FECHA *************************/
+  /********************************************************************/
+
+  public seleccionarPeriodo( periodo: 'HOY' | 'SEMANA' | 'MES'): void {
+
+    this.periodoSeleccionado = periodo;
+
+    const hoy = new Date();
+
+    let inicio: Date;
+
+    switch (periodo) {
+
+      case 'HOY':
+        inicio = new Date(hoy);
+        break;
+
+      case 'SEMANA':
+        inicio = this.obtenerInicioSemana(hoy);
+        break;
+
+      case 'MES':
+        inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        break;
     }
+
+    this.fechaInicio = this.formatearFechaInput(inicio);
+    this.fechaFin = this.formatearFechaInput(hoy);
+
+    this.cargarDashboard();
   }
 
-  
-  //Limpiar Datos
-  private limpiarDatos(): void{
-    this.storageServices.guardarDatos('trasaccionesPorSemanaEgreso', {})
-    this.storageServices.guardarDatos('trasaccionesPorSemanaIngreso', {})
-  }
-  
-  //Por si contamos con una actualizacion en la grafica
-  actualizarDatosGrafica(): void { 
-    this.trasaccionesPorSemanaEgreso = { ...this.trasaccionesPorSemanaEgreso }; 
-    this.trasaccionesPorSemanaIngreso = { ...this.trasaccionesPorSemanaIngreso }; 
-    this.guardarDatos()//Guardar datos cada vez actualicemos
-  }
-  
-  //Guardar Datos En El LocalStorage
-  private guardarDatos(): void{
-    this.storageServices.guardarDatos('trasaccionesPorSemanaEgreso', JSON.stringify(this.trasaccionesPorSemanaEgreso))
-    this.storageServices.guardarDatos('trasaccionesPorSemanaIngreso', JSON.stringify(this.trasaccionesPorSemanaIngreso))
+  public usarPeriodoPersonalizado(): void {
+    this.periodoSeleccionado = 'PERSONALIZADO';
   }
 
-  //Obtener las ultimas 6 transacciones
-  trasaccionesRecientes(transacciones:Transaccion[]){
-    const numArreglo = transacciones.length
-    for(let i = numArreglo -1;i >= numArreglo-6 && i >= 0; i--){
-      this.transacciones.push(transacciones[i])
-    }
-  }
+  private obtenerInicioSemana(fecha: Date): Date {
+    
+    const inicio = new Date(fecha);
+    const diaSemana = inicio.getDay();
+    const diferencia = diaSemana === 0 ? -6 : 1 - diaSemana;
 
-  //Calcular el tipo de transaccion
-  calcularTransaccion(transaccion:Transaccion):string{
-    let transaccionResiente = this.transaccionServices.calcularTransaccion(transaccion)
-    return this.utilServices.formatCurrency(transaccionResiente)
-  }
+    inicio.setDate(inicio.getDate() + diferencia);
 
+    return inicio;
+  }
 }

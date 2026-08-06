@@ -1,0 +1,266 @@
+<section class="detalle-orden">
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando informacion">
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="reintentar()">
+        </app-state>
+
+    } @else if (orden) {
+
+        <div class="detalle-orden__contenido">
+
+            <header class="detalle-orden__header">
+    
+                <div class="detalle-orden__identidad">
+    
+                    <span class="detalle-orden__icono">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </span>
+    
+                    <div>
+                        <span class="detalle-orden__folio">
+                            Orden #{{ orden.id }}
+                        </span>
+    
+                        <h3 class="detalle-orden__titulo">
+                            {{ orden.cliente }}
+                        </h3>
+                    </div>
+    
+                </div>
+    
+                <span class="detalle-orden__estado">
+                    {{ orden.estadoOrden }}
+                </span>
+    
+            </header>
+    
+            <section class="detalle-orden__seccion">
+    
+                <h3 class="detalle-orden__seccion-titulo">
+                    Estado de la orden
+                </h3>
+    
+                <div class="detalle-orden__estados">
+    
+                    <article class="detalle-orden__estado-card">
+                        <span>Orden</span>
+                        <strong>{{ orden.estadoOrden }}</strong>
+                    </article>
+    
+                    <article class="detalle-orden__estado-card">
+                        <span>Proceso</span>
+                        <strong>{{ orden.proceso }}</strong>
+                    </article>
+    
+                    <article class="detalle-orden__estado-card">
+                        <span>Pago</span>
+                        <strong>{{ orden.estadoPago }}</strong>
+                    </article>
+    
+                    <article class="detalle-orden__estado-card">
+                        <span>Entrega</span>
+                        <strong>{{ orden.estadoEntrega }}</strong>
+                    </article>
+    
+                </div>
+    
+            </section>
+    
+            <section class="detalle-orden__seccion">
+    
+                <h3 class="detalle-orden__seccion-titulo">
+                    Muebles
+                </h3>
+    
+                @if (orden.detalles.length === 0) {
+    
+                    <p class="detalle-orden__vacio">
+                        La orden no contiene muebles
+                    </p>
+    
+                } @else {
+    
+                    <div class="detalle-orden__tabla-scroll">
+    
+                        <table class="detalle-orden__tabla">
+    
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+    
+                            <tbody>
+    
+                                @for (detalle of orden.detalles; track detalle.muebleId) {
+    
+                                    <tr>
+                                        <td>
+                                            {{ detalle.descripcion }}
+                                        </td>
+    
+                                        <td>
+                                            {{ detalle.cantidad }}
+                                        </td>
+    
+                                        <td>
+                                            {{detalle.precioUnitario | money}}
+                                        </td>
+    
+                                        <td class="detalle-orden__importe">
+                                            {{ detalle.precioTotal | money }}
+                                        </td>
+                                    </tr>
+    
+                                }
+    
+                            </tbody>
+    
+                        </table>
+    
+                    </div>
+    
+                }
+    
+            </section>
+    
+            <section class="detalle-orden__finanzas">
+    
+                <article class="detalle-orden__resumen-card">
+    
+                    <span>Total</span>
+    
+                    <strong>
+                        {{ orden.total | money }}
+                    </strong>
+    
+                </article>
+    
+                <article class="detalle-orden__resumen-card">
+    
+                    <span>Total pagado</span>
+    
+                    <strong class="detalle-orden__valor--success">
+                        {{ orden.totalPagado | money }}
+                    </strong>
+    
+                </article>
+    
+                <article class="detalle-orden__resumen-card">
+    
+                    <span>Saldo pendiente</span>
+    
+                    <strong class="detalle-orden__valor--danger">
+                        {{ orden.saldoPendiente | money }}
+                    </strong>
+    
+                </article>
+    
+            </section>
+    
+            <section class="detalle-orden__seccion">
+    
+                <h3 class="detalle-orden__seccion-titulo">
+                    Historial de pagos
+                </h3>
+    
+                @if (orden.pagos.length === 0) {
+    
+                    <p class="detalle-orden__vacio">
+                        No existen pagos registrados
+                    </p>
+    
+                } @else {
+    
+                    <div class="detalle-orden__tabla-scroll">
+    
+                        <table class="detalle-orden__tabla">
+    
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Forma</th>
+                                    <th>Monto</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+    
+                            <tbody>
+    
+                                @for (pago of orden.pagos; track pago.id) {
+    
+                                    <tr>
+    
+                                        <td>
+                                            {{ pago.fechaRegistro | date:'dd/MM/yyyy HH:mm'}}
+                                        </td>
+    
+                                        <td>
+                                            {{ pago.tipoPago }}
+                                        </td>
+    
+                                        <td>
+                                            {{ pago.formaPago }}
+                                        </td>
+    
+                                        <td class="detalle-orden__importe">
+                                            {{ pago.monto | money }}
+                                        </td>
+    
+                                        <td>
+                                            <span class="detalle-orden__pago-estado">
+                                                {{ pago.estado }}
+                                            </span>
+                                        </td>
+    
+                                    </tr>
+    
+                                }
+    
+                            </tbody>
+    
+                        </table>
+    
+                    </div>
+    
+                }
+    
+            </section>
+
+        </div>
+
+    } @else {
+        
+        <app-state state="empty"
+            icon="fa-solid fa-file-invoice"
+            message="No hay informacion disponible">
+        </app-state>
+    
+    }
+
+    <footer class="detalle-orden__acciones">
+
+        <button type="button"
+            class="detalle-orden__regresar"
+            (click)="cerrar()">
+            
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+        </button>
+
+    </footer>
+</section>

@@ -1,0 +1,378 @@
+<form class="registrar-pago"
+    [formGroup]="formulario"
+    (ngSubmit)="guardar()">
+
+    <div class="registrar-pago__contenido">
+
+        <!------------------------------------------------------------>
+        <!------------------- SELECCIONAR ORDEN ----------------------->
+        <!------------------------------------------------------------>
+    
+        <section class="registrar-pago__seccion">
+    
+            <div class="registrar-pago__seccion-header">
+    
+                <span class="registrar-pago__seccion-icono">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </span>
+    
+                <div>
+                    <h3 class="registrar-pago__seccion-titulo">
+                        Orden de compra
+                    </h3>
+    
+                    <p class="registrar-pago__seccion-descripcion">
+                        Selecciona la orden a la que se aplicara el pago
+                    </p>
+                </div>
+    
+            </div>
+    
+            @if (ui.cargandoOrdenes) {
+    
+                <app-state state="loading"
+                    message="Cargando ordenes disponibles">
+    
+                </app-state>
+    
+            } @else if (ordenes.length === 0) {
+    
+                <app-state state="empty"
+                    icon="fa-solid fa-file-circle-xmark"
+                    message="No hay ordenes confirmadas con saldo pendiente">
+    
+                </app-state>
+    
+            } @else {
+    
+                <div class="registrar-pago__campo">
+    
+                    <label for="ordenId">
+                        Orden de compra
+                    </label>
+    
+                    <select id="ordenId"
+                        formControlName="ordenId"
+                        [disabled]="ui.guardando">
+    
+                        <option [ngValue]="0">
+                            Selecciona una orden
+                        </option>
+    
+                        @for (orden of ordenes; track orden.id) {
+    
+                            <option [ngValue]="orden.id">
+    
+                                Orden #{{ orden.id }} · {{ orden.cliente }} · {{ orden.total | money }}
+    
+                            </option>
+    
+                        }
+    
+                    </select>
+    
+                    @if (
+                        formulario.controls.ordenId.touched && formulario.controls.ordenId.invalid) {
+    
+                        <small class="registrar-pago__error-campo">
+                            Selecciona una orden valida
+                        </small>
+    
+                    }
+    
+                </div>
+    
+            }
+    
+        </section>
+    
+        <!------------------------------------------------------------>
+        <!---------------- INFORMACIÓN DE LA ORDEN -------------------->
+        <!------------------------------------------------------------>
+    
+        @if (ui.cargandoDetalle) {
+    
+            <app-state state="loading"
+                message="Cargando informacion de la orden">
+    
+            </app-state>
+    
+        } @else if (ordenSeleccionada) {
+    
+            <section class="registrar-pago__orden">
+    
+                <header class="registrar-pago__orden-header">
+    
+                    <div class="registrar-pago__orden-identidad">
+    
+                        <span class="registrar-pago__orden-icono">
+                            <i class="fa-solid fa-receipt"></i>
+                        </span>
+    
+                        <div>
+                            <span class="registrar-pago__orden-folio">
+                                Orden #{{ ordenSeleccionada.id }}
+                            </span>
+    
+                            <h3 class="registrar-pago__orden-cliente">
+                                {{ ordenSeleccionada.cliente }}
+                            </h3>
+                        </div>
+    
+                    </div>
+    
+                    <span class="registrar-pago__orden-estado">
+                        {{ ordenSeleccionada.estadoPago }}
+                    </span>
+    
+                </header>
+    
+                <div class="registrar-pago__resumen">
+    
+                    <article class="registrar-pago__resumen-item">
+    
+                        <span>
+                            Total de la orden
+                        </span>
+    
+                        <strong>
+                            {{ ordenSeleccionada.total | money }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="registrar-pago__resumen-item">
+    
+                        <span>
+                            Total pagado
+                        </span>
+    
+                        <strong>
+                            {{ ordenSeleccionada.totalPagado | money }}
+                        </strong>
+    
+                    </article>
+    
+                    <article class="registrar-pago__resumen-item 
+                        registrar-pago__resumen-item--pendiente">
+    
+                        <span>
+                            Saldo pendiente
+                        </span>
+    
+                        <strong>
+                            {{ ordenSeleccionada.saldoPendiente | money }}
+                        </strong>
+    
+                    </article>
+    
+                </div>
+    
+            </section>
+    
+            <!------------------------------------------------------------>
+            <!--------------------- DATOS DEL PAGO ------------------------>
+            <!------------------------------------------------------------>
+    
+            <section class="registrar-pago__seccion">
+    
+                <div class="registrar-pago__seccion-header">
+    
+                    <span class="registrar-pago__seccion-icono">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </span>
+    
+                    <div>
+                        <h3 class="registrar-pago__seccion-titulo">
+                            Datos del pago
+                        </h3>
+    
+                        <p class="registrar-pago__seccion-descripcion">
+                            Ingresa el monto y la forma en que se recibio
+                        </p>
+                    </div>
+    
+                </div>
+    
+                <div class="registrar-pago__grid">
+    
+                    <div class="registrar-pago__campo">
+    
+                        <label for="monto">
+                            Monto
+                        </label>
+    
+                        <div class="registrar-pago__monto-control">
+    
+                            <span class="registrar-pago__moneda">
+                                $
+                            </span>
+    
+                            <input id="monto"
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                formControlName="monto"
+                                [max]="saldoPendiente"
+                                [disabled]="ui.guardando"
+                                placeholder="0.00">
+    
+                        </div>
+    
+                        @if (formulario.controls.monto.touched && formulario.controls.monto.invalid) {
+    
+                            <small class="registrar-pago__error-campo">
+    
+                                @if (formulario.controls.monto.errors?.['required']) {
+                                    El monto es obligatorio
+                                }
+    
+                                @if (formulario.controls.monto.errors?.['min']) {
+                                    El monto debe ser mayor a cero
+                                }
+    
+                            </small>
+    
+                        }
+    
+                    </div>
+    
+                    <div class="registrar-pago__campo">
+    
+                        <label for="formaPago">
+                            Forma de pago
+                        </label>
+    
+                        <select id="formaPago"
+                            formControlName="formaPago"
+                            [disabled]="ui.guardando">
+    
+                            <option [ngValue]="formaPagoEnum.EFECTIVO">
+                                Efectivo
+                            </option>
+    
+                            <option [ngValue]="formaPagoEnum.TRANSFERENCIA">
+                                Transferencia
+                            </option>
+    
+                            <option [ngValue]="formaPagoEnum.TARJETA">
+                                Tarjeta
+                            </option>
+    
+                        </select>
+    
+                        @if ( formulario.controls.formaPago.touched && formulario.controls.formaPago.invalid) {
+    
+                            <small class="registrar-pago__error-campo">
+                                Selecciona una forma de pago
+                            </small>
+    
+                        }
+    
+                    </div>
+    
+                </div>
+    
+                <div class="registrar-pago__saldo-ayuda">
+    
+                    <i class="fa-solid fa-circle-info"></i>
+    
+                    <span>
+                        El pago no puede superar el saldo pendiente de
+                        <strong>
+                            {{ saldoPendiente | money }}
+                        </strong>.
+                    </span>
+    
+                </div>
+    
+                <div class="registrar-pago__campo">
+    
+                    <label for="referencia">
+                        Referencia
+                    </label>
+    
+                    <input id="referencia"
+                        type="text"
+                        formControlName="referencia"
+                        [disabled]="ui.guardando"
+                        placeholder="Folio, autorización o referencia bancaria">
+    
+                </div>
+    
+                <div class="registrar-pago__campo">
+    
+                    <label for="observaciones">
+                        Observaciones
+                    </label>
+    
+                    <textarea id="observaciones"
+                        rows="4"
+                        formControlName="observaciones"
+                        [disabled]="ui.guardando"
+                        placeholder="Agrega información adicional del pago">
+    
+                    </textarea>
+    
+                </div>
+    
+            </section>
+    
+        }
+    
+        <!------------------------------------------------------------>
+        <!------------------------- ERROR ----------------------------->
+        <!------------------------------------------------------------>
+    
+        @if (ui.error) {
+    
+            <div class="registrar-pago__error">
+    
+                <i class="fa-solid fa-circle-exclamation"></i>
+    
+                <span>
+                    {{ ui.error }}
+                </span>
+    
+            </div>
+    
+        }
+
+    </div>
+
+    <!------------------------------------------------------------>
+    <!------------------------ ACCIONES --------------------------->
+    <!------------------------------------------------------------>
+
+    <footer class="registrar-pago__acciones">
+
+        <button type="button"
+            class="registrar-pago__boton registrar-pago__boton--secundario"
+            [disabled]="ui.guardando"
+            (click)="cerrar()">
+
+            Regresar
+
+        </button>
+
+        <button type="submit"
+            class=" registrar-pago__boton registrar-pago__boton--principal"
+            [disabled]="formulario.invalid || !ordenSeleccionada || ui.guardando">
+
+            @if (ui.guardando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Registrando...
+
+            } @else {
+
+                <i class="fa-solid fa-floppy-disk"></i>
+                Registrar pago
+
+            }
+
+        </button>
+
+    </footer>
+
+</form>

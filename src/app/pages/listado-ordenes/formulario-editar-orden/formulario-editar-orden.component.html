@@ -1,0 +1,231 @@
+<section class="editar-orden">
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando información de la orden">
+        </app-state>
+
+    } @else if (ui.error && !orden) {
+
+        <app-state state="error"
+            [message]="ui.error">
+        </app-state>
+
+    } @else if (orden) {
+
+        <header class="editar-orden__header">
+
+            <div class="editar-orden__identidad">
+
+                <span class="editar-orden__icono">
+                    <i class="fa-solid fa-file-pen"></i>
+                </span>
+
+                <div>
+                    <span class="editar-orden__folio">
+                        Orden #{{ orden.id }}
+                    </span>
+
+                    <h3 class="editar-orden__titulo">
+                        Editar cotización
+                    </h3>
+                </div>
+
+            </div>
+
+            <span class="editar-orden__badge">
+                {{ orden.estadoOrden }}
+            </span>
+
+        </header>
+
+        <section class="editar-orden__seccion">
+
+            <div class="editar-orden__datos">
+
+                <div class="editar-orden__campo">
+
+                    <label class="editar-orden__label">
+                        Cliente
+                    </label>
+
+                    <button type="button"
+                        class="editar-orden__selector"
+                        [disabled]="ui.guardando"
+                        (click)="abrirClientes()">
+
+                        <span> 
+                            {{ clienteSeleccionado?.nombre || 'Seleccionar cliente'}}
+                        </span>
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="editar-orden__campo">
+
+                    <label for="fechaEntrega"
+                        class="editar-orden__label">
+
+                        Fecha de entrega
+
+                    </label>
+
+                    <input id="fechaEntrega"
+                        type="date"
+                        class="editar-orden__input"
+                        [(ngModel)]="fechaEntrega"
+                        [disabled]="ui.guardando">
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="editar-orden__seccion">
+
+            <div class="editar-orden__detalle-header">
+
+                <div>
+                    <h4 class="editar-orden__subtitulo">
+                        Detalle de la orden
+                    </h4>
+
+                    <p class="editar-orden__descripcion">
+                        Modifica los muebles, cantidades o precios.
+                    </p>
+                </div>
+
+                <button type="button"
+                    class="editar-orden__agregar"
+                    [disabled]="ui.guardando"
+                    (click)="abrirSeleccionarMueble()">
+
+                    <i class="fa-solid fa-plus"></i>
+                    Agregar mueble
+
+                </button>
+
+            </div>
+
+            <div class="editar-orden__tabla">
+
+                <app-tabla-orden-detalle [detalles]="detalleView"
+                    (agregar)="abrirSeleccionarMueble()"
+                    (eliminar)="eliminarDetalle($event)"
+                    (actualizar)="actualizarPrecioTotal($event)">
+                </app-tabla-orden-detalle>
+
+            </div>
+
+        </section>
+
+        <div class="editar-orden__total">
+
+            <span>Total de la orden</span>
+
+            <strong>
+                {{ totalOrden | money }}
+            </strong>
+
+        </div>
+
+        @if (ui.error) {
+
+            <p class="editar-orden__error">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                {{ ui.error }}
+
+            </p>
+
+        }
+
+        <footer class="editar-orden__acciones">
+
+            <button type="button"
+                class="editar-orden__boton editar-orden__boton--secundario"
+                [disabled]="ui.guardando"
+                (click)="cerrarFormulario()">
+
+                Cancelar
+
+            </button>
+
+            <button type="button"
+                class="editar-orden__boton editar-orden__boton--principal"
+                [disabled]=" ui.guardando || detalleView.length === 0"
+                (click)="guardarCambios()">
+
+                @if (ui.guardando) {
+
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Guardando...
+
+                } @else {
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Guardar cambios
+
+                }
+
+            </button>
+
+        </footer>
+
+    }
+
+</section>
+
+<app-modal [visible]="ui.mostrarClientes"
+    title="Seleccionar cliente"
+    size="sm"
+    (cerrar)="cerrarClientes()">
+
+    <app-seleccionar-cliente (clienteSeleccionado)="seleccionarCliente($event)"
+        (crearCliente)="abrirCrearCliente()">
+
+    </app-seleccionar-cliente>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarCrearCliente"
+    title="Nuevo cliente"
+    size="lg"
+    (cerrar)="cerrarCrearCliente()">
+
+    <app-crear (clienteCreado)="clienteCreado($event)"
+        (cancelar)="cerrarCrearCliente()">
+        
+    </app-crear>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarSeleccionarMueble"
+    title="Seleccionar mueble"
+    size="md"
+    (cerrar)="cerrarSeleccionarMueble()">
+
+    <app-seleccionar-mueble (muebleSeleccionado)="seleccionarMueble($event)"
+        (crearMueble)="abrirCrearMueble()">
+
+    </app-seleccionar-mueble>
+
+</app-modal>
+
+<app-modal [visible]="ui.mostrarCrearMueble"
+    title="Nuevo mueble"
+    size="md"
+    (cerrar)="cerrarCrearMueble()">
+
+    <app-crear-mueble (muebleCreado)="muebleCreado($event)"
+        (cancelar)="cerrarCrearMueble()">
+
+    </app-crear-mueble>
+
+</app-modal>

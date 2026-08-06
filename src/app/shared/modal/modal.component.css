@@ -1,0 +1,211 @@
+
+/*host exclusivo de angular que no solo afecta al div  afecta al componente app-modal*/
+:host{
+    display: block;
+}
+
+.modal__backdrop{
+    position: fixed;
+    /*forma de escribir top, right, buttom y left a 0*/
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background:rgba(0, 0, 0, 0.45);
+
+    backdrop-filter: blur(.5rem);
+
+    opacity: 0;
+}
+
+/***************************************************/
+/**********************HEADER***********************/
+/***************************************************/
+
+.modal__header{
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+
+    border-bottom: .1rem solid rgba(0,0,0,0.08);
+}
+
+.modal__title{
+    margin: 0;
+
+    font-size: 2rem;
+
+    font-weight: 600;
+}
+
+.close__button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    background: none;
+
+    cursor: pointer;
+
+    font-size: 2rem;
+    width: 3.2rem;
+    height: 3.2rem;
+
+    border-radius: 50%;
+
+    transition: .2s ease-in-out;
+}
+
+.close__button:hover{
+    background: rgba(0,0,0,0.08);;
+}
+
+/****************************************************/
+/***************TAMAÑOS CONTAINER********************/
+/****************************************************/
+
+.modal__container{
+    display: flex;
+
+    flex-direction: column;
+
+    width: 90%;
+    max-height: 90vh;
+    
+    overflow: hidden;
+
+    background: var(--color-surface);
+
+    border-radius: 3rem;
+
+    box-shadow: 0 0 20px rgba(0, 162, 255, .35);
+    
+}
+
+.modal__container.sm{
+    max-width: 35rem;
+}
+
+.modal__container.md{
+    max-width: 50rem;
+}
+
+.modal__container.lg{
+    max-width: 75rem;
+}
+
+.modal__container.xl{
+    max-width: 90rem;
+}
+
+/*******************************************/
+/******************BODY*********************/
+/*******************************************/
+
+.modal__body{
+
+    overflow-y: auto;
+
+    flex:1;
+
+    min-height: 0;
+
+    padding: 2rem;
+
+}
+
+/***********************************************/
+/**************MODAL CERRA Y ABRIR**************/
+/***********************************************/
+
+.modal__open{
+    animation: modalOpen .25s ease forwards;
+}
+
+.modal__close{
+    animation: modalClose .25s ease forwards;
+}
+
+.backdrop__open{
+    animation: backdropOpen .25s ease forwards;
+}
+
+.backdrop__close{
+    animation: backdropClose .25s ease forwards;
+}
+
+
+
+/***********************************************/
+/*****************KEYFRAMES*********************/
+/***********************************************/
+
+@keyframes backdropOpen{
+    
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+    
+}
+
+@keyframes backdropClose{
+    
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+
+}
+
+@keyframes modalOpen{
+    from{
+
+        opacity: 0;
+        transform: 
+            translateY(2.5rem)
+            scale(.95);
+
+    }
+
+    to{
+        opacity: 1;
+        transform: 
+            translateY(0)
+            scale(1);
+    }
+}
+
+@keyframes modalClose{
+    from{
+        
+        opacity: 1;
+        transform: 
+            translateY(0)
+            scale(1);
+        
+    }
+    
+    to{
+
+        opacity: 0;
+        transform: 
+            translateY(2.5rem)
+            scale(.95);
+    }
+}
+
