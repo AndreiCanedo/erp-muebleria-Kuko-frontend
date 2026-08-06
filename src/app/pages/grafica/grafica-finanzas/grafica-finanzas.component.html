@@ -1,0 +1,21 @@
+<div class="grafica-finanzas">
+
+    @if (puntos.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-chart-line"
+            message="No hay información financiera para mostrar">
+
+        </app-state>
+
+    } @else {
+
+        <canvas #graficaCanvas
+            aria-label="Gráfica de ingresos, egresos y balance"
+            role="img">
+
+        </canvas>
+
+    }
+
+</div>

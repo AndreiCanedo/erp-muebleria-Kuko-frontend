@@ -1,0 +1,25 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.grafica-finanzas {
+    position: relative;
+
+    width: 100%;
+    height: 32rem;
+    min-height: 32rem;
+}
+
+.grafica-finanzas canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media (max-width: 700px) {
+
+    .grafica-finanzas {
+        height: 28rem;
+        min-height: 28rem;
+    }
+}

@@ -42,7 +42,7 @@ export class OrdenCompraServices{
     cargarOrdenCompra(): Observable<OrdenCompra[]>{
         return this.sharedServices.get<OrdenCompraDTO>(this.endpoint)
             .pipe(
-                map((dtos) => dtos.map(OrdenCompraMapper.fromDTO))
+                map(dtos => dtos.map(dto => OrdenCompraMapper.fromDTO(dto)))
             );
     }
 

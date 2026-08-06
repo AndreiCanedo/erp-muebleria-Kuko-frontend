@@ -118,7 +118,12 @@
 
                 <div class="presupuesto-card__dato">
                     <i class="fa-solid fa-calendar"></i>
-                    Sin programar
+                    <input type="date"
+                        id="fechaEntrega"
+                        [(ngModel)]="fechaEntrega"
+                        [min]="fechaMinimaEntrega"
+                        [disabled]="ui.cargando">
+                        
                 </div>
 
             </div>

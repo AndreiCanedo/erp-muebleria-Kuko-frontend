@@ -56,6 +56,8 @@ export class PresupuestoComponent {
 
   public clienteSeleccionado: Cliente | null = null;
 
+  public fechaEntrega = '';
+
   mostrarClientes(): void{
     this.ui.animado = false;
     this.ui.mostrarClientes = true;
@@ -204,6 +206,7 @@ export class PresupuestoComponent {
   private buildRequest(): CrearOrdenCompraRequest{
     return {
       clienteId: this.clienteSeleccionado!.id,
+      fechaEntrega: this.fechaEntrega,
       detallesRequest: this.detalleView.map(detalle => ({
         muebleId: detalle.muebleId!,
         cantidad: detalle.cantidad,
@@ -238,6 +241,30 @@ export class PresupuestoComponent {
       return false;
     }
 
+    if (!this.fechaEntrega) {
+      Swal.fire({
+        title: 'Seleccione una fecha de entrega',
+        icon: 'warning'
+      });
+
+      return false;
+    }
+
+    const fechaSeleccionada = this.convertirFechaInput(this.fechaEntrega);
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (!fechaSeleccionada || fechaSeleccionada.getTime() < hoy.getTime()) {
+      Swal.fire({
+        title: 'Fecha de entrega inválida',
+        text: 'La fecha de entrega no puede ser anterior a hoy',
+        icon: 'warning'
+      });
+
+      return false;
+    }
+
     if(this.detalleView.length === 0){
       Swal.fire({
         title: 'Agregue al menos un mueble',
@@ -253,14 +280,25 @@ export class PresupuestoComponent {
 
   private limpiarFormulario(): void {
     this.clienteSeleccionado = null;
+    this.fechaEntrega = '';
     this.detalleView = [];
 
     // Cerrar modales por si alguno quedó abierto
     this.ui.mostrarClientes = false;
     this.ui.mostrarCrearCliente = false;
+    this.ui.mostrarCrearMueble = false;
     this.ui.mostrarSeleccionarMueble = false;
     this.ui.animado = false;
   }
+
+  private convertirFechaInput(fecha: string): Date | null {
+
+  if (!fecha) return null;
+
+  const [year, month, day] = fecha.split('-').map(Number);
+
+  return new Date(year, month - 1, day);
+}
 
   /******************************************************/
   /**********************VALIDACIONES********************/
@@ -284,6 +322,15 @@ export class PresupuestoComponent {
 
     return false;
   
+  }
+
+  public get fechaMinimaEntrega(): string{
+    const hoy = new Date();
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, '0');
+    const day = String(hoy.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
 }

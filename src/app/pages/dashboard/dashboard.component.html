@@ -513,23 +513,7 @@
 
                 <div class="dashboard-panel__grafica">
 
-                    <!-- Aquí se integrará Chart.js o ng2-charts -->
-
-                    <div class="dashboard-grafica__placeholder">
-
-                        <i class="fa-solid fa-chart-area"></i>
-
-                        <p>
-                            La grafica financiera se integrara en el siguiente
-                            paso.
-                        </p>
-
-                        <span>
-                            {{ dashboard.finanzas.length }}
-                            puntos disponibles
-                        </span>
-
-                    </div>
+                    <app-grafica-finanzas [puntos]="dashboard.finanzas"></app-grafica-finanzas>
 
                 </div>
 

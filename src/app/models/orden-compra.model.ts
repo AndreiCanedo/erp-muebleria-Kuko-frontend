@@ -12,6 +12,7 @@ export class OrdenCompra{
         public fecha:Date | null,
         public total:number,
         public detalles:OrdenDetalle[],
+        public fechaConfirmacion:Date | null,
         public fechaEntrega:Date | null,
         public fechaCancelacion:Date | null,
         public motivoCancelacion:string | null,

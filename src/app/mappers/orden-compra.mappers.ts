@@ -10,11 +10,12 @@ export class OrdenCompraMapper{
         return new OrdenCompra(
             dto.id,
             dto.clienteId,
-            dto.fecha ? new Date(dto.fecha) : null,
+            this.parseLocalDateTime(dto.fecha),
             dto.total,
             (dto.detalles ?? []).map(detalle => OrdenDetalleMapper.fromDTO(detalle)),
-            dto.fechaEntrega  ? new Date(dto.fechaEntrega) : null,
-            dto.fechaCancelacion ? new Date(dto.fechaCancelacion) : null,
+            this.parseLocalDateTime(dto.fechaConfirmacion),
+            this.parseLocalDate(dto.fechaEntrega),
+            this.parseLocalDateTime(dto.fechaCancelacion),
             dto.motivoCancelacion,
             dto.estadoOrden,
             dto.proceso,
@@ -32,7 +33,8 @@ export class OrdenCompraMapper{
             detalles: model.detalles
                 .map(detalle => OrdenDetalleMapper.toDTO(detalle)),
 
-            fechaEntrega: model.fechaEntrega?.toISOString() ?? null,
+            fechaConfirmacion: model.fechaConfirmacion?.toISOString() ?? null,    
+            fechaEntrega: model.fechaEntrega ? this.formatLocalDate(model.fechaEntrega) : null,
             fechaCancelacion: model.fechaCancelacion?.toISOString() ?? null,
             motivoCancelacion: model.motivoCancelacion,
 
@@ -41,6 +43,31 @@ export class OrdenCompraMapper{
             estadoPago: model.estadoPago,
             estadoEntrega: model.estadoEntrega
         };
+    }
+
+    private static parseLocalDate(fecha: string | null): Date | null {
+
+        if (!fecha) return null;
+
+        const [year, month, day] =fecha.substring(0, 10).split('-').map(Number);
+
+        return new Date(year, month - 1, day);
+    }
+
+    private static parseLocalDateTime(fecha: string | null): Date | null {
+
+        return fecha ? new Date(fecha) : null;
+    }
+
+    private static formatLocalDate(fecha: Date): string {
+
+        const year = fecha.getFullYear();
+
+        const month = String(fecha.getMonth() + 1).padStart(2, '0');
+
+        const day =String(fecha.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
     }
 
 }

@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { EgresoComponent } from './egreso/egreso.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { GraficaComponent } from './grafica/grafica.component';
 import { EgresoEditComponent } from './egreso/botones/egreso-edit/egreso-edit.component';
 import { EgresoCrearComponent } from './egreso/botones/egreso-crear/egreso-crear.component';
 import { TablaComponent } from './tabla/tabla-lectura/tabla.component';
@@ -40,6 +39,7 @@ import { SharedModule } from "../shared/shared.module";
 import { PagesComponent } from './pages.component';
 import { PagesRoutingModule } from './pages.routing';
 import { RegistrarPagoOrdenComponent } from './listado-pagos-orden/registrar-pago-orden/registrar-pago-orden.component';
+import { GraficaFinanzasComponent } from './grafica/grafica-finanzas/grafica-finanzas.component';
 
 
 
@@ -47,7 +47,6 @@ import { RegistrarPagoOrdenComponent } from './listado-pagos-orden/registrar-pag
   declarations: [
     PagesComponent,
     DashboardComponent,
-    GraficaComponent,
 
     EgresoComponent,
     EgresoEditComponent,
@@ -84,6 +83,7 @@ import { RegistrarPagoOrdenComponent } from './listado-pagos-orden/registrar-pag
     DetallePagoOrdenComponent,
     FormularioEditarPagoComponent,
     RegistrarPagoOrdenComponent,
+    GraficaFinanzasComponent,
     
     
   ],

@@ -12,6 +12,7 @@ export interface OrdenCompraDTO{
         total:number;
         detalles:OrdenDetalleDTO[];
         
+        fechaConfirmacion:string | null;
         fechaEntrega:string | null;
         fechaCancelacion:string | null;
         motivoCancelacion:string | null;
