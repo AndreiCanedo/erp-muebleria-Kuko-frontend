@@ -1,9 +1,9 @@
 import { Component, Inject, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UsuariosService } from '../../services/usuarios.service';
 import Swal from 'sweetalert2';
 import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -15,20 +15,20 @@ export class LoginComponent implements OnInit{
 
   private router = inject(Router)
   private fb = inject(FormBuilder)
-  private usuarioService = inject(UsuariosService)
+  private authService = inject(AuthService);
   public loginForm: FormGroup
+
+  public errorLogin = '';
   
   constructor(@Inject(PLATFORM_ID) private platformId: Object){
-    console.log(isPlatformBrowser(this.platformId))
+    
     if(isPlatformBrowser(this.platformId)){
-      console.log('manda o esto')
       this.loginForm = this.fb.group({
         username:[ localStorage.getItem('username') || '', [Validators.required, Validators.email]],
         password:['',Validators.required],
         remember:[localStorage.getItem('remember') || false]
       });
     }else{
-      console.log('manda esto')
       this.loginForm = this.fb.group({
         username:['', [Validators.required, Validators.email]],
         password:['',Validators.required],
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit{
 
 
   login(){
-    this.usuarioService.login( this.loginForm.value)
+    this.authService.login( this.loginForm.value)
       .subscribe(resp => {
         if( this.loginForm.get('remember')?.value){
           localStorage.setItem('username', this.loginForm.get('username')?.value);
@@ -53,8 +53,9 @@ export class LoginComponent implements OnInit{
         }
 
         //ir al DashBoard
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/dashboard');
       },(err) => {
+        this.errorLogin = 'El usuario o la contraseña es incorrecta';
         const errorMsg = err.error?.msg || 'El Usuario o la Contraseña es incorrecta';
         Swal.fire('Error', errorMsg, 'error');
       });

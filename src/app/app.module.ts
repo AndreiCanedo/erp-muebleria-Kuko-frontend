@@ -16,9 +16,10 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     bootstrap: [AppComponent],
     imports: [
         BrowserModule,
-        AppRoutingModule,
+        AuthModule,
         PagesModule,
-        AuthModule
+        //Siempre tiene que ir al final
+        AppRoutingModule,
     ], 
     providers: [provideHttpClient(withFetch(), withInterceptorsFromDi())] 
     })

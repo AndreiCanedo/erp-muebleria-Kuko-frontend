@@ -9,18 +9,23 @@ import { PresupuestoComponent } from './presupuesto/presupuesto.component';
 import { MuebleComponent } from './mueble/mueble.component';
 import { ListadoOrdenesComponent } from './listado-ordenes/listado-ordenes.component';
 import { ListadoPagosOrdenComponent } from './listado-pagos-orden/listado-pagos-orden.component';
+import { authGuard } from '../guards/auth.guard';
 
 
 const routes: Routes = [
-  {path:'',component:PagesComponent,children:[
-    {path:'dashboard',component:DashboardComponent},
-    {path:'clientes', component:ClienteComponent},
-    {path:'muebles', component:MuebleComponent},
-    {path:'ordenes', component:ListadoOrdenesComponent},
-    {path: 'presupuesto', component: PresupuestoComponent},
-    {path: 'pagos', component: ListadoPagosOrdenComponent},
-    {path:'egresos', component:EgresoComponent},
-  ]}
+  {path:'',component:PagesComponent,
+    canActivate: [authGuard], 
+    canActivateChild: [authGuard], 
+    children:[
+      { path:'dashboard',component:DashboardComponent },
+      { path:'clientes', component:ClienteComponent },
+      { path:'muebles', component:MuebleComponent },
+      { path:'ordenes', component:ListadoOrdenesComponent },
+      { path: 'presupuesto', component: PresupuestoComponent },
+      { path: 'pagos', component: ListadoPagosOrdenComponent },
+      { path:'egresos', component:EgresoComponent },
+    ]
+  }
 ];
 
 @NgModule({

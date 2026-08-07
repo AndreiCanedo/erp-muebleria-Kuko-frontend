@@ -1,35 +1,47 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageServiceService {
 
-  constructor() { }
+  private readonly platformId = inject(PLATFORM_ID);
 
-  isLocalStorageAvailable(): boolean{
+  private get disponible(): boolean{
+    return isPlatformBrowser(this.platformId);
+  }
+
+  public guardar<T>(key:string, value: T): void{
+    if(!this.disponible) return;
+
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  obtener<T>(key:string): T | null{
+    if(!this.disponible) return null;
+
+    const valor = localStorage.getItem(key);
+
+    if(!valor) return null;
+
     try{
-      const test = 'test'
-      localStorage.setItem(test,test)
-      localStorage.removeItem(test)
-      return true;
-    }catch(e){
-      return false;
+      return JSON.parse(valor) as T;
+    }catch{
+      return null;
     }
+
   }
 
-  guardarDatos(key:string, data:any):void{
-    if(this.isLocalStorageAvailable()){
-      localStorage.setItem(key,JSON.stringify(data))
-    }
+  eliminar(key: string): void{
+    if(!this.disponible) return;
+
+    localStorage.removeItem(key);
   }
 
-  cargarDatos(key:string):any{
-    if(this.isLocalStorageAvailable()){
-      const data =localStorage.getItem(key)
-      return data ? JSON.parse(data) : null
-    }
+  limpiar(): void{
+    if(!this.disponible) return;
 
-    return null
+    localStorage.clear();
   }
 }

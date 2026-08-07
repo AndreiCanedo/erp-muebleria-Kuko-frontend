@@ -29,6 +29,18 @@
                 
                         <a href="#" class="login__forget">Forgot Password?</a>
                     </div>
+
+                    @if (errorLogin) {
+
+                        <div class="login__error-general">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                            <span>{{ errorLogin }}</span>
+
+                        </div>
+
+                    }
                 
                     <div class="login__buttom">
                         <button class="buttom__loguear" type="submit">

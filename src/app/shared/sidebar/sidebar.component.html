@@ -105,7 +105,14 @@
     <!-- salir -->
     <div class="menu__buttom">
         
-        <a routerLink="/login" class="menu__logout logout__link">Log out</a>
+        <button type="button"
+            class="menu__logout logout__link"
+            (click)="logout()">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Cerrar sesión
+
+        </button>
         
     </div>
 </section>

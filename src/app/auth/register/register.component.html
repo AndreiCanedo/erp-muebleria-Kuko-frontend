@@ -49,24 +49,52 @@
                         [ngClass]="{'invalid-field': campoNoValido('username')}"
                         [attr.placeholder]="campoNoValido('username') ? 'email requerido' : ''">
         
-                    <label for="password" class="login__title">Password</label>
+                    <label for="password" class="login__title">Contraseña</label>
                     <input type="password" 
                         class="login__box" 
                         id="password" 
                         formControlName="password" 
-                        [ngClass]="{'invalid-field': campoNoValido('firstName')}"
-                        [attr.placeholder]="campoNoValido('password') ? 'contraseña requerida' : ''">
+                        [ngClass]="{'invalid-field': campoNoValido('password')}"
+                        [attr.placeholder]="mensajeErrorPassword()">
+
+                        @if (mensajeErrorPassword()) {
+                            <span class="login__error">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                {{ mensajeErrorPassword() }}
+                            </span>
+                        }
                     
-                    <label for="password2" class="login__title">Password Remember</label>
+                    <label for="passwordConfirm" class="login__title">Password Remember</label>
                     <input type="password" 
                         class="login__box" 
-                        id="password2" 
-                        formControlName="password2" 
-                        [ngClass]="{'invalid-field': contrasenasNoValidas()}"
-                        [attr.placeholder]="contrasenasNoValidas() ? 'contraseña no coinciden' : ''">
+                        id="passwordConfirm" 
+                        formControlName="passwordConfirm" 
+                        [ngClass]="{'invalid-field': campoNoValido('passwordConfirm') 
+                            || contrasenasNoValidas() }">
+
+                        @if (campoNoValido('passwordConfirm')) {
+                            <span class="login__error">
+                                Confirma la contraseña
+                            </span>
+                        } @else if (contrasenasNoValidas()) {
+                            <span class="login__error">
+                                Las contraseñas no coinciden
+                            </span>
+                        }
 
                     <div class="login__buttom">
-                        <button class="buttom__loguear" type="submit">Sign in</button>
+                        <button class="buttom__loguear" 
+                            type="submit" 
+                            [disabled]="guardando">
+                        
+                            @if(guardando){
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                Registrando...
+                            } @else {
+                                Crear cuenta
+                            }  
+                        
+                        </button>
                     </div>
                     <!-- <div class="menu__option">
                         <h3 class="option__text">or sign in with</h3>
@@ -84,7 +112,7 @@
             </div>
         
             <footer class="menu__footer">
-                <span class="footer__text">cuentas con una cuenta? <a routerLink="/login" class="footer__link">Inicia Sesion aqui</a></span>
+                <span class="footer__text">¿Ya cuentas con una cuenta?<a routerLink="/login" class="footer__link">Inicia Sesion aqui</a></span>
             </footer>
         </div>
     </div>

@@ -1,9 +1,10 @@
-import { Component, Inject, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UsuariosService } from '../../services/usuarios.service';
-import { isPlatformBrowser } from '@angular/common';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
+import { RegisterRequest } from '../../interface/register-request.interface';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-register',
@@ -11,94 +12,124 @@ import Swal from 'sweetalert2';
     styleUrl: './register.component.css',
     standalone: false
 })
-export class RegisterComponent implements OnInit{
+export class RegisterComponent{
 
-  private router = inject(Router)
-  private formSumitted = false//bandera para errores
-  private fb = inject(FormBuilder)
-  private usuarioService = inject(UsuariosService)
-  public registerForm: FormGroup
-  
-  constructor(@Inject(PLATFORM_ID) private platformId: Object){
-    console.log(isPlatformBrowser(this.platformId))
-    if(isPlatformBrowser(this.platformId)){
-      this.registerForm = this.fb.group({
-        firstName:['', [Validators.required]],
-        lastName:['', [Validators.required]],
-        country:['', [Validators.required]],
-        username:[ '', [Validators.required, Validators.email]],
-        password:['',Validators.required],
-        password2:['',Validators.required]
-      },{
-        validators: this.passwordsIguales('password', 'password2')
-      });
-    }else{
-      this.registerForm = this.fb.group({
-        firstName:['', [Validators.required]],
-        lastName:['', [Validators.required]],
-        country:['', [Validators.required]],
-        username:[ '', [Validators.required, Validators.email]],
-        password:['',Validators.required]
-      },{
-        validators: this.passwordsIguales('password', 'password2')
-      })
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  public enviado = false;
+  public guardando = false;
+
+  public registerForm = this.fb.group(
+    {
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      country: ['', Validators.required],
+      username: ['',[Validators.required, Validators.email]],
+      password: ['',[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
+      passwordConfirm: ['', Validators.required]
+    },
+    {
+      validators: [this.passwordsIguales]
     }
-  }
-  ngOnInit(): void {
-    //throw new Error('Method not implemented.');
-  }
+  );
 
+  public crearUsuario(): void {
+    this.enviado = true;
 
-  crearUsuario(){
-    this.formSumitted = true;
-    console.log(this.registerForm.value)
-    if(this.registerForm.invalid){
+    if (this.registerForm.invalid || this.guardando) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 
-    this.usuarioService.crearUsuario(this.registerForm.value)
-      .subscribe( resp => {
-        this.router.navigateByUrl('/');
+    const form = this.registerForm.getRawValue();
 
-      },(err) => {
-        const errorMsg = err.error?.msg || 'Error al crear Usuario';
-        Swal.fire('Error', errorMsg, 'error');
-      })
+    const request: RegisterRequest = {
+      username: form.username.trim(),
+      password: form.password,
+      passwordConfirm: form.passwordConfirm,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      country: form.country.trim()
+    };
+
+    this.guardando = true;
+
+    this.authService.register(request)
+      .pipe(finalize(() => this.guardando = false)
+      )
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Usuario registrado',
+            icon: 'success'
+          }).then(() => {
+            this.router.navigateByUrl('/');
+          });
+        },
+        error: (error: Error) => {
+          Swal.fire({
+            title: 'No fue posible registrar al usuario',
+            text: error.message,
+            icon: 'error'
+          });
+        }
+      });
   }
 
-  campoNoValido(campo:string):boolean{
-    console.log(campo,"=>", this.registerForm.get(campo)?.invalid && this.formSumitted)
-    if(this.registerForm.get(campo)?.invalid && this.formSumitted ){
-      return true
-    }
-    return false
-    
-    }
+  public campoNoValido(campo: string): boolean {
+    const control = this.registerForm.get(campo);
 
-  contrasenasNoValidas(){
-    const pass1 =  this.registerForm.get('password')?.value;
-    const pass2 =  this.registerForm.get('password2')?.value;
-    console.log(pass1 !== pass2)
-    if( (pass1 !== pass2) && this.formSumitted ){
-      return true;
-    } else {
-      return false;
-    }
+    return Boolean(control && control.invalid && (control.touched || this.enviado));
   }
 
-  passwordsIguales(pass1:string, pass2:string){
-    return (form: FormGroup) => {
+  public contrasenasNoValidas(): boolean {
+    const confirmacion = this.registerForm.controls.passwordConfirm;
 
-      const pass1Check = form.get(pass1);
-      const pass2Check = form.get(pass2);
-
-      if(pass1Check?.value == pass2Check?.value){
-        pass2Check?.setErrors(null)
-      }else{
-        pass2Check?.setErrors({ noEsIgual: true})
-      }
-
+    return Boolean(this.registerForm.hasError('passwordMismatch') 
+      && (confirmacion.touched || this.enviado));  
     }
+
+  private passwordsIguales(control: AbstractControl): ValidationErrors | null {
+
+    const password = control.get('password')?.value;
+
+    const passwordConfirm = control.get('passwordConfirm')?.value;
+
+    if (!password || !passwordConfirm) {
+      return null;
+    }
+
+    if (password === passwordConfirm) {
+      return null;
+    }
+
+    return {
+      passwordMismatch: true
+    };
+  }
+
+  public mensajeErrorPassword(): string {
+    const control = this.registerForm.controls.password;
+
+    if (!(control.touched || this.enviado)) {
+      return '';
+    }
+  
+    if (control.hasError('required')) {
+      return 'La contraseña es obligatoria';
+    }
+  
+    if (control.hasError('minlength')) {
+      return 'Debe tener mínimo 8 caracteres';
+    }
+  
+    if (control.hasError('pattern')) {
+      return 'Debe incluir una mayúscula, una minúscula y un número';
+    }
+  
+    return '';
   }
 
 }
