@@ -6,6 +6,8 @@ import { SharedService } from "./shared.service";
 import { MuebleDTO } from "../models/interface-models/muebleDTO.interface";
 import { MuebleMapper } from "../mappers/mueble.mapper";
 import { Mueble } from "../models/mueble.model";
+import { ActualizarMuebleRequest } from "../models/request/actualizar-mueble.request";
+import { CrearMuebleRequest } from "../models/request/crear-mueble.request";
 
 
 @Injectable({
@@ -20,50 +22,66 @@ export class MuebleService {
 
     muebleCreado$ =  this.muebleCreadoSourse.asObservable();
 
-    notificarMuebleCreado(){
+    public notificarMuebleCreado(){
         this.muebleCreadoSourse.next();
     }
 
-    cargarMueble():Observable<Mueble[]>{
+    public cargarMueble():Observable<Mueble[]>{
         return this.sharedServices.get<MuebleDTO>(this.endpoint)
             .pipe(
                 map((dtos) => dtos.map(MuebleMapper.fromDTO))
             );
     }
 
-    buscarMueble(texto: string):Observable<Mueble[]>{
+    public buscarMueble(texto: string):Observable<Mueble[]>{
         return this.sharedServices.get<MuebleDTO>(`${this.endpoint}/buscar`,{texto: texto.trim()})
             .pipe(
                 map((dtos) => dtos.map(MuebleMapper.fromDTO))
             );
     }
 
-    cargarMuebleById(id:number):Observable<Mueble>{
+    public cargarMuebleById(id:number):Observable<Mueble>{
         return this.sharedServices.getById<MuebleDTO>(`${this.endpoint}/${id}`)
             .pipe(
                 map(dto => MuebleMapper.fromDTO(dto))
             );
     }
     
-    crearMueble(mueble:Mueble):Observable<Mueble>{
-        return this.sharedServices.post<MuebleDTO>(this.endpoint, MuebleMapper.toDTO(mueble))
+    public crearMueble(request:CrearMuebleRequest):Observable<Mueble>{
+        return this.sharedServices.post<MuebleDTO>(this.endpoint,request)
             .pipe(
                 map(dto => MuebleMapper.fromDTO(dto))
             );
     }
     
-    actualizarMueble(mueble:Mueble, id:number):Observable<Mueble>{
-        return this.sharedServices.put<MuebleDTO>(`${this.endpoint}/${id}`, MuebleMapper.toDTO(mueble))
+    public actualizarMueble(request:ActualizarMuebleRequest, id:number):Observable<Mueble>{
+        return this.sharedServices.put<MuebleDTO>(`${this.endpoint}/${id}`, request)
             .pipe(
                 map(dto => MuebleMapper.fromDTO(dto))
             );
     }
     
-    eliminarMueble(id:number):Observable<Mueble>{
+    public eliminarMueble(id:number):Observable<Mueble>{
         return this.sharedServices.delete<MuebleDTO>(`${this.endpoint}/${id}`)
             .pipe(
                 map(dto => MuebleMapper.fromDTO(dto))
             );
+    }
+
+    public buscarPorDiseno(disenoId: number): Observable<Mueble[]> {
+
+        return this.sharedServices.get<MuebleDTO>(`/muebles/diseno/${disenoId}`)
+            .pipe(
+                map(dtos =>MuebleMapper.fromDTOList(dtos))
+            );
+    }   
+
+    public cambiarEstado(id: number, activo: boolean): Observable<Mueble> {
+
+        return this.sharedServices.patch<MuebleDTO>(`/muebles/${id}/estado?activo=${activo}`,{})
+        .pipe(
+            map(dto => MuebleMapper.fromDTO(dto))
+        );
     }
 
 }

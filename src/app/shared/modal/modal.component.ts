@@ -10,26 +10,14 @@ import { ModalService } from './modal.service';
 export class ModalComponent {
 
 
-  @Input()
-    visible = false;
+  @Input() visible = false;
+  @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() title = '';
+  @Input() showClose = true;
+  @Input() closeOnBackdrop = true;
+  @Input() closeOnEsc = true;
 
-  @Input()
-    size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
-
-  @Input()
-    title = '';
-
-  @Input()
-    showClose = true;
-    
-  @Input()
-    closeOnBackdrop = true;
-
-  @Input() 
-    closeOnEsc = true;
-
-  @Output()
-    cerrar = new EventEmitter<void>();
+  @Output() cerrar = new EventEmitter<void>();
 
   private modalServices = inject(ModalService);
 
@@ -93,13 +81,22 @@ export class ModalComponent {
   //nos ayuda esta funcion a eliminar la funcion setTimeout de cerrarModal()
   public onAnimationEnd(): void{
   
-    if(!this.cerrando) return;
+    if(this.cerrando) {
+      this.modalServices.eliminar(this.modalId);
 
-    this.modalServices.eliminar(this.modalId);
+      this.cerrando = false;
+      this.mostrar = false;
 
-    this.cerrando = false;
-    this.mostrar = false;
-    this.cerrar.emit();
+      this.cerrar.emit();
+
+      return;
+    }
+
+    // Termino la animacion de apertura
+    // Quitamos el transform del modal
+    if (this.animacion === 'modal__open') {
+      this.animacion = 'modal__opened';
+    }
   
   }
 

@@ -1,0 +1,245 @@
+<section class="catalogo-page">
+
+    <header class="catalogo-page__header">
+
+        <div class="catalogo-page__encabezado">
+
+            <span class="catalogo-page__header-icon">
+                <i class="fa-solid fa-images"></i>
+            </span>
+
+            <div>
+                <h1 class="catalogo-page__title">
+                    Catalogo
+                </h1>
+
+                <p class="catalogo-page__subtitle">
+                    Explora los diseños de muebles disponibles
+                </p>
+            </div>
+
+        </div>
+
+        <button type="button"
+            class="catalogo-page__nuevo"
+            (click)="abrirCrear()">
+
+            <i class="fa-solid fa-plus"></i>
+            Nuevo diseño
+        </button>
+
+    </header>
+
+    <section class="catalogo-page__filtros">
+
+        <app-search-box placeholder="Buscar diseño por nombre o descripcion"
+            [value]="busqueda"
+            (search)="buscar($event)">
+        </app-search-box>
+
+        <div class="catalogo-page__categoria">
+
+            <select class="catalogo-page__select"
+                [ngModel]="categoriaSeleccionada"
+                (ngModelChange)="cambiarCategoria($event)">
+
+                <option [ngValue]="null">
+                    Todas las categorías
+                </option>
+
+                @for (categoria of categorias; track categoria) {
+
+                    <option [ngValue]="categoria">
+                        {{ categoria }}
+                    </option>
+
+                }
+
+            </select>
+
+        </div>
+
+    </section>
+
+    @if (ui.cargando) {
+
+        <app-state
+            state="loading"
+            message="Cargando catalogo">
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarCatalogo()">
+
+        </app-state>
+
+    } @else if (disenosFiltrados.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-images"
+            message="No hay diseños disponibles">
+
+        </app-state>
+
+    } @else {
+
+        <section class="catalogo-grid">
+
+            @for (diseno of disenosFiltrados; track diseno.id) {
+
+                <article class="catalogo-card">
+
+                    <button type="button"
+                        class="catalogo-card__contenido-click"
+                        (click)="verDetalle(diseno)">
+
+                        <div class="catalogo-card__imagen">
+
+                            <app-image-fallback [src]="obtenerImagen(diseno)"
+                                [alt]="diseno.nombre"
+                                mensaje="Imagen no disponible">
+                            </app-image-fallback>
+                        </div>
+
+                        <div class="catalogo-card__contenido">
+
+                            <span class="catalogo-card__categoria">
+                                {{ diseno.categoria }}
+                            </span>
+
+                            <h3 class="catalogo-card__nombre">
+                                {{ diseno.nombre }}
+                            </h3>
+
+                            @if (diseno.descripcion) {
+
+                                <p class="catalogo-card__descripcion">
+                                    {{ diseno.descripcion }}
+                                </p>
+                            }
+
+                        </div>
+
+                    </button>
+
+                    <div class="catalogo-card__acciones">
+
+                        <button type="button"
+                            class="catalogo-card__menu-button"
+                            aria-label="Abrir Opciones"
+                            [appContextMenuTrigger]="'diseno-' + diseno.id">
+
+                            <i class="catalogo-card__menu-icon fa-solid fa-ellipsis-vertical"></i>
+
+                        </button>
+
+                        <ul class="catalogo-card__menu"
+                            [appContextMenu]="'diseno-' + diseno.id">
+                    
+                            <li class="catalogo-card__menu-item">
+                            
+                                <button type="button"
+                                    class="catalogo-card__menu-opcion"
+                                    role="menuitem"
+                                    (click)="verDetalle(diseno)">
+                    
+                                    <i class="fa-solid fa-eye"></i>
+                                    Ver detalle
+                            
+                                </button>
+                            
+                            </li>
+                        
+                            <li class="catalogo-card__menu-item">
+                            
+                                <button type="button"
+                                    class="catalogo-card__menu-opcion"
+                                    role="menuitem"
+                                    (click)="abrirActualizar(diseno)">
+                    
+                                    <i class="fa-solid fa-pen"></i>
+                                    Editar diseño
+                            
+                                </button>
+                            
+                            </li>
+                        
+                            <li class="catalogo-card__menu-item">
+                            
+                                <button type="button"
+                                    class="catalogo-card__menu-opcion catalogo-card__menu-opcion--danger"
+                                    role="menuitem"
+                                    [disabled]="ui.cambiandoEstado"
+                                    (click)="confirmarCambiarEstado(diseno)">
+                    
+                                    <i class="fa-solid fa-ban"></i>
+                                    Desactivar
+                            
+                                </button>
+                            
+                            </li>
+                        
+                        </ul>
+
+                    </div>
+
+                </article>    
+
+            }
+
+        </section>
+
+    }
+
+    <app-modal [visible]="mostrarDetalle"
+        size="xl"
+        title="Detalle del diseño"
+        (cerrar)="cerrarDetalle()">
+
+        @if (mostrarDetalle && disenoSeleccionado) {
+
+            <app-detalle-diseno-catalogo
+                [diseno]="disenoSeleccionado">
+            </app-detalle-diseno-catalogo>
+        }
+
+    </app-modal>
+
+    <app-modal [visible]="mostrarCrear"
+        title="Nuevo diseño"
+        size="lg"
+        (cerrar)="cerrarCrear()">
+
+        @if (mostrarCrear) {
+
+            <app-crear-diseno-mueble
+                (disenoCreado)="disenoCreado($event)"
+                (cancelar)="cerrarCrear()">
+            </app-crear-diseno-mueble>
+
+        }
+
+    </app-modal>
+
+    <app-modal [visible]="mostrarActualizar"
+        title="Actualizar diseño"
+        size="lg"
+        (cerrar)="cerrarActualizar()">
+
+        @if (mostrarActualizar && disenoSeleccionado) {
+
+            <app-actualizar-diseno-mueble
+                [diseno]="disenoSeleccionado"
+                (disenoActualizado)="disenoActualizado($event)"
+                (cancelar)="cerrarActualizar()">
+            </app-actualizar-diseno-mueble>
+
+        }
+
+    </app-modal>
+
+</section>

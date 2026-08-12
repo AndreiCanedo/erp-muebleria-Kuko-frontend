@@ -2,6 +2,7 @@
 
     <div  class="modal__backdrop"
         [class.backdrop__open] = "animacion === 'modal__open'"
+        [class.backdrop__opened]="animacion === 'modal__opened'"
         [class.backdrop__close] = "animacion === 'modal__close'"
         (click)="onBackdropClick()">
         

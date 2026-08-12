@@ -9,6 +9,7 @@ import { StateComponent } from './state/state.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { ContextMenuDirective } from './directives/context-menu.directive';
 import { ContextMenuTriggerDirective } from './directives/context-menu-trigger.directive';
+import { ImageFallbackComponent } from './image-fallback/image-fallback.component';
 
 
 
@@ -20,7 +21,8 @@ import { ContextMenuTriggerDirective } from './directives/context-menu-trigger.d
     StateComponent,
     SearchBoxComponent,
     ContextMenuDirective,
-    ContextMenuTriggerDirective
+    ContextMenuTriggerDirective,
+    ImageFallbackComponent
   ],
   exports:[
     SidebarComponent,
@@ -29,7 +31,8 @@ import { ContextMenuTriggerDirective } from './directives/context-menu-trigger.d
     StateComponent,
     SearchBoxComponent,
     ContextMenuDirective,
-    ContextMenuTriggerDirective
+    ContextMenuTriggerDirective,
+    ImageFallbackComponent
   ],
   imports: [
     CommonModule,

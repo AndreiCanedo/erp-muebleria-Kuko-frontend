@@ -67,7 +67,20 @@
                 <li class="mueble-card">
 
                     <div class="mueble-card__icon">
-                        <i class="fa-solid fa-couch"></i>
+                        
+                        @if (mueble.disenoMuebleMiniaturaUrl) {
+
+                            <app-image-fallback [src]="obtenerMiniatura(mueble.disenoMuebleMiniaturaUrl)"
+                                [alt]="mueble.disenoMuebleNombre || mueble.descripcion"
+                                mensaje="Sin imagen">
+                            </app-image-fallback>
+
+                        } @else {
+
+                            <i class="fa-solid fa-couch"></i>
+
+                        }
+
                     </div>
 
                     <div class="mueble-card__contenido">
@@ -75,6 +88,16 @@
                         <h2 class="mueble-card__descripcion">
                             {{ mueble.descripcion }}
                         </h2>
+
+                        @if (mueble.disenoMuebleNombre) {
+                            <p class="mueble-card__diseno">
+
+                                <i class="fa-solid fa-images"></i>
+
+                                    {{ mueble.disenoMuebleNombre }}
+
+                            </p>
+                        }
 
                         <p class="mueble-card__precio">
                             Precio referencia: 
@@ -97,13 +120,12 @@
                         
                         </button>
 
-                        <button
-                            type="button"
+                        <button type="button"
                             class="mueble-card__accion mueble-card__accion--eliminar"
                             title="Eliminar mueble"
                             aria-label="Eliminar mueble"
                             [disabled]="ui.eliminando"
-                            (click)="confirmarEliminarMueble(mueble)">
+                            (click)="confirmarDesactivarMueble(mueble)">
                             
                             <i class="fa-solid fa-trash"></i>
                         </button>
@@ -120,14 +142,12 @@
 </section>
 
 @if(ui.mostrarCrear) {
-    <app-modal 
-        title="Nuevo Mueble"
+    <app-modal title="Nuevo Mueble"
         size="md"
         [visible]="true"
-        (close)="cerrarCrearMueble()">
+        (cerrar)="cerrarCrearMueble()">
 
-        <app-crear-mueble 
-            (muebleCreado)="handleMuebleCreado($event)"
+        <app-crear-mueble (muebleCreado)="handleMuebleCreado($event)"
             (cancelar)="cerrarCrearMueble()">
         
         </app-crear-mueble>
@@ -137,11 +157,10 @@
 
 @if(ui.mostrarActualizar && muebleSeleccionado) {
 
-    <app-modal 
-        title="Actualizar Mueble"
+    <app-modal title="Actualizar Mueble"
         size="md"
         [visible]="true"
-        (close)="cerrarActualizarMueble()">
+        (cerrar)="cerrarActualizarMueble()">
 
         <app-actualizar-mueble 
             [mueble] = "muebleSeleccionado"

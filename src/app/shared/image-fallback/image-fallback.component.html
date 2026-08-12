@@ -1,0 +1,22 @@
+@if (src && !errorImagen) {
+
+    <img [src]="src"
+        [alt]="alt"
+        loading="lazy"
+        decoding="async"
+        (load)="manejarCarga()"
+        (error)="manejarError()">
+
+} @else {
+
+    <div class="image-fallback">
+
+        <i class="fa-solid fa-image"></i>
+
+        <span>
+            {{ mensaje }}
+        </span>
+
+    </div>
+
+}

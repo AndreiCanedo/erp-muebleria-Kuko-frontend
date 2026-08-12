@@ -1,0 +1,18 @@
+
+export enum CategoriaMueble {
+    SILLA = 'SILLA',
+    MESA = 'MESA',
+    COMEDOR = 'COMEDOR',
+    SALA = 'SALA',
+    RECAMARA = 'RECAMARA',
+    CLOSET = 'CLOSET',
+    COCINA = 'COCINA',
+    ESCRITORIO = 'ESCRITORIO',
+    MUEBLE_TV = 'MUEBLE_TV',
+    MUEBLE_DE_BAÑO = 'MUEBLE_DE_BAÑO',
+    PUERTA_TAMBOR = 'PUERTA_TAMBOR',
+    PUERTA_PRINCIPAL = 'PUERTA_PRINCIPAL',
+    ENDUELADOS = 'ENDUELADOS',
+    OTRO = 'OTRO'
+    
+}

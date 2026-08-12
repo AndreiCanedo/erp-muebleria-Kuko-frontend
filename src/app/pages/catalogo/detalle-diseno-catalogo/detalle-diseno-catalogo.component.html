@@ -1,0 +1,150 @@
+<section class="detalle-catalogo">
+
+    <div class="detalle-catalogo__imagen">
+
+        <app-image-fallback
+            [src]="obtenerImagen()"
+            [alt]="diseno.nombre"
+            mensaje="No se encontró la imagen del diseño">
+        </app-image-fallback>
+
+    </div>
+
+    <div class="detalle-catalogo__contenido">
+
+        <header class="detalle-catalogo__header">
+
+            <span class="detalle-catalogo__categoria">
+                {{ diseno.categoria }}
+            </span>
+
+            <h2 class="detalle-catalogo__titulo">
+                {{ diseno.nombre }}
+            </h2>
+
+            @if (diseno.descripcion) {
+
+                <p class="detalle-catalogo__descripcion">
+                    {{ diseno.descripcion }}
+                </p>
+
+            }
+
+        </header>
+
+        <section class="detalle-catalogo__variantes">
+
+            <div class="detalle-catalogo__variantes-header">
+
+                <div>
+                    <h3 class="detalle-catalogo__variantes-title">
+                        Variantes disponibles
+                    </h3>
+
+                    <p class="detalle-catalogo__variantes-description">
+                        Selecciona una variante para consultar su precio
+                    </p>
+                </div>
+
+            </div>
+
+            @if (ui.cargando) {
+
+                <app-state state="loading"
+                    message="Cargando variantes">
+
+                </app-state>
+
+            } @else if (ui.error) {
+
+                <app-state state="error"
+                    [message]="ui.error"
+                    buttonText="Reintentar"
+                    (retry)="reintentar()">
+
+                </app-state>
+
+            } @else if (muebles.length === 0) {
+
+                <app-state state="empty"
+                    icon="fa-solid fa-couch"
+                    message="Este diseño todavía no tiene variantes disponibles">
+
+                </app-state>
+
+            } @else {
+
+                <div class="detalle-catalogo__lista">
+
+                    @for (mueble of muebles; track mueble.id) {
+
+                        <button type="button"
+                            class="detalle-catalogo__variante"
+                            [class.detalle-catalogo__variante--seleccionada]="seleccionado?.id === mueble.id"
+                            (click)="seleccionarMueble(mueble)">
+
+                            <span class="detalle-catalogo__variante-info">
+
+                                <span class="detalle-catalogo__variante-nombre">
+                                    {{ mueble.descripcion }}
+                                </span>
+
+                                @if (mueble.disenoMuebleNombre) {
+
+                                    <span class="detalle-catalogo__variante-diseno">
+                                        {{ mueble.disenoMuebleNombre }}
+                                    </span>
+
+                                }
+
+                            </span>
+
+                            <strong class="detalle-catalogo__variante-precio">
+                                {{ mueble.precioReferencia | money }}
+                            </strong>
+
+                        </button>
+
+                    }
+
+                </div>
+
+            }
+
+        </section>
+
+        @if (seleccionado) {
+
+            <section class="detalle-catalogo__seleccion">
+
+                <div class="detalle-catalogo__seleccion-info">
+
+                    <span class="detalle-catalogo__seleccion-label">
+                        Variante seleccionada
+                    </span>
+
+                    <strong class="detalle-catalogo__seleccion-nombre">
+                        {{ seleccionado.descripcion }}
+                    </strong>
+
+                </div>
+
+                <div class="detalle-catalogo__seleccion-precio">
+
+                    <span>
+                        Precio
+                    </span>
+
+                    <strong>
+                        {{ seleccionado.precioReferencia | money }}
+                    </strong>
+
+                </div>
+
+            </section>
+
+        }
+
+    </div>
+
+</section>

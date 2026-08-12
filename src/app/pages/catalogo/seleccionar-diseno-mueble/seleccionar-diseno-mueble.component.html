@@ -1,0 +1,149 @@
+<div class="selector-diseno">
+
+    <section class="selector-diseno__filtros">
+
+        <div class="selector-diseno__busqueda">
+
+            <app-search-box placeholder="Buscar diseño por nombre o descripción..."
+                [value]="textoBusqueda"
+                (search)="buscar($event)">
+            </app-search-box>
+
+        </div>
+
+        <select class="selector-diseno__select"
+            [ngModel]="categoriaSeleccionada"
+            (ngModelChange)="cambiarCategoria($event)">
+
+            <option [ngValue]="null">
+                Todas las categorias
+            </option>
+
+            @for (categoria of categorias; track categoria) {
+
+                <option [ngValue]="categoria">
+                    {{ categoria }}
+                </option>
+
+            }
+
+        </select>
+
+    </section>
+
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando diseños...">
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarDisenos()">
+        </app-state>
+
+    } @else if (disenosFiltrados.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-images"
+            [message]="textoBusqueda || categoriaSeleccionada
+                    ? 'No se encontraron diseños con los filtros seleccionados'
+                    : 'No hay diseños disponibles'
+            ">
+        </app-state>
+
+    } @else {
+
+        <div class="selector-diseno__lista">
+
+            @for (diseno of disenosFiltrados; track diseno.id) {
+
+                <button type="button"
+                    class="selector-diseno__item"
+                    (click)="seleccionarDiseno(diseno)">
+
+                    <span class="selector-diseno__imagen">
+
+                        @if (diseno.miniaturaUrl) {
+
+                            <app-image-fallback [src]="obtenerMiniatura(diseno)"
+                                [alt]="diseno.nombre"
+                                mensaje="Sin imagen">
+                            </app-image-fallback>
+
+                        } @else {
+
+                            <i class="fa-solid fa-image"></i>
+
+                        }
+
+                    </span>
+
+
+                    <span class="selector-diseno__contenido">
+
+                        <span class="selector-diseno__nombre">
+                            {{ diseno.nombre }}
+                        </span>
+
+                        <span class="selector-diseno__categoria">
+                            {{ diseno.categoria }}
+                        </span>
+
+                        @if (diseno.descripcion) {
+
+                            <span class="selector-diseno__descripcion">
+                                {{ diseno.descripcion }}
+                            </span>
+
+                        }
+
+                    </span>
+
+
+                    <span class="selector-diseno__arrow">
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </span>
+
+                </button>
+
+            }
+
+        </div>
+
+    }
+
+
+    <footer class="selector-diseno__acciones">
+
+        @if (textoBusqueda || categoriaSeleccionada) {
+
+            <button type="button"
+                class="selector-diseno__limpiar"
+                (click)="limpiarFiltros()">
+
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+
+                Limpiar filtros
+
+            </button>
+
+        }
+
+        <button type="button"
+            class="selector-diseno__cancelar"
+            (click)="cerrar()">
+
+            Cancelar
+
+        </button>
+
+    </footer>
+
+</div>

@@ -160,6 +160,7 @@
 
     width: 7rem;
     height: 7rem;
+    overflow:hidden;
 
     flex-shrink: 0;
 
@@ -198,6 +199,16 @@
 
     transform: scale(1.08);
 }
+
+.mueble-card__icon app-image-fallback,
+.mueble-card__icon img{
+
+    width:100%;
+    height:100%;
+
+    border-radius:inherit;
+}
+
 
 /******************************************************************************/
 /******************************* INFORMACIÓN **********************************/
@@ -245,6 +256,21 @@
 
     font-size: 1.6rem;
     font-weight: 700;
+}
+
+.mueble-card__diseno{
+
+    font-size:1.25rem;
+
+    color:var(--color-primary);
+
+    font-weight:600;
+
+    margin-top:.15rem;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
 /******************************************************************************/

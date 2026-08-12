@@ -10,6 +10,7 @@ import { MuebleComponent } from './mueble/mueble.component';
 import { ListadoOrdenesComponent } from './listado-ordenes/listado-ordenes.component';
 import { ListadoPagosOrdenComponent } from './listado-pagos-orden/listado-pagos-orden.component';
 import { authGuard } from '../guards/auth.guard';
+import { CatalogoComponent } from './catalogo/catalogo.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path:'dashboard',component:DashboardComponent },
       { path:'clientes', component:ClienteComponent },
       { path:'muebles', component:MuebleComponent },
+      { path:'catalogo', component:CatalogoComponent },
       { path:'ordenes', component:ListadoOrdenesComponent },
       { path: 'presupuesto', component: PresupuestoComponent },
       { path: 'pagos', component: ListadoPagosOrdenComponent },

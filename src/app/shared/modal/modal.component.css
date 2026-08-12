@@ -108,6 +108,8 @@
     max-width: 90rem;
 }
 
+
+
 /*******************************************/
 /******************BODY*********************/
 /*******************************************/
@@ -142,6 +144,20 @@
 
 .backdrop__close{
     animation: backdropClose .25s ease forwards;
+}
+
+.modal__opened {
+    opacity: 1;
+
+    /*
+     * MUY IMPORTANTE:
+     * no usar transform aquí.
+     */
+    transform: none;
+}
+
+.backdrop__opened {
+    opacity: 1;
 }
 
 

@@ -1,7 +1,5 @@
 
 
-
-
 <form [formGroup]="muebleForm" (ngSubmit)="onSubmit()" class="mueble-form">
 
     <div class="mueble-form__campo">
@@ -63,38 +61,147 @@
 
     </div>
 
-        <div class="mueble-form__acciones">
+    <div class="mueble-form__campo">
 
-            <button type="submit" 
-                class="mueble-form__button mueble-form__button--guardar"
-                [disabled]="guardando">
-                
-                @if (guardando) {
-                        
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                
-                    <span>
-                        {{ actualizar ? 'Actualizando...' : 'Guardando...'}}
-                    </span>
-                }@else{
-                    <i class="fa-solid" [class.fa-flappy-disk]="actualizar" [class.fa-plus]="!actualizar"></i>
-                    
-                    <span>
-                        {{ actualizar ? 'Actualizar' : 'Crear Mueble'}}
-                    </span>
-                }
-                
-            </button>
-            
-            <button type="button" 
-                class="mueble-form__button mueble-form__button--cancelar"
-                (click)="cerrarCaja()">
+        <label for="disenoMuebleId" class="mueble-form__label"> Diseño de referencia </label>
 
-                Cancelar
+        @if (disenoSeleccionado) {
+
+            <div class="mueble-form__diseno">
+
+                <button type="button"
+                    class="mueble-form__diseno-seleccionado"
+                    [disabled]="guardando"
+                    (click)="abrirSelectorDiseno()">
+
+                    <span class="mueble-form__diseno-info">
+
+                        <strong>
+                            {{ disenoSeleccionado.nombre }}
+                        </strong>
+
+                        <span>
+                            {{ disenoSeleccionado.categoria }}
+                        </span>
+
+                    </span>
+
+                    <span class="mueble-form__diseno-cambiar">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Cambiar
+
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mueble-form__quitar-diseno"
+                    [disabled]="guardando"
+                    aria-label="Quitar diseño"
+                    title="Quitar diseño"
+                    (click)="quitarDiseno()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+        } @else {
+
+            <button type="button"
+                class="mueble-form__seleccionar-diseno"
+                [disabled]="guardando"
+                (click)="abrirSelectorDiseno()">
+
+                <i class="fa-solid fa-images"></i>
+
+                <span>
+                    Seleccionar diseño
+                </span>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
             </button>
-            
+
+        }
+
+    </div>
+
+    @if (actualizar) {
+
+        <div class="mueble-form__campo">
+            <label for="activo" class="mueble-form__label">Estado</label>
+
+            <select id="activo"
+                class="mueble-form__input"
+                formControlName="activo">
+
+                <option [ngValue]="true">
+                    Activo
+                </option>
+
+                <option [ngValue]="false">
+                    Inactivo
+                </option>
+
+            </select>
+
         </div>
 
+    }
+
+    <div class="mueble-form__acciones">
+
+        <button type="submit" 
+            class="mueble-form__button mueble-form__button--guardar"
+            [disabled]="guardando">
+                
+            @if (guardando) {
+                        
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                
+                <span>
+                    {{ actualizar ? 'Actualizando...' : 'Guardando...'}}
+                </span>
+            }@else{
+                <i class="fa-solid" [class.fa-flappy-disk]="actualizar" [class.fa-plus]="!actualizar"></i>
+                    
+                <span>
+                    {{ actualizar ? 'Actualizar' : 'Crear Mueble'}}
+                </span>
+            }
+                
+        </button>
+            
+        <button type="button" 
+            class="mueble-form__button mueble-form__button--cancelar"
+            (click)="cerrarCaja()">
+
+            Cancelar
+        </button>
+            
+    </div>
+
 </form>
+
+<app-modal [visible]="mostrarSelectorDiseno"
+    size="lg"
+    title="Seleccionar diseño"
+    (cerrar)="onSelectorDisenoCerrado()">
+
+    @if (renderSelectorDiseno) {
+
+        <app-seleccionar-diseno-mueble
+            (disenoSeleccionado)="seleccionarDiseno($event)"
+            (cancelar)="cerrarSelectorDiseno()">
+        </app-seleccionar-diseno-mueble>
+
+    }
+
+</app-modal>
 
 

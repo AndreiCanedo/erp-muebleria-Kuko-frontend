@@ -1,10 +1,13 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MuebleService } from '../../../services/mueble.service';
 import { Mueble } from '../../../models/mueble.model';
 import { MuebleForm } from '../../../type/form/mueble-form.type';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
+import { DisenoMuebleService } from '../../../services/diseno-mueble.service';
+import { DisenoMueble } from '../../../models/diseno-mueble.model';
+import { ActualizarMuebleRequest } from '../../../models/request/actualizar-mueble.request';
 
 @Component({
   selector: 'app-actualizar-mueble',
@@ -16,18 +19,23 @@ export class ActualizarMuebleComponent implements OnChanges{
 
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly destroyRef = inject(DestroyRef);
-  
   private readonly mueblesServices = inject(MuebleService);
+  private readonly disenoMuebleService = inject(DisenoMuebleService)
 
   @Input({ required: true}) mueble!: Mueble;
 
   @Output() cancelar = new EventEmitter<void>();
   @Output() muebleActualizado = new EventEmitter<Mueble>();
 
+  public disenoActual: DisenoMueble | null = null;
+
+
   public muebleForm: MuebleForm = this.fb.group({
     id: 0,
     descripcion:['',[Validators.required, this.noWhitespaceValidator]],
-    precioReferencia: [0,[Validators.required, Validators.min(1)]]
+    precioReferencia: [0,[Validators.required, Validators.min(1)]],
+    disenoMuebleId: this.fb.control<number>(0),
+    activo: this.fb.control<boolean>(true)
   });
 
   public ui = {
@@ -38,8 +46,15 @@ export class ActualizarMuebleComponent implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
       if(changes['mueble']&& this.mueble){
         this.cargarMuebleEnformulario();
+        this.cargarDisenoActual();
       }
   }
+
+
+
+  /****************************************************/
+  /**************** ACTUALIZAR MUEBLE *****************/
+  /****************************************************/
 
   actualizarMueble(): void {
     if(this.muebleForm.invalid || this.ui.guardando){
@@ -49,9 +64,9 @@ export class ActualizarMuebleComponent implements OnChanges{
 
     this.ui.guardando = true;
 
-    const muebleActualizado = this.buildMueble();
+    const request = this.buildRequest();
 
-    this.mueblesServices.actualizarMueble(muebleActualizado, this.mueble.id)
+    this.mueblesServices.actualizarMueble(request, this.mueble.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: mueble => {
@@ -63,22 +78,56 @@ export class ActualizarMuebleComponent implements OnChanges{
       });
   }
 
+  /*************************************************************/
+  /****************** CARGAR DISEÑO ACTUAL *********************/
+  /*************************************************************/
+
+  private cargarDisenoActual(): void {
+
+    const disenoId = this.mueble.disenoMuebleId;
+
+    if (!disenoId) {
+      this.disenoActual = null;
+      return;
+    }
+
+    this.disenoMuebleService.obtenerPorId(disenoId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+
+        next: diseno => {
+          this.disenoActual = diseno;
+        },
+
+        error: () => {
+          this.disenoActual = null;
+        }
+      });
+  }
+
+  /*************************************************************/
+  /********************** BUILD MUEBLE *************************/
+  /*************************************************************/
+
   private cargarMuebleEnformulario():void {
     this.muebleForm.reset({
       id:this.mueble.id,
       descripcion: this.mueble.descripcion,
-      precioReferencia: this.mueble.precioReferencia
+      precioReferencia: this.mueble.precioReferencia,
+      disenoMuebleId: this.mueble.disenoMuebleId ?? 0,
+      activo: this.mueble.activo
     });
   }
 
-  private buildMueble(): Mueble{
+  private buildRequest(): ActualizarMuebleRequest{
     const form = this.muebleForm.getRawValue();
 
-    return new Mueble(
-      this.mueble.id,
-      form.descripcion.trim(),
-      form.precioReferencia 
-    );
+    return {
+        descripcion: form.descripcion.trim(),
+        precioReferencia:form.precioReferencia,
+        disenoMuebleId:form.disenoMuebleId || null,
+        activo:form.activo
+    };
   }
 
   private handleSuccess(mueble: Mueble): void{

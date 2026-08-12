@@ -43,13 +43,32 @@
                     (click)="seleccionarMueble(mueble)">
 
                     <span class="selector-mueble__icono">
-                        <i class="fa-solid fa-couch"></i>
+                        @if (mueble.disenoMuebleMiniaturaUrl) {
+
+                            <app-image-fallback [src]="obtenerMiniatura(mueble.disenoMuebleMiniaturaUrl)"
+                                [alt]="mueble.disenoMuebleNombre || mueble.descripcion"
+                                mensaje="">
+                            </app-image-fallback>
+
+                        } @else {
+
+                            <i class="fa-solid fa-couch"></i>
+
+                        }
                     </span>
 
                     <span class="selector-mueble__contenido">
                         <span class="selector-mueble__descripcion">
                             {{ mueble.descripcion }}
                         </span>
+
+                        @if (mueble.disenoMuebleNombre) {
+
+                            <span class="selector-mueble__diseno">
+                                {{ mueble.disenoMuebleNombre }}
+                            </span>
+
+                        }
 
                         <span class="selector-mueble__precio">
                             Precio de referencia: {{ mueble.precioReferencia | money}}

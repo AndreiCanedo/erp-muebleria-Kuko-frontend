@@ -8,6 +8,7 @@ import { MuebleService } from '../../../services/mueble.service';
 import { Mueble } from '../../../models/mueble.model';
 
 import { MuebleForm } from '../../../type/form/mueble-form.type';
+import { CrearMuebleRequest } from '../../../models/request/crear-mueble.request';
 
 @Component({
   selector: 'app-crear-mueble',
@@ -16,20 +17,15 @@ import { MuebleForm } from '../../../type/form/mueble-form.type';
   styleUrl: './crear-mueble.component.css',
 })
 export class CrearMuebleComponent implements OnInit{
-  private fb = inject(NonNullableFormBuilder);
-  private destroyRf = inject(DestroyRef);
-
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly destroyRf = inject(DestroyRef);
   private muebleServices = inject(MuebleService);
 
 
   @Output() cancelar = new EventEmitter<void>();
   @Output() muebleCreado = new EventEmitter<Mueble>();
 
-
-  //////////////FORM////////////////////////
   public muebleForm!: MuebleForm;
-
-  ///////////////////UI STATE/////////////////
 
   public ui = {
     actualizar: false,
@@ -37,18 +33,22 @@ export class CrearMuebleComponent implements OnInit{
   }
 
   ngOnInit():void{
-    this.initForm()
+    this.initForm();
   }
 
   private initForm():void{
     this.muebleForm = this.fb.group({
       id:0,
       descripcion: ['',[Validators.required, this.noWhitespaceValidator]],
-      precioReferencia: [0,[Validators.required, Validators.min(1)]]
+      precioReferencia: [0,[Validators.required, Validators.min(1)]],
+      disenoMuebleId: this.fb.control<number>(0),
+      activo: this.fb.control<boolean>(true)
     });
   }
 
-  ///////////////////GUARDAR MUEBLE//////////////////////
+/**************************************************************/
+/********************* GUARDAR MUEBLE *************************/
+/**************************************************************/
 
   guardarMueble():void{
     if(this.muebleForm.invalid || this.ui.guardando){
@@ -58,9 +58,9 @@ export class CrearMuebleComponent implements OnInit{
 
     this.ui.guardando = true;
 
-    const mueble = this.buildMueble();
+    const request = this.buildRequest();
 
-    this.muebleServices.crearMueble(mueble)
+    this.muebleServices.crearMueble(request)
       .pipe(takeUntilDestroyed(this.destroyRf))
       .subscribe({
         next: (mueble) => this.handlesucces(mueble),
@@ -68,19 +68,25 @@ export class CrearMuebleComponent implements OnInit{
       });
   }
 
-  ///////////////////////BUILDER///////////////////
 
-  private buildMueble():Mueble{
+/**************************************************************/
+/************************ BUILD MUEBLE ************************/
+/**************************************************************/
+
+  private buildRequest():CrearMuebleRequest{
     const form = this.muebleForm.getRawValue();
 
-    return new Mueble(
-      0,
-      form.descripcion.trim(),
-      form.precioReferencia
-    )
+    return {
+      descripcion: form.descripcion.trim(),
+      precioReferencia: form.precioReferencia,
+      disenoMuebleId: form.disenoMuebleId || null
+    }
+      
   }
 
-  /////////////////////HANDLERS////////////////////////
+/**************************************************************/
+/************************** HANDLERS **************************/
+/**************************************************************/
 
   private handlesucces(mueble:Mueble):void{
     this.ui.guardando = false;
@@ -111,7 +117,9 @@ export class CrearMuebleComponent implements OnInit{
   }
 
 
-  ///////////////////HELPERS////////////////
+/**************************************************************/
+/*************************** HELPERS **************************/
+/**************************************************************/
 
   private noWhitespaceValidator(control: AbstractControl){
     return (control.value || ``).trim().length === 0
@@ -130,7 +138,9 @@ export class CrearMuebleComponent implements OnInit{
     this.muebleForm.reset({
       id:0,
       descripcion: '',
-      precioReferencia: 0
+      precioReferencia: 0,
+      disenoMuebleId: 0,
+      activo: true
     });
   }
 

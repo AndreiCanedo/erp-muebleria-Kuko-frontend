@@ -2,6 +2,7 @@ import { Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@an
 import { MuebleService } from '../../../services/mueble.service';
 import { Mueble } from '../../../models/mueble.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CatalogoImageService } from '../../../services/catalogo-image.service';
 
 @Component({
   selector: 'app-seleccionar-mueble',
@@ -13,6 +14,7 @@ export class SeleccionarMuebleComponent implements OnInit{
 
   private readonly muebleServices = inject(MuebleService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly imageService = inject(CatalogoImageService);
 
 
   @Output() muebleSeleccionado = new EventEmitter<Mueble>;
@@ -53,7 +55,20 @@ export class SeleccionarMuebleComponent implements OnInit{
       })
   }
 
-  /////////////////HELPERS//////////////////
+  /**********************************************************/
+  /******************** IMAGEN MINIATURA ********************/
+  /**********************************************************/
+
+  public obtenerMiniatura(nombreArchivo: string | null): string {
+
+    if (!nombreArchivo)  return '';
+
+    return this.imageService.obtenerMiniatura(nombreArchivo);
+  }
+
+  /**********************************************************/
+  /************************* HELPERS ************************/
+  /**********************************************************/
   seleccionarMueble(mueble:Mueble): void{
     this.muebleSeleccionado.emit(mueble);
   }

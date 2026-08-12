@@ -4,6 +4,7 @@ import { Mueble } from '../../models/mueble.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs';
+import { CatalogoImageService } from '../../services/catalogo-image.service';
 
 @Component({
   selector: 'app-mueble',
@@ -15,6 +16,7 @@ export class MuebleComponent implements OnInit{
   
   private readonly muebleService = inject(MuebleService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly imageService =  inject(CatalogoImageService);
 
   public muebles: Mueble[] = [];
 
@@ -99,27 +101,27 @@ export class MuebleComponent implements OnInit{
     this.buscarMuebles(this.textoBusqueda);
   }
 
-  confirmarEliminarMueble(mueble: Mueble): void{
+  confirmarDesactivarMueble(mueble: Mueble): void{
     if(this.ui.eliminando){
       return;
     }
 
     Swal.fire({
-      title: '¿Eliminar Mueble?',
-      text: `Se eliminará "${mueble.descripcion}".`,
+      title: '¿Desactivar Mueble?',
+      text: `"${mueble.descripcion}" dejara de estar disponible para nuevas operaciones`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Sí, desactivar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true
     }).then(result => {
       if(result.isConfirmed){
-        this.eliminarMueble(mueble);
+        this.desactivarMueble(mueble);
       }
     });
   }
 
-  private eliminarMueble(mueble: Mueble): void{
+  private desactivarMueble(mueble: Mueble): void{
     this.ui.eliminando = true;
 
     this.muebleService.eliminarMueble(mueble.id)
@@ -134,7 +136,7 @@ export class MuebleComponent implements OnInit{
           );
 
           Swal.fire({
-            title: 'Mueble eliminado correctamente',
+            title: 'Mueble desactivado correctamente',
             icon: 'success'
           });
         },
@@ -142,13 +144,29 @@ export class MuebleComponent implements OnInit{
           this.ui.eliminando = false;
 
           Swal.fire({
-            title: 'Error al eliminar el mueble',
+            title: 'Error al desactivar el mueble',
             text: this.obtenerMensajeError(error),
             icon: 'error'
           });
         }
       });
   }
+
+  
+  /**********************************************************/
+  /******************** IMAGEN MINIATURA ********************/
+  /**********************************************************/
+
+  public obtenerMiniatura(nombreArchivo: string | null): string {
+
+    if (!nombreArchivo)  return '';
+
+    return this.imageService.obtenerMiniatura(nombreArchivo);
+  }
+
+  /**********************************************************/
+  /************************* HELPERS ************************/
+  /**********************************************************/  
 
   private cerrarModales(): void{
     this.ui.mostrarCrear = false;

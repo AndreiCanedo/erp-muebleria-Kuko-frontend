@@ -1,0 +1,9 @@
+<app-form-diseno-mueble
+    [disenoForm]="disenoForm"
+    [actualizar]="ui.actualizar"
+    [guardando]="ui.guardando"
+
+    (imagenSeleccionada)="seleccionarImagen($event)"
+    (submitForm)="actualizarDiseno()"
+    (cancelar)="cerrarCaja()">
+</app-form-diseno-mueble>

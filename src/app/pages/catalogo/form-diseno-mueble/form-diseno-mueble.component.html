@@ -1,0 +1,217 @@
+<form [formGroup]="disenoForm"
+    (ngSubmit)="onSubmit()"
+    class="diseno-form">
+
+    <div class="diseno-form__contenido">
+
+        <div class="diseno-form__campo">
+
+            <label for="nombre" class="diseno-form__label">
+                Nombre del diseño
+            </label>
+
+            <input type="text"
+                id="nombre"
+                class="diseno-form__input"
+                formControlName="nombre"
+                autocomplete="off"
+                placeholder="Ej. Silla Toscana"
+                [class.diseno-form__input--invalid]="isInvalid('nombre')"
+                autofocus>
+
+            @if (isInvalid('nombre')) {
+
+                <div class="diseno-form__error">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    <span>
+
+                        @if (f.nombre.errors?.['required']) {
+                            El nombre es obligatorio
+                        }
+
+                        @if (f.nombre.errors?.['whitespace']) {
+                            El nombre no puede estar vacio
+                        }
+
+                    </span>
+
+                </div>
+
+            }
+
+        </div>
+
+
+        <div class="diseno-form__campo">
+
+            <label for="categoria" class="diseno-form__label">
+                Categoria
+            </label>
+
+            <select id="categoria"
+                class="diseno-form__input"
+                formControlName="categoria"
+                [class.diseno-form__input--invalid]="isInvalid('categoria')">
+
+                @for (categoria of categorias; track categoria) {
+
+                    <option [ngValue]="categoria">
+                        {{ categoria }}
+                    </option>
+
+                }
+
+            </select>
+
+            @if (isInvalid('categoria')) {
+
+                <div class="diseno-form__error">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    <span>
+                        La categoria es obligatoria
+                    </span>
+
+                </div>
+
+            }
+
+        </div>
+
+
+        <div class="diseno-form__campo">
+
+            <label for="descripcion"
+                class="diseno-form__label">
+
+                Descripcion
+
+            </label>
+
+            <textarea id="descripcion"
+                rows="4"
+                class="diseno-form__input diseno-form__textarea"
+                formControlName="descripcion"
+                placeholder="Descripción general del diseño">
+
+            </textarea>
+
+        </div>
+
+
+        <div class="diseno-form__campo">
+
+            <label for="imagenUrl" class="diseno-form__label">
+                Imagen principal
+            </label>
+
+            <input type="file"
+                id="imagen"
+                accept="image/*"
+                class="diseno-form__input-file"
+                (change)="seleccionarImagen($event)">
+
+            @if (archivoSeleccionado) {
+
+                <div class="diseno-form__archivo">
+
+                    <i class="fa-solid fa-image"></i>
+
+                    {{ archivoSeleccionado.name }}
+                </div>
+
+            }
+
+        </div>
+
+
+        @if (previewUrl) {
+
+            <div class="diseno-form__preview">
+
+                <span class="diseno-form__preview-label">
+                    Vista previa
+                </span>
+
+                <app-image-fallback [src]="previewUrl"
+                    [alt]="f.nombre.value || 'Vista previa del diseño'"
+                    mensaje="No se pudo cargar la vista previa">
+                </app-image-fallback>
+
+            </div>
+
+        }
+
+        @if (actualizar) {
+
+            <div class="diseno-form__campo">
+
+                <label for="activo" class="diseno-form__label">
+                    Estado
+                </label>
+
+                <select id="activo"
+                    class="diseno-form__input"
+                    formControlName="activo">
+
+                    <option [ngValue]="true">
+                        Activo
+                    </option>
+
+                    <option [ngValue]="false">
+                        Inactivo
+                    </option>
+
+                </select>
+
+            </div>
+
+        }
+
+    </div>
+
+
+    <footer class="diseno-form__acciones">
+
+        <button type="submit"
+            class="diseno-form__button diseno-form__button--guardar"
+            [disabled]="guardando">
+
+            @if (guardando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                <span>
+                    {{ actualizar ? 'Actualizando...' : 'Guardando...' }}
+                </span>
+
+            } @else {
+
+                <i class="fa-solid"
+                    [class.fa-floppy-disk]="actualizar"
+                    [class.fa-plus]="!actualizar">
+                </i>
+
+                <span>
+                    {{ actualizar ? 'Actualizar diseño' : 'Crear diseño' }}
+                </span>
+
+            }
+
+        </button>
+
+        <button type="button"
+            class="diseno-form__button diseno-form__button--cancelar"
+            [disabled]="guardando"
+            (click)="cerrarCaja()">
+
+            Cancelar
+
+        </button>
+
+    </footer>
+
+</form>
