@@ -1,25 +1,41 @@
 
 
-    <div class="layout">
+<div class="layout">
+
+    @if (menuAbierto) {
+        <button type="button"
+            class="layout__backdrop"
+            aria-label="Cerrar menu"
+            (click)="cerrarMenu()">
+        </button>
+    }
         
-        <!-- Menu Lateral -->
-        <aside class="layout__aside">
-            <app-sidebar></app-sidebar>
-        </aside>
+    <!-- Menu Lateral -->
+    <aside class="layout__aside"
+        [class.layout__aside--open]="menuAbierto">
 
-        <div class="layout__content">
+        <app-sidebar (navegar)="cerrarMenu()">
+
+        </app-sidebar>
+
+    </aside>
+
+    <div class="layout__content">
             
-            <!-- Menu Horizontal -->
-            <header class="layout__nav">
-                <app-header></app-header>
-            </header>
+        <!-- Menu Horizontal -->
+        <header class="layout__nav">
+            <app-header [menuAbierto]="menuAbierto"
+                (menuClick)="toggleMenu()">
 
-            <!-- Hoja principal -->
-            <main class="layout__dashboard">
-                <router-outlet></router-outlet>
-            </main>
-        </div>
+            </app-header>
+        </header>
 
+        <!-- Hoja principal -->
+        <main class="layout__dashboard">
+            <router-outlet></router-outlet>
+        </main>
     </div>
+
+</div>
 
 

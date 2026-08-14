@@ -4,13 +4,15 @@ import { Role } from "./role.enum";
 export class Usuario{
     
     constructor(
-        public firstName:string,
-        public lastName:string,
+        public id:number,
         public username:string,
-        public password:string,
-        public country:string,
-        public uid:number,
-        public role:Role
+        
+        public firstName:string | null,
+        public lastName:string | null,
+        public country:string | null,
+        
+        public role:Role,
+        public activo: boolean
 
     ){}
 

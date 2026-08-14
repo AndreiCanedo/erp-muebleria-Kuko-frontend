@@ -166,16 +166,20 @@
                 </button>
               </li>
 
-              <li class="trespuntos__elementos">
+              @if(puedeAdministrarMuebles){
+                
+                <li class="trespuntos__elementos">
+  
+                  <button type="button" 
+                    class="elementos__button elementos__button--danger"
+                    role="menuitem" 
+                    (click)="eliminarCliente(cliente.id)">
+                    
+                    Eliminar
+                  </button>
+                </li>
+              }
 
-                <button type="button" 
-                  class="elementos__button elementos__button--danger"
-                  role="menuitem" 
-                  (click)="eliminarCliente(cliente.id)">
-                  
-                  Eliminar
-                </button>
-              </li>
 
               <li class="trespuntos__elementos">
 

@@ -9,6 +9,8 @@ import { Cliente } from '../../models/cliente.model';
 import { ClienteView } from '../../interface/cliente-view.interface';
 import { finalize } from 'rxjs';
 import { ContextMenuService } from '../../shared/directives/context-menu.service';
+import { StorageServiceService } from '../../services/storage-service.service';
+import { Role } from '../../models/role.enum';
 
 @Component({
     selector: 'app-cliente',
@@ -19,25 +21,18 @@ import { ContextMenuService } from '../../shared/directives/context-menu.service
 export class ClienteComponent {
 
   private readonly contextMenu = inject(ContextMenuService);
-  private clienteService = inject(ClienteService);
+  private readonly clienteService = inject(ClienteService);
+  private readonly storageService = inject(StorageServiceService);
   
 
   //private subscription!: Subscription;
   //nueva forma subscripcion
   private destroyRef= inject(DestroyRef);
 
-  ///////////////////////////////////////
-  /////////////////DATA//////////////////
-  ///////////////////////////////////////
-
   public clientes: Cliente[] = [];
   public clientesView: ClienteView[] = [];
 
   public textoBusqueda = '';
-
-  ///////////////////////////////////////
-  //////////////UI STATE/////////////////
-  ///////////////////////////////////////
 
   //para reducir variables de las cajas crear, editar e info
   public ui = {
@@ -60,9 +55,9 @@ export class ClienteComponent {
     this.initSubscriptions();
   }
 
-  ///////////////////////////////////////
-  ///////////////INITS///////////////////
-  ///////////////////////////////////////
+  /*********************************************************/
+  /*********************** INITS ***************************/
+  /*********************************************************/
 
   private initData(): void{
     this.cargarClientes();
@@ -75,9 +70,9 @@ export class ClienteComponent {
       .subscribe(() => this.cargarClientes(this.textoBusqueda));
   }
 
-  ///////////////////////////////////////
-  ////////////DATA CLIENTE///////////////
-  ///////////////////////////////////////
+  /*********************************************************/
+  /****************** CARGAR CLIENTES **********************/
+  /*********************************************************/
 
   cargarClientes(texto?: string): void{
 
@@ -117,9 +112,9 @@ export class ClienteComponent {
       })
   }
 
-  ///////////////////////////////////////
-  //////////////UI METODOS///////////////
-  ///////////////////////////////////////
+  /*********************************************************/
+  /********************* UI METODOS ************************/
+  /*********************************************************/
 
   public mostrarCrear():void{
 
@@ -166,9 +161,9 @@ export class ClienteComponent {
     this.cargarClientes(this.textoBusqueda);
   }
 
-  ///////////////////////////////////////
-  //////////ELIMINAR CLIENTE/////////////
-  ///////////////////////////////////////
+  /*********************************************************/
+  /****************** ELIMINAR CLIENTE *********************/
+  /*********************************************************/
 
   public eliminarCliente(id:number){
 
@@ -208,9 +203,9 @@ export class ClienteComponent {
     });
   }
 
-  ///////////////////////////////////////
-  /////////////////HELPERS///////////////
-  ///////////////////////////////////////
+  /*********************************************************/
+  /********************** HELPERS **************************/
+  /*********************************************************/
 
   resetClienteSeleccionado(): void {
     this.ui.clienteSeleccionado = {
@@ -228,6 +223,18 @@ export class ClienteComponent {
 
   public cerrarMenuContextual(): void{
     this.contextMenu.cerrar();
+  }
+
+  /*********************************************************/
+  /*********************** ROLES ***************************/
+  /*********************************************************/
+
+  public get role(): Role | null {
+    return this.storageService.obtener<Role>('role');
+  }
+        
+  public get puedeAdministrarMuebles(): boolean {
+    return this.role === Role.ADMIN;
   }
 
 }

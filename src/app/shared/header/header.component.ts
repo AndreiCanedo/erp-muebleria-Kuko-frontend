@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-header',
@@ -8,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
+    @Input() public menuAbierto = false;
+
+    @Output() public menuClick = new EventEmitter<void>();
+
+    public toggleMenu(): void {
+        this.menuClick.emit();
+    }
 }

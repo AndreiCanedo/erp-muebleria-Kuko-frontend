@@ -88,13 +88,17 @@
 
     <div class="selector-mueble__acciones">
 
-        <button type="button" 
-            class="selector-mueble__crear"
-            (click)="mostrarCrearMueble()">
+        @if(puedeAdministrarMuebles){
+            <button type="button" 
+                class="selector-mueble__crear"
+                (click)="mostrarCrearMueble()">
+    
+                <i class="fa-solid fa-plus"></i>
+                    Nuevo Mueble
+            </button>
 
-            <i class="fa-solid fa-plus"></i>
-                Nuevo Mueble
-        </button>
+        }
+
 
     </div>
 

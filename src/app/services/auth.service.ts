@@ -4,7 +4,6 @@ import { StorageServiceService } from './storage-service.service';
 import { LoginRequest } from '../interface/login-request.interface';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse } from '../interface/auth-response.interface';
-import { RegisterRequest } from '../interface/register-request.interface';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 
 @Injectable({
@@ -23,13 +22,6 @@ export class AuthService {
 
   }
 
-  public register(request: RegisterRequest): Observable<AuthResponse> {
-
-    return this.sharedService
-      .post<AuthResponse>('/auth/register', request)
-      .pipe(tap(response => this.guardarSesion(response)));
-
-  }
 
   public logout(): void{
     this.storageService.eliminar('token');

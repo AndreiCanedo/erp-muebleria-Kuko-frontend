@@ -3,6 +3,8 @@ import { MuebleService } from '../../../services/mueble.service';
 import { Mueble } from '../../../models/mueble.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CatalogoImageService } from '../../../services/catalogo-image.service';
+import { StorageServiceService } from '../../../services/storage-service.service';
+import { Role } from '../../../models/role.enum';
 
 @Component({
   selector: 'app-seleccionar-mueble',
@@ -15,6 +17,7 @@ export class SeleccionarMuebleComponent implements OnInit{
   private readonly muebleServices = inject(MuebleService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly imageService = inject(CatalogoImageService);
+  private readonly storageService = inject(StorageServiceService);
 
 
   @Output() muebleSeleccionado = new EventEmitter<Mueble>;
@@ -64,6 +67,18 @@ export class SeleccionarMuebleComponent implements OnInit{
     if (!nombreArchivo)  return '';
 
     return this.imageService.obtenerMiniatura(nombreArchivo);
+  }
+
+  /**********************************************************/
+  /************************** ROLES *************************/
+  /**********************************************************/
+
+  public get role(): Role | null {
+    return this.storageService.obtener<Role>('role');
+  }
+      
+  public get puedeAdministrarMuebles(): boolean {
+    return this.role === Role.ADMIN;
   }
 
   /**********************************************************/

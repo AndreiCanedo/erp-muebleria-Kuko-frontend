@@ -11,104 +11,248 @@
     <nav class="layout__menu" aria-label="Navegación principal">
         <ul class="menu__list">
             
+            @if (esAdmin) {
+
+                <li class="menu__option">
+
+                    <h3 class="menu__submenu-title">
+                        Inicio
+                    </h3>
+
+                    <ul class="submenu__list">
+
+                        <li class="submenu__option">
+
+                            <a routerLink="/dashboard"
+                                routerLinkActive="submenu__link--active"
+                                [routerLinkActiveOptions]="{ exact: true }"
+                                class="submenu__link"
+                                (click)="cerrarMenu()">
+
+                                <i class="submenu__icon fa-solid fa-chart-line"></i>
+
+                                <span class="submenu__overlay">
+                                    Dashboard
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            }
+
+    
+            <!-- **************************************************** -->
+            <!-- ******************** CATALOGOS ********************* -->
+            <!-- **************************************************** -->
+
             <li class="menu__option">
-                <h3 class="menu__submenu-title">Inicio</h3>
+
+                <h3 class="menu__submenu-title">
+                    Catálogos
+                </h3>
 
                 <ul class="submenu__list">
+
+                <!-- CLIENTES -->
+
+                    @if (esAdmin || esVendedor) {
+
+                        <li class="submenu__option">
+
+                            <a routerLink="/clientes"
+                                routerLinkActive="submenu__link--active"
+                                class="submenu__link"
+                                (click)="cerrarMenu()">
+
+                                <i class="submenu__icon fa-solid fa-users"></i>
+
+                                <span class="submenu__overlay">
+                                    Clientes
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                    }
+
+            
+                    <!-- MUEBLES -->
+
+                    @if (esAdmin || esVendedor) {
+
+                        <li class="submenu__option">
+
+                            <a routerLink="/muebles"
+                                routerLinkActive="submenu__link--active"
+                                class="submenu__link"
+                                (click)="cerrarMenu()">
+
+                                <i class="submenu__icon fa-solid fa-couch"></i>
+
+                                <span class="submenu__overlay">
+                                    Muebles
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                    }
+            
+                    <!-- CATALOGO -->
+
                     <li class="submenu__option">
-                        <a routerLink="/dashboard"
-                            routerLinkActive="submenu__link--active"
-                            [routerLinkActiveOptions]="{ exact: true}"
-                            class="submenu__link">
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">DashBoard</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="menu__option">
-                <h3 class="menu__submenu-title">Catalogos</h3>
-
-                <ul class="submenu__list">
-                    <li class="submenu__option">
-                        <a routerLink="/clientes"
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
-
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Clientes</span>
-                        </a>
-                    </li>
-                    
-                    <li class="submenu__option">
-                        <a routerLink="/muebles"
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
-
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Muebles</span>
-                        </a>
-                    </li>
-
-                    <li class="submenu__option">
                         <a routerLink="/catalogo"
                             routerLinkActive="submenu__link--active"
-                            class="submenu__link">
+                            class="submenu__link"
+                            (click)="cerrarMenu()">
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Catalogo</span>
+                            <i class="submenu__icon fa-solid fa-images"></i>
+
+                            <span class="submenu__overlay">
+                                Catalogo
+                            </span>
+
                         </a>
+
                     </li>
 
-                    <li class="submenu__option">
-                        <a routerLink="/ordenes"
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
+                    <!-- ORDENES -->
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Ordenes</span>
-                        </a>
-                    </li>
+                    @if (esAdmin) {
+
+                        <li class="submenu__option">
+
+                            <a routerLink="/ordenes"
+                                routerLinkActive="submenu__link--active"
+                                class="submenu__link"
+                                (click)="cerrarMenu()">
+
+                                <i class="submenu__icon fa-solid fa-clipboard-list"></i>
+
+                                <span class="submenu__overlay">
+                                    Ordenes
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                    }
+
                 </ul>
+
             </li>
 
-            <li class="menu__option">
-                <h3 class="menu__submenu-title">Operaciones</h3>
 
-                <ul class="submenu__list">
-                    <li class="submenu__option">
-                        <a routerLink="presupuesto"
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
+            <!-- **************************************************** -->
+            <!-- ******************* OPERACIONES ******************** -->
+            <!-- **************************************************** -->
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Presupuesto</span>
-                        </a>
-                    </li>
+            @if (esAdmin || esVendedor) {
 
-                    <li class="submenu__option">
-                        <a routerLink="pagos"
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
+                <li class="menu__option">
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Pagos de Ordenes</span>
-                        </a>
-                    </li>
+                    <h3 class="menu__submenu-title">
+                        Operaciones
+                    </h3>
 
-                    <li class="submenu__option">
-                        <a routerLink="/egresos" 
-                            routerLinkActive="submenu__link--active"
-                            class="submenu__link">
+                    <ul class="submenu__list">
 
-                            <i class="submenu__icon fa-solid fa-microchip"></i>
-                            <span class="submenu__overlay">Egresos</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                    <!-- PRESUPUESTO -->
+
+                        <li class="submenu__option">
+
+                            <a routerLink="/presupuesto"
+                                routerLinkActive="submenu__link--active"
+                                class="submenu__link"
+                                (click)="cerrarMenu()">
+
+                                <i class="submenu__icon fa-solid fa-file-invoice-dollar"></i>
+
+                                <span class="submenu__overlay">
+                                    Presupuesto
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                        <!-- PAGOS -->
+
+                        @if (esAdmin) {
+
+                            <li class="submenu__option">
+
+                                <a routerLink="/pagos"
+                                    routerLinkActive="submenu__link--active"
+                                    class="submenu__link"
+                                    (click)="cerrarMenu()">
+
+                                    <i class="submenu__icon fa-solid fa-money-check-dollar"></i>
+
+                                    <span class="submenu__overlay">
+                                        Pagos de ordenes
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                        }
+
+                        <!-- EGRESOS -->
+
+                        @if (esAdmin) {
+
+                            <li class="submenu__option">
+
+                                <a routerLink="/egresos"
+                                    routerLinkActive="submenu__link--active"
+                                    class="submenu__link"
+                                    (click)="cerrarMenu()">
+
+                                    <i class="submenu__icon fa-solid fa-receipt"></i>
+
+                                    <span class="submenu__overlay">
+                                        Egresos
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                        }
+
+                        <!-- USUARIOS -->
+
+                        @if (esAdmin) {
+
+                            <li class="submenu__option">
+
+                                <a routerLink="/usuarios"
+                                    routerLinkActive="submenu__link--active"
+                                    class="submenu__link"
+                                    (click)="cerrarMenu()">
+
+                                    <i class="submenu__icon fa-solid fa-users-gear"></i>
+
+                                    <span class="submenu__overlay">
+                                        Usuarios
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
         </ul>
     </nav>
 

@@ -32,12 +32,6 @@ import { TablaEgresosComponent } from './tabla/tabla-egresos/tabla-egresos.compo
 import { FormularioEgresoComponent } from './egreso/formulario-egreso/formulario-egreso.component';
 import { DetalleEgresoComponent } from './egreso/botones/detalle-egreso/detalle-egreso.component';
 import { CancelarEgresoComponent } from './egreso/botones/cancelar-egreso/cancelar-egreso.component';
-
-import { FormaPagoPipe } from '../pipe/forma-pago.pipe';
-import { MoneyPipe } from '../pipe/money.pipe';
-import { SharedModule } from "../shared/shared.module";
-import { PagesComponent } from './pages.component';
-import { PagesRoutingModule } from './pages.routing';
 import { RegistrarPagoOrdenComponent } from './listado-pagos-orden/registrar-pago-orden/registrar-pago-orden.component';
 import { GraficaFinanzasComponent } from './grafica/grafica-finanzas/grafica-finanzas.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
@@ -46,6 +40,16 @@ import { CrearDisenoMuebleComponent } from './catalogo/crear-diseno-mueble/crear
 import { ActualizarDisenoMuebleComponent } from './catalogo/actualizar-diseno-mueble/actualizar-diseno-mueble.component';
 import { FormDisenoMuebleComponent } from './catalogo/form-diseno-mueble/form-diseno-mueble.component';
 import { SeleccionarDisenoMuebleComponent } from './catalogo/seleccionar-diseno-mueble/seleccionar-diseno-mueble.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { FormUsuariosComponent } from './usuarios/form-usuarios/form-usuarios.component';
+import { CrearUsuariosComponent } from './usuarios/crear-usuarios/crear-usuarios.component';
+import { ActualizarUsuariosComponent } from './usuarios/actualizar-usuarios/actualizar-usuarios.component';
+
+import { FormaPagoPipe } from '../pipe/forma-pago.pipe';
+import { MoneyPipe } from '../pipe/money.pipe';
+import { SharedModule } from "../shared/shared.module";
+import { PagesComponent } from './pages.component';
+import { PagesRoutingModule } from './pages.routing';
 
 
 
@@ -89,13 +93,20 @@ import { SeleccionarDisenoMuebleComponent } from './catalogo/seleccionar-diseno-
     DetallePagoOrdenComponent,
     FormularioEditarPagoComponent,
     RegistrarPagoOrdenComponent,
+
     GraficaFinanzasComponent,
+
     CatalogoComponent,
     DetalleDisenoCatalogoComponent,
     CrearDisenoMuebleComponent,
     ActualizarDisenoMuebleComponent,
     FormDisenoMuebleComponent,
     SeleccionarDisenoMuebleComponent,
+
+    UsuariosComponent,
+    FormUsuariosComponent,
+    CrearUsuariosComponent,
+    ActualizarUsuariosComponent,
     
     
   ],

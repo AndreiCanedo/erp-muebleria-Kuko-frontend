@@ -1,0 +1,315 @@
+<form [formGroup]="usuarioForm"
+    (ngSubmit)="onSubmit()"
+    class="usuario-form">
+
+    <div class="usuario-form__contenido">
+
+
+        <!-- ******************************************************** -->
+        <!-- ********************** USUARIO ************************* -->
+        <!-- ******************************************************** -->
+
+        <div class="usuario-form__campo">
+
+            <label for="username" class="usuario-form__label">
+                Usuario / Correo
+            </label>
+
+            <input type="email"
+                id="username"
+                class="usuario-form__input"
+                formControlName="username"
+                autocomplete="off"
+                placeholder="Ej. vendedor@muebleria.com"
+                [class.usuario-form__input--invalid]="isInvalid('username')"
+                autofocus>
+
+            @if (isInvalid('username')) {
+
+                <div class="usuario-form__error">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    <span>
+
+                        @if (f.username.errors?.['required']) {
+                            El usuario es obligatorio
+                        }
+
+                        @if (f.username.errors?.['email']) {
+                            Ingresa un correo valido
+                        }
+
+                        @if (f.username.errors?.['whitespace']) {
+                            El usuario no puede estar vacio
+                        }
+
+                    </span>
+
+                </div>
+
+            }
+
+        </div>
+
+
+        <!-- ******************************************************** -->
+        <!-- *********************** NOMBRE ************************* -->
+        <!-- ******************************************************** -->
+
+        <div class="usuario-form__fila">
+
+            <div class="usuario-form__campo">
+
+                <label for="firstName" class="usuario-form__label">
+                    Nombre
+                </label>
+
+                <input type="text"
+                    id="firstName"
+                    class="usuario-form__input"
+                    formControlName="firstName"
+                    autocomplete="off"
+                    placeholder="Ej. María">
+
+            </div>
+
+
+            <div class="usuario-form__campo">
+
+                <label for="lastName" class="usuario-form__label">
+                    Apellido
+                </label>
+
+                <input type="text"
+                    id="lastName"
+                    class="usuario-form__input"
+                    formControlName="lastName"
+                    autocomplete="off"
+                    placeholder="Ej. López">
+
+            </div>
+
+        </div>
+
+
+        <!-- ******************************************************** -->
+        <!-- ************************ PAIS *************************** -->
+        <!-- ******************************************************** -->
+
+        <div class="usuario-form__campo">
+
+            <label for="country" class="usuario-form__label">
+                Pais
+            </label>
+
+            <input type="text"
+                id="country"
+                class="usuario-form__input"
+                formControlName="country"
+                autocomplete="off"
+                placeholder="Ej. México">
+
+        </div>
+
+
+        <!-- ******************************************************** -->
+        <!-- ************************ ROL *************************** -->
+        <!-- ******************************************************** -->
+
+        <div class="usuario-form__campo">
+
+            <label for="role" class="usuario-form__label">
+                Rol
+            </label>
+
+            <select id="role"
+                class="usuario-form__input"
+                formControlName="role"
+                [class.usuario-form__input--invalid]="isInvalid('role')">
+
+                @for (role of roles; track role) {
+
+                    <option [ngValue]="role">
+
+                        {{ obtenerNombreRol(role) }}
+
+                    </option>
+
+                }
+
+            </select>
+
+            @if (isInvalid('role')) {
+
+                <div class="usuario-form__error">
+
+                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                    <span>
+                        El rol es obligatorio
+                    </span>
+
+                </div>
+
+            }
+
+        </div>
+
+
+        <!-- ******************************************************** -->
+        <!-- ********************* CONTRASEÑA *********************** -->
+        <!-- ******************************************************** -->
+
+        @if (!actualizar) {
+
+            <div class="usuario-form__campo">
+
+                <label for="password" class="usuario-form__label">
+                    Contraseña
+                </label>
+
+                <input type="password"
+                    id="password"
+                    class="usuario-form__input"
+                    formControlName="password"
+                    autocomplete="new-password"
+                    placeholder="Contraseña"
+                    [class.usuario-form__input--invalid]="isInvalid('password')">
+
+                @if (isInvalid('password')) {
+
+                    <div class="usuario-form__error">
+
+                        <i class="fa-solid fa-circle-exclamation"></i>
+
+                        <span>
+                            La contraseña debe contar con 8 caracteres,
+                            una mayuscula, una miniscula y un numero
+                        </span>
+
+                    </div>
+
+                }
+
+            </div>
+
+
+            <div class="usuario-form__campo">
+
+                <label for="passwordConfirm" class="usuario-form__label">
+                    Confirmar contraseña
+                </label>
+
+                <input type="password"
+                    id="passwordConfirm"
+                    class="usuario-form__input"
+                    formControlName="passwordConfirm"
+                    autocomplete="new-password"
+                    placeholder="Repite la contraseña"
+                    [class.usuario-form__input--invalid]="passwordConfirmInvalid()">
+
+                @if (passwordConfirmInvalid()) {
+
+                    <div class="usuario-form__error">
+
+                        <i class="fa-solid fa-circle-exclamation"></i>
+
+                        <span>
+
+                            @if (f.passwordConfirm.errors?.['required']) {
+                                Confirma la contraseña
+                            } @else if (passwordMismatch()) {
+                                Las contraseñas no coinciden
+                            }
+
+                        </span>
+
+                    </div>
+
+                }
+
+            </div>
+
+        }
+
+
+        <!-- ******************************************************** -->
+        <!-- *********************** ESTADO ************************* -->
+        <!-- ******************************************************** -->
+
+        @if (actualizar) {
+
+            <div class="usuario-form__campo">
+
+                <label for="activo" class="usuario-form__label">
+                    Estado
+                </label>
+
+                <select id="activo"
+                    class="usuario-form__input"
+                    formControlName="activo">
+
+                    <option [ngValue]="true">
+                        Activo
+                    </option>
+
+                    <option [ngValue]="false">
+                        Inactivo
+                    </option>
+
+                </select>
+
+            </div>
+
+        }
+
+    </div>
+
+
+    <!-- ******************************************************** -->
+    <!-- ********************* ACCIONES ************************* -->
+    <!-- ******************************************************** -->
+
+    <footer class="usuario-form__acciones">
+
+        <button type="submit"
+            class="usuario-form__button usuario-form__button--guardar"
+            [disabled]="guardando">
+
+            @if (guardando) {
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                <span>
+                    {{ actualizar ? 'Actualizando...' : 'Guardando...'}}
+                </span>
+
+            } @else {
+
+                <i class="fa-solid"
+                    [class.fa-floppy-disk]="actualizar"
+                    [class.fa-plus]="!actualizar">
+                </i>
+
+                <span>
+                    {{ actualizar ? 'Actualizar usuario' : 'Crear usuario' }}
+                </span>
+
+            }
+
+        </button>
+
+
+        <button type="button"
+            class="usuario-form__button usuario-form__button--cancelar"
+            [disabled]="guardando"
+            (click)="cerrarCaja()">
+
+            Cancelar
+
+        </button>
+
+    </footer>
+
+</form>

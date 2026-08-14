@@ -7,6 +7,8 @@ import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ContextMenuService } from '../../shared/directives/context-menu.service';
 import { CatalogoImageService } from '../../services/catalogo-image.service';
+import { StorageServiceService } from '../../services/storage-service.service';
+import { Role } from '../../models/role.enum';
 
 @Component({
   selector: 'app-catalogo',
@@ -20,6 +22,7 @@ export class CatalogoComponent implements OnInit{
   private readonly disenoMuebleService = inject(DisenoMuebleService);
   private readonly contextMenu = inject(ContextMenuService);
   private readonly imageService = inject(CatalogoImageService);
+  private readonly storageService = inject(StorageServiceService);
 
   public disenos: DisenoMueble[] = [];
   public disenosFiltrados: DisenoMueble[] = [];
@@ -252,6 +255,22 @@ export class CatalogoComponent implements OnInit{
         }
 
       });
+  }
+
+  /******************************************************/
+  /*********************** ROLES ************************/
+  /******************************************************/
+
+  public get role(): Role | null {
+    return this.storageService.obtener<Role>('role');
+  }
+  
+  public get puedeAdministrarMuebles(): boolean {
+    return this.role === Role.ADMIN;
+  }
+
+  public get puedeVendedorMuebles(): boolean {
+    return this.role === Role.VENDEDOR;
   }
 
   /******************************************************/

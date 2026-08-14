@@ -17,11 +17,12 @@
             </div>
 
         </div>
-
-        <button type="button" class="muebles-page__nuevo" (click)="abrirCrearMueble()">
-            <i class="fa-solid fa-plus"></i>
-            Nuevo Mueble
-        </button>
+        @if (puedeAdministrarMuebles) {
+            <button type="button" class="muebles-page__nuevo" (click)="abrirCrearMueble()">
+                <i class="fa-solid fa-plus"></i>
+                Nuevo Mueble
+            </button>
+        }
 
     </header>
 
@@ -108,29 +109,33 @@
 
                     </div>
 
-                    <div class="mueble-card__acciones">
 
-                        <button type="button" 
-                            class="mueble-card__accion"
-                            title="Editar Mueble"
-                            aria-label="Editar mueble"
-                            (click)="abrirActualizarMueble(mueble)">
+                    @if (puedeAdministrarMuebles) {
 
-                            <i class="fa-solid fa-pen"></i>
-                        
-                        </button>
-
-                        <button type="button"
-                            class="mueble-card__accion mueble-card__accion--eliminar"
-                            title="Eliminar mueble"
-                            aria-label="Eliminar mueble"
-                            [disabled]="ui.eliminando"
-                            (click)="confirmarDesactivarMueble(mueble)">
+                        <div class="mueble-card__acciones">
+    
+                            <button type="button" 
+                                class="mueble-card__accion"
+                                title="Editar Mueble"
+                                aria-label="Editar mueble"
+                                (click)="abrirActualizarMueble(mueble)">
+    
+                                <i class="fa-solid fa-pen"></i>
                             
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-
-                    </div>
+                            </button>
+    
+                            <button type="button"
+                                class="mueble-card__accion mueble-card__accion--eliminar"
+                                title="Eliminar mueble"
+                                aria-label="Eliminar mueble"
+                                [disabled]="ui.eliminando"
+                                (click)="confirmarDesactivarMueble(mueble)">
+                                
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+    
+                        </div>
+                    }
 
                 </li>
             }

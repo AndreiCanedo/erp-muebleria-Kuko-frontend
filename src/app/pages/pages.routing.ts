@@ -11,6 +11,9 @@ import { ListadoOrdenesComponent } from './listado-ordenes/listado-ordenes.compo
 import { ListadoPagosOrdenComponent } from './listado-pagos-orden/listado-pagos-orden.component';
 import { authGuard } from '../guards/auth.guard';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { roleGuard } from '../guards/role.guard';
+import { Role } from '../models/role.enum';
 
 
 const routes: Routes = [
@@ -18,14 +21,15 @@ const routes: Routes = [
     canActivate: [authGuard], 
     canActivateChild: [authGuard], 
     children:[
-      { path:'dashboard',component:DashboardComponent },
-      { path:'clientes', component:ClienteComponent },
-      { path:'muebles', component:MuebleComponent },
-      { path:'catalogo', component:CatalogoComponent },
-      { path:'ordenes', component:ListadoOrdenesComponent },
-      { path: 'presupuesto', component: PresupuestoComponent },
-      { path: 'pagos', component: ListadoPagosOrdenComponent },
-      { path:'egresos', component:EgresoComponent },
+      { path:'dashboard',component:DashboardComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN]} },
+      { path:'clientes', component:ClienteComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN, Role.VENDEDOR]} },
+      { path:'muebles', component:MuebleComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN, Role.VENDEDOR]} },
+      { path:'catalogo', component:CatalogoComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN, Role.VENDEDOR, Role.USER]} },
+      { path:'ordenes', component:ListadoOrdenesComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN]} },
+      { path: 'presupuesto', component: PresupuestoComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN, Role.VENDEDOR]} },
+      { path: 'pagos', component: ListadoPagosOrdenComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN]} },
+      { path:'egresos', component:EgresoComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN]} },
+      { path:'usuarios', component:UsuariosComponent, canActivate: [roleGuard], data: {roles: [Role.ADMIN]} },
     ]
   }
 ];

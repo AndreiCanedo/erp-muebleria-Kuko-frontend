@@ -1,0 +1,299 @@
+<section class="usuarios-page">
+
+    <header class="usuarios-page__header">
+
+        <div class="usuarios-page__encabezado">
+
+            <span class="usuarios-page__header-icon">
+                <i class="fa-solid fa-users-gear"></i>
+            </span>
+
+            <div>
+
+                <h1 class="usuarios-page__title">
+                    Usuarios
+                </h1>
+
+                <p class="usuarios-page__subtitle">
+                    Administra los usuarios, roles y accesos al sistema
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button type="button"
+            class="usuarios-page__nuevo"
+            (click)="abrirCrear()">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            Nuevo usuario
+
+        </button>
+
+    </header>
+
+
+    <!-- ******************************************************* -->
+    <!-- ********************** FILTROS ************************ -->
+    <!-- ******************************************************* -->
+
+    <section class="usuarios-page__filtros">
+
+        <div class="usuarios-page__busqueda">
+
+            <app-search-box placeholder="Buscar por usuario, nombre o pais"
+                [value]="textoBusqueda"
+                (search)="buscar($event)">
+            </app-search-box>
+
+        </div>
+
+
+        <select class="usuarios-page__select"
+            [ngModel]="rolSeleccionado"
+            (ngModelChange)="cambiarRol($event)">
+
+            <option [ngValue]="null">
+                Todos los roles
+            </option>
+
+            @for (role of roles; track role) {
+
+                <option [ngValue]="role">
+                    {{ obtenerNombreRol(role) }}
+                </option>
+
+            }
+
+        </select>
+
+
+        <button type="button"
+            class="usuarios-page__limpiar"
+            [disabled]="!textoBusqueda && !rolSeleccionado"
+            (click)="limpiarFiltros()">
+
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+
+            Limpiar
+
+        </button>
+
+    </section>
+
+
+    <!-- ******************************************************* -->
+    <!-- ********************** ESTADO ************************* -->
+    <!-- ******************************************************* -->
+
+    @if (ui.cargando) {
+
+        <app-state state="loading"
+            message="Cargando usuarios...">
+        
+        </app-state>
+
+    } @else if (ui.error) {
+
+        <app-state state="error"
+            [message]="ui.error"
+            buttonText="Reintentar"
+            (retry)="cargarUsuarios()">
+        
+        </app-state>
+
+    } @else if (usuarios.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-users"
+            message="No hay usuarios registrados">
+        
+        </app-state>
+
+    } @else if (usuariosFiltrados.length === 0) {
+
+        <app-state state="empty"
+            icon="fa-solid fa-magnifying-glass"
+            message="No se encontraron usuarios con los filtros seleccionados">
+        </app-state>
+
+    } @else {
+
+    <!-- ******************************************************* -->
+    <!-- ********************** LISTADO ************************ -->
+    <!-- ******************************************************* -->
+
+        <section class="usuarios-page__lista">
+
+            @for (usuario of usuariosFiltrados; track usuario.id) {
+
+                <article class="usuario-card"
+                    [class.usuario-card--inactivo]="!usuario.activo">
+
+                    <span class="usuario-card__avatar"
+                        [class.usuario-card__avatar--admin]="usuario.role === 'ADMIN'"
+                        [class.usuario-card__avatar--vendedor]="usuario.role === 'VENDEDOR'">
+
+                        @if (usuario.firstName) {
+
+                            {{ usuario.firstName.charAt(0).toUpperCase() }}
+
+                        } @else {
+
+                            <i class="fa-solid fa-user"></i>
+
+                        }
+
+                    </span>
+
+
+                    <div class="usuario-card__contenido">
+
+                        <div class="usuario-card__titulo-row">
+
+                            <h2 class="usuario-card__nombre">
+                                {{ obtenerNombreCompleto(usuario) }}
+                            </h2>
+
+
+                            <span class="usuario-card__estado"
+                                [class.usuario-card__estado--activo]="usuario.activo"
+                                [class.usuario-card__estado--inactivo]="!usuario.activo">
+
+                                <i class="fa-solid"
+                                    [class.fa-circle-check]="usuario.activo"
+                                    [class.fa-circle-xmark]="!usuario.activo">
+                                </i>
+
+                                {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+
+                            </span>
+
+                        </div>
+
+
+                        <span class="usuario-card__username">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            {{ usuario.username }}
+
+                        </span>
+
+
+                        <div class="usuario-card__datos">
+
+                            <span class="usuario-card__rol"
+                                [class.usuario-card__rol--admin]="usuario.role === 'ADMIN'"
+                                [class.usuario-card__rol--vendedor]="usuario.role === 'VENDEDOR'"
+                                [class.usuario-card__rol--user]="usuario.role === 'USER'">
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                                {{ obtenerNombreRol(usuario.role) }}
+
+                            </span>
+
+
+                            @if (usuario.country) {
+
+                                <span class="usuario-card__pais">
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    {{ usuario.country }}
+
+                                </span>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="usuario-card__acciones">
+
+                        <button type="button"
+                            class="usuario-card__accion"
+                            title="Editar usuario"
+                            aria-label="Editar usuario"
+                            (click)="abrirActualizar(usuario)">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </button>
+
+
+                        <button type="button"
+                            class="usuario-card__accion"
+                            [class.usuario-card__accion--danger]="usuario.activo"
+                            [class.usuario-card__accion--success]="!usuario.activo"
+                            [disabled]="ui.cambiandoEstado"
+                            [title]="usuario.activo ? 'Desactivar usuario' : 'Activar usuario'"
+                            [attr.aria-label]="usuario.activo ? 'Desactivar usuario' : 'Activar usuario'"
+                            (click)="confirmarCambiarEstado(usuario)">
+
+                            <i class="fa-solid"
+                                [class.fa-ban]="usuario.activo"
+                                [class.fa-circle-check]="!usuario.activo">
+                            </i>
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+            }
+
+        </section>
+
+    }
+
+</section>
+
+
+    <!-- ******************************************************* -->
+    <!-- ************************ MODAL ************************ -->
+    <!-- ******************************************************* -->
+
+<app-modal
+    [visible]="ui.modalVisible"
+    size="md"
+    [title]=" ui.modo === 'crear' ? 'Nuevo usuario'
+            : ui.modo === 'actualizar' ? 'Actualizar usuario' : ''"
+    (cerrar)="onModalCerrado()">
+
+
+    @switch (ui.modo) {
+
+        @case ('crear') {
+
+            <app-crear-usuarios (usuarioCreado)="usuarioCreado($event)"
+                (cancelar)="cerrarModal()">
+
+            </app-crear-usuarios>
+
+        }
+
+
+        @case ('actualizar') {
+
+            @if (usuarioSeleccionado) {
+
+                <app-actualizar-usuarios [usuario]="usuarioSeleccionado"
+                    (usuarioActualizado)="usuarioActualizado($event)"
+                    (cancelar)="cerrarModal()">
+
+                </app-actualizar-usuarios>
+
+            }
+
+        }
+
+    }
+
+</app-modal>

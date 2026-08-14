@@ -4,8 +4,12 @@ import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { RegisterForm } from '../interface/register-form.interface';
 import { LoginForm } from '../interface/login-form.interface';
+import { SharedService } from './shared.service';
+import { UsuarioDTO } from '../models/interface-models/usuarioDTO.interface';
+import { UsuarioMapper } from '../mappers/usuario.,mapper';
+import { CrearUsuarioRequest } from '../models/request/crear-usuario.request';
+import { ActualizarUsuarioRequest } from '../models/request/actualizar-usuario.request';
 
 const base_url = environment.base_url
 
@@ -16,75 +20,73 @@ const base_url = environment.base_url
 })
 export class UsuariosService {
 
-  private router = inject(Router);
-  public usuario! : Usuario;
+  private readonly sharedService = inject(SharedService);
 
-  private http = inject(HttpClient);
+    private readonly endpoint = '/usuarios';
 
 
-  guardarLocalStorage(token: string, menu:any){
-    localStorage.setItem('token', token)
-    localStorage.setItem('menu', JSON.stringify(menu))
-  }
+    /************************************************************/
+    /************************ LISTAR ****************************/
+    /************************************************************/
 
-  get token():string {
-    return localStorage.getItem('token') || '';
-  }
+    public cargarUsuarios(): Observable<Usuario[]> {
 
-  get uid():number{
-    return this.usuario.uid || 0;
-  }
-
-  get headers(){
-    return {
-      headers: {
-        'x-token' : this.token
-      }
+        return this.sharedService.get<UsuarioDTO>(this.endpoint)
+            .pipe(
+              map (dtos => UsuarioMapper.fromDTOList(dtos))
+            );
     }
-  }
 
-  validarToken(): Observable<boolean>{
-    return this.http.get(`${base_url}/auth/login`,{
-      headers:{
-        'x-token': this.token
-      }
-    }).pipe(
-      map( (resp:any) => {
-        const{username, firstName, lastName, country, role, uid } = resp.usuario;
 
-        this.usuario = new Usuario( firstName, lastName, username, '',country, uid, role);
+    /************************************************************/
+    /*********************** BUSCAR ID ***************************/
+    /************************************************************/
 
-        this.guardarLocalStorage(resp.token, resp.menu)
+    public buscarUsuarioPorId(id: number): Observable<Usuario> {
 
-        return true
-      }),
-      catchError(error => of(false))
-    );
-  }
+        return this.sharedService.getById<UsuarioDTO>(`${this.endpoint}/${id}`)
+            .pipe(
+              map(dto => UsuarioMapper .fromDTO(dto))
+            );
+    }
 
-  crearUsuario(formData: RegisterForm){
-    return this.http.post(`${base_url}/auth/register`,formData)
-      .pipe(
-        tap( (resp: any) => {
-          this.guardarLocalStorage(resp.token, resp.menu)
-        })
-      );
-  }
 
-  login( formData: LoginForm){
-    console.log(formData);
-    return this.http.post(`${base_url}/auth/login`, formData)
-      .pipe(
-        tap( (resp:any) => {
-          this.guardarLocalStorage(resp.token, resp.menu)
-        })
-      )
-  }
+    /************************************************************/
+    /************************ CREAR *******************************/
+    /************************************************************/
 
-  logout(){
-    localStorage.removeItem('token');
-    localStorage.removeItem('menu');
-    this.router.navigateByUrl('/login');
-  }
+    public crearUsuario(request: CrearUsuarioRequest): Observable<Usuario> {
+
+        return this.sharedService.post<UsuarioDTO>(this.endpoint, request)
+            .pipe(
+              map(dto => UsuarioMapper.fromDTO(dto))
+            );
+    }
+
+
+    /************************************************************/
+    /*********************** ACTUALIZAR **************************/
+    /************************************************************/
+
+    public actualizarUsuario(id: number, request: ActualizarUsuarioRequest): Observable<Usuario> {
+
+        return this.sharedService.put<UsuarioDTO>(`${this.endpoint}/${id}`, request)
+            .pipe(
+                map(dto => UsuarioMapper.fromDTO(dto))
+            );
+    }
+
+
+    /************************************************************/
+    /********************** CAMBIAR ESTADO ***********************/
+    /************************************************************/
+
+    public cambiarEstado(id: number, activo: boolean): Observable<Usuario> {
+
+        return this.sharedService.patch<UsuarioDTO>(`${this.endpoint}/${id}/estado?activo=${activo}`, {})
+            .pipe(
+                map(dto => UsuarioMapper.fromDTO(dto))
+            );
+    }
   
 }

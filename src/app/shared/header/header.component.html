@@ -1,24 +1,49 @@
 <section class="nav__menu">
 
+    <button type="button"
+        class="nav__menu-toggle"
+        [attr.aria-label]="menuAbierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'"
+        [attr.aria-expanded]="menuAbierto"
+        (click)="toggleMenu()">
+
+        <i class="fa-solid"
+            [class.fa-bars]="!menuAbierto"
+            [class.fa-xmark]="menuAbierto">
+        </i>
+
+    </button>
+
     <nav class="nav__option" aria-label="Acciones de usuario">
 
         <ul class="nav__list">
 
             <li class="nav__list-option">
 
-                <button type="button" class="nav__icon-button" aria-label="Notificaciones">
+                <button type="button" 
+                    class="nav__icon-button" 
+                    aria-label="Notificaciones">
+                    
                     <i class="fa-solid fa-bell list-option__icon"></i>
                 </button>
             </li>
 
             <li class="nav__list-option nav__list-option--download">
-                <button type="button" class="list-option__button">
-                    <span class="button__text">Descargar</span>
+
+                <button type="button" 
+                    class="list-option__button">
+
+                    <span class="button__text">
+                        Descargar
+                    </span>
                 </button>
             </li>
 
             <li class="nav__list-option">
-                <img src="assets/img/avatar.png" alt="Avatar del usuario" class="list-option__avatar">
+
+                <img src="assets/img/avatar.png" 
+                    alt="Avatar del usuario" 
+                    class="list-option__avatar">
+                    
             </li>
 
         </ul>

@@ -1,0 +1,9 @@
+
+<app-form-usuarios
+    [usuarioForm]="usuarioForm"
+    [actualizar]="ui.actualizar"
+    [guardando]="ui.guardando"
+
+    (submitForm)="guardarUsuario()"
+    (cancelar)="cerrarCaja()">
+</app-form-usuarios>

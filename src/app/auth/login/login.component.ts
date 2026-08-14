@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { Role } from '../../models/role.enum';
 
 @Component({
     selector: 'app-login',
@@ -43,7 +44,8 @@ export class LoginComponent implements OnInit{
 
   login(){
     this.authService.login( this.loginForm.value)
-      .subscribe(resp => {
+      .subscribe({
+        next: resp => {
         if( this.loginForm.get('remember')?.value){
           localStorage.setItem('username', this.loginForm.get('username')?.value);
           localStorage.setItem('remember', this.loginForm.get('remember')?.value);
@@ -52,13 +54,29 @@ export class LoginComponent implements OnInit{
           localStorage.removeItem('remember');
         }
 
-        //ir al DashBoard
-        this.router.navigateByUrl('/dashboard');
-      },(err) => {
+        const role = resp.role as Role;
+
+        switch (role) {
+
+          case Role.ADMIN:
+            this.router.navigateByUrl('/dashboard');
+            break;
+
+          case Role.VENDEDOR:
+          case Role.USER:
+            this.router.navigateByUrl('/catalogo');
+            break;
+
+          default:
+            this.router.navigateByUrl('/login');
+        }
+      },
+      error: err => {
         this.errorLogin = 'El usuario o la contraseña es incorrecta';
         const errorMsg = err.error?.msg || 'El Usuario o la Contraseña es incorrecta';
         Swal.fire('Error', errorMsg, 'error');
-      });
+      }
+    });
     //console.log( this.loginForm.value )
   }
 

@@ -5,6 +5,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs';
 import { CatalogoImageService } from '../../services/catalogo-image.service';
+import { StorageServiceService } from '../../services/storage-service.service';
+import { Role } from '../../models/role.enum';
 
 @Component({
   selector: 'app-mueble',
@@ -17,6 +19,7 @@ export class MuebleComponent implements OnInit{
   private readonly muebleService = inject(MuebleService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly imageService =  inject(CatalogoImageService);
+  private readonly storageService = inject(StorageServiceService);
 
   public muebles: Mueble[] = [];
 
@@ -162,6 +165,18 @@ export class MuebleComponent implements OnInit{
     if (!nombreArchivo)  return '';
 
     return this.imageService.obtenerMiniatura(nombreArchivo);
+  }
+
+  /**********************************************************/
+  /************************** ROLS **************************/
+  /**********************************************************/ 
+
+  public get role(): Role | null {
+    return this.storageService.obtener<Role>('role');
+  }
+
+  public get puedeAdministrarMuebles(): boolean {
+    return this.role === Role.ADMIN;
   }
 
   /**********************************************************/

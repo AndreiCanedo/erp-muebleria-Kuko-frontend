@@ -32,86 +32,92 @@
 
         </header>
 
-        <section class="detalle-catalogo__variantes">
+        @if(puedeAdministrarMuebles || puedeVendedorMuebles){
 
-            <div class="detalle-catalogo__variantes-header">
-
-                <div>
-                    <h3 class="detalle-catalogo__variantes-title">
-                        Variantes disponibles
-                    </h3>
-
-                    <p class="detalle-catalogo__variantes-description">
-                        Selecciona una variante para consultar su precio
-                    </p>
+            <section class="detalle-catalogo__variantes">
+    
+                <div class="detalle-catalogo__variantes-header">
+    
+                    <div>
+                        <h3 class="detalle-catalogo__variantes-title">
+                            Variantes disponibles
+                        </h3>
+    
+                        <p class="detalle-catalogo__variantes-description">
+                            Selecciona una variante para consultar su precio
+                        </p>
+                    </div>
+    
                 </div>
-
-            </div>
-
-            @if (ui.cargando) {
-
-                <app-state state="loading"
-                    message="Cargando variantes">
-
-                </app-state>
-
-            } @else if (ui.error) {
-
-                <app-state state="error"
-                    [message]="ui.error"
-                    buttonText="Reintentar"
-                    (retry)="reintentar()">
-
-                </app-state>
-
-            } @else if (muebles.length === 0) {
-
-                <app-state state="empty"
-                    icon="fa-solid fa-couch"
-                    message="Este diseño todavía no tiene variantes disponibles">
-
-                </app-state>
-
-            } @else {
-
-                <div class="detalle-catalogo__lista">
-
-                    @for (mueble of muebles; track mueble.id) {
-
-                        <button type="button"
-                            class="detalle-catalogo__variante"
-                            [class.detalle-catalogo__variante--seleccionada]="seleccionado?.id === mueble.id"
-                            (click)="seleccionarMueble(mueble)">
-
-                            <span class="detalle-catalogo__variante-info">
-
-                                <span class="detalle-catalogo__variante-nombre">
-                                    {{ mueble.descripcion }}
-                                </span>
-
-                                @if (mueble.disenoMuebleNombre) {
-
-                                    <span class="detalle-catalogo__variante-diseno">
-                                        {{ mueble.disenoMuebleNombre }}
+    
+    
+                @if (ui.cargando) {
+    
+                    <app-state state="loading"
+                        message="Cargando variantes">
+    
+                    </app-state>
+    
+                } @else if (ui.error) {
+    
+                    <app-state state="error"
+                        [message]="ui.error"
+                        buttonText="Reintentar"
+                        (retry)="reintentar()">
+    
+                    </app-state>
+    
+                } @else if (muebles.length === 0) {
+    
+                    <app-state state="empty"
+                        icon="fa-solid fa-couch"
+                        message="Este diseño todavía no tiene variantes disponibles">
+    
+                    </app-state>
+    
+                } @else {
+    
+                    <div class="detalle-catalogo__lista">
+    
+                        @for (mueble of muebles; track mueble.id) {
+    
+                            <button type="button"
+                                class="detalle-catalogo__variante"
+                                [class.detalle-catalogo__variante--seleccionada]="seleccionado?.id === mueble.id"
+                                (click)="seleccionarMueble(mueble)">
+    
+                                <span class="detalle-catalogo__variante-info">
+    
+                                    <span class="detalle-catalogo__variante-nombre">
+                                        {{ mueble.descripcion }}
                                     </span>
+    
+                                    @if (mueble.disenoMuebleNombre) {
+    
+                                        <span class="detalle-catalogo__variante-diseno">
+                                            {{ mueble.disenoMuebleNombre }}
+                                        </span>
+    
+                                    }
+    
+                                </span>
+    
+                                <strong class="detalle-catalogo__variante-precio">
+                                    {{ mueble.precioReferencia | money }}
+                                </strong>
+    
+                            </button>
+    
+                        }
+    
+                    </div>
+    
+                }
+    
+    
+            </section>
+        }
 
-                                }
-
-                            </span>
-
-                            <strong class="detalle-catalogo__variante-precio">
-                                {{ mueble.precioReferencia | money }}
-                            </strong>
-
-                        </button>
-
-                    }
-
-                </div>
-
-            }
-
-        </section>
 
         @if (seleccionado) {
 
@@ -142,6 +148,7 @@
                 </div>
 
             </section>
+
 
         }
 

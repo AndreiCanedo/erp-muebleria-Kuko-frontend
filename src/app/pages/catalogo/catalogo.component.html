@@ -20,13 +20,17 @@
 
         </div>
 
-        <button type="button"
-            class="catalogo-page__nuevo"
-            (click)="abrirCrear()">
+        @if(puedeAdministrarMuebles || puedeVendedorMuebles){
 
-            <i class="fa-solid fa-plus"></i>
-            Nuevo diseño
-        </button>
+            <button type="button"
+                class="catalogo-page__nuevo"
+                (click)="abrirCrear()">
+    
+                <i class="fa-solid fa-plus"></i>
+                Nuevo diseño
+            </button>
+        }
+
 
     </header>
 
@@ -153,35 +157,39 @@
                                 </button>
                             
                             </li>
+                            
+                            @if(puedeAdministrarMuebles || puedeVendedorMuebles){
+                                
+                                <li class="catalogo-card__menu-item">
+                                
+                                    <button type="button"
+                                        class="catalogo-card__menu-opcion"
+                                        role="menuitem"
+                                        (click)="abrirActualizar(diseno)">
                         
-                            <li class="catalogo-card__menu-item">
+                                        <i class="fa-solid fa-pen"></i>
+                                        Editar diseño
+                                
+                                    </button>
+                                
+                                </li>
                             
-                                <button type="button"
-                                    class="catalogo-card__menu-opcion"
-                                    role="menuitem"
-                                    (click)="abrirActualizar(diseno)">
-                    
-                                    <i class="fa-solid fa-pen"></i>
-                                    Editar diseño
-                            
-                                </button>
-                            
-                            </li>
+                                <li class="catalogo-card__menu-item">
+                                
+                                    <button type="button"
+                                        class="catalogo-card__menu-opcion catalogo-card__menu-opcion--danger"
+                                        role="menuitem"
+                                        [disabled]="ui.cambiandoEstado"
+                                        (click)="confirmarCambiarEstado(diseno)">
                         
-                            <li class="catalogo-card__menu-item">
-                            
-                                <button type="button"
-                                    class="catalogo-card__menu-opcion catalogo-card__menu-opcion--danger"
-                                    role="menuitem"
-                                    [disabled]="ui.cambiandoEstado"
-                                    (click)="confirmarCambiarEstado(diseno)">
-                    
-                                    <i class="fa-solid fa-ban"></i>
-                                    Desactivar
-                            
-                                </button>
-                            
-                            </li>
+                                        <i class="fa-solid fa-ban"></i>
+                                        Desactivar
+                                
+                                    </button>
+                                
+                                </li>
+                            }
+
                         
                         </ul>
 

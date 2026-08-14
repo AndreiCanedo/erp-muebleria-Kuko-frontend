@@ -5,6 +5,8 @@ import { Mueble } from '../../../models/mueble.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { CatalogoImageService } from '../../../services/catalogo-image.service';
+import { StorageServiceService } from '../../../services/storage-service.service';
+import { Role } from '../../../models/role.enum';
 
 @Component({
   selector: 'app-detalle-diseno-catalogo',
@@ -19,6 +21,7 @@ export class DetalleDisenoCatalogoComponent implements OnChanges{
   private readonly muebleService = inject(MuebleService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly imageService = inject(CatalogoImageService);
+  private readonly storageService = inject(StorageServiceService);
 
   public muebles: Mueble[] = [];
 
@@ -95,6 +98,20 @@ export class DetalleDisenoCatalogoComponent implements OnChanges{
   
   }
 
+  /*********************************************************/
+  /************************* ROLES *************************/
+  /*********************************************************/
+
+  public get role(): Role | null {
+    return this.storageService.obtener<Role>('role');
+  }
+    
+  public get puedeAdministrarMuebles(): boolean {
+    return this.role === Role.ADMIN;
+  }
   
+  public get puedeVendedorMuebles(): boolean {
+    return this.role === Role.VENDEDOR;
+  }
 
 }
