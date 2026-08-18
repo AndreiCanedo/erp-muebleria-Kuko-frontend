@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrearOrdenCompraRequest } from '../../models/request/crear-orden-compra.request';
 import { finalize } from 'rxjs';
+import { PdfDownloadService } from '../../services/pdf-download.service';
 
 @Component({
   selector: 'app-orden-compra',
@@ -18,9 +19,9 @@ import { finalize } from 'rxjs';
 })
 export class PresupuestoComponent {
 
-  private destroyRef = inject(DestroyRef);
-
-  private ordenCompraServices = inject(OrdenCompraServices);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly ordenCompraServices = inject(OrdenCompraServices);
+  private readonly pdfDownloadService = inject(PdfDownloadService)
 
   /*******************************************************/
   /******************DATOS PARA TABLA*********************/
@@ -177,14 +178,9 @@ export class PresupuestoComponent {
         finalize(() => this.ui.cargando = false)
       )
       .subscribe({
-        next: () => {
+        next: orden => {
             
-          this.limpiarFormulario();
-
-          Swal.fire({
-            title: 'Presupuesto Creado',
-            icon: 'success'
-          });
+          this.mostrarPresupuestoCreado(orden.id);
             
         },
         error: (err:Error) => {
@@ -197,7 +193,53 @@ export class PresupuestoComponent {
       });
   }
 
+  /******************************************************/
+  /******************DESCARGA PRESUPUESTO****************/
+  /******************************************************/
 
+  public descargarPresupuesto(ordenId: number): void {
+
+    this.pdfDownloadService.obtenerPresupuestoPdf(ordenId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: blob => {
+
+            this.pdfDownloadService.descargar(blob,`presupuesto-${ordenId}.pdf`);
+          },
+          error: () => {
+            Swal.fire({
+              title: 'Error',
+              text: 'No fue posible descargar el presupuesto',
+              icon: 'error'
+            });
+          }
+        });
+  }
+
+  private mostrarPresupuestoCreado(ordenId: number): void {
+
+    Swal.fire({
+      title: 'Presupuesto creado',
+      text: `Folio #${ordenId}`,
+      icon: 'success',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Descargar PDF',
+      cancelButtonText: 'Cerrar',
+
+      allowOutsideClick: false
+    })
+    .then(resultado => {
+
+      if (resultado.isConfirmed) {
+
+        this.descargarPresupuesto(ordenId);
+      }
+
+      this.limpiarFormulario();
+    });
+  }
 
   /******************************************************/
   /************************BUILDER***********************/

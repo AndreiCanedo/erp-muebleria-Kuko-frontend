@@ -20,6 +20,7 @@ export class TablaOrdenesComponent {
   @Output() editar = new EventEmitter<OrdenResumenView>();
   @Output() confirmar = new EventEmitter<OrdenResumenView>();
   @Output() cancelar = new EventEmitter<OrdenResumenView>();
+  @Output() descargarPdf = new EventEmitter<OrdenResumenView>();
 
   public readonly estadoOrdenCompra = EstadoOrdenCompra;
 
@@ -41,6 +42,11 @@ export class TablaOrdenesComponent {
   cancelarOrden(orden: OrdenResumenView): void{
     this.contextMenu.cerrar();
     this.cancelar.emit(orden);
+  }
+
+  public descargarDocumento(orden: OrdenResumenView): void {
+    this.contextMenu.cerrar();
+    this.descargarPdf.emit(orden);
   }
 
 

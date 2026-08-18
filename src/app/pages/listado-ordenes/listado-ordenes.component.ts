@@ -5,6 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { CancelarOrdenCompraRequest } from '../../models/request/cancelar-orden-compra.request';
 import { ordenarPorFechaDescendente } from '../../shared/utils/sort.util';
+import { PdfDownloadService } from '../../services/pdf-download.service';
+import Swal from 'sweetalert2';
+import { EstadoOrdenCompra } from '../../models/estado-orden-compra.enum';
 
 @Component({
   selector: 'app-listado-ordenes',
@@ -14,8 +17,9 @@ import { ordenarPorFechaDescendente } from '../../shared/utils/sort.util';
 })
 export class ListadoOrdenesComponent implements OnInit{
 
-  private destroyRef = inject(DestroyRef);
-  private ordenService = inject(OrdenCompraServices);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly ordenService = inject(OrdenCompraServices);
+  private readonly pdfDownloadService = inject(PdfDownloadService);
 
   public ordenes: OrdenResumenView[] = [];
   public ordenesFiltradas: OrdenResumenView[] = [];
@@ -248,5 +252,60 @@ export class ListadoOrdenesComponent implements OnInit{
         }
       });
   }
+
+  /*********************************************************/
+  /********************** DESCARGARGA **********************/
+  /*********************************************************/
+
+  public descargarDocumento(orden: OrdenResumenView): void {
+
+    if (orden.estadoOrden === EstadoOrdenCompra.COTIZACION) {
+
+      this.descargarPresupuesto(orden.id);
+      return;
+    }
+
+    this.descargarOrdenCompra(orden.id);
+  }
+
+  public descargarOrdenCompra(ordenId: number): void {
+
+    this.pdfDownloadService.obtenerOrdenCompraPdf(ordenId)
+      .subscribe({
+        next: blob => {
+
+          this.pdfDownloadService.descargar(blob, `orden-compra-${ordenId}.pdf`);
+        },
+
+        error: () => {
+
+          Swal.fire({
+            title: 'Error',
+            text: 'No fue posible descargar la orden de compra',
+            icon: 'error'
+          });
+        }
+      });
+  }
+
+  private descargarPresupuesto(ordenId: number): void {
+
+    this.pdfDownloadService.obtenerPresupuestoPdf(ordenId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: blob => {
+
+          this.pdfDownloadService.descargar(blob, `presupuesto-${ordenId}.pdf`);
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error',
+            text: 'No fue posible descargar el presupuesto',
+            icon: 'error'
+          });
+        }
+      });
+  }   
+
 
 }
