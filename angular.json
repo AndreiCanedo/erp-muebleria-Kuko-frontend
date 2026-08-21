@@ -35,6 +35,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/fonts/fontawesome-free-6.1.2-web/css/all.min.css",
+              "src/assets/fonts/poppins/poppins.css",
               "src/assets/css/styles.css"
             ],
             "scripts": [],
