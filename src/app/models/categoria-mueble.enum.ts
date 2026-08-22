@@ -13,6 +13,14 @@ export enum CategoriaMueble {
     PUERTA_TAMBOR = 'PUERTA_TAMBOR',
     PUERTA_PRINCIPAL = 'PUERTA_PRINCIPAL',
     ENDUELADOS = 'ENDUELADOS',
-    OTRO = 'OTRO'
+    OTRO = 'OTRO',
+
+    BANCO = 'BANCO',
+    BURO = 'BURO',
+    CREDENZA = 'CREDENZA',
+    ESCALERA = 'ESCALERA',
+    ESPEJO = 'ESPEJO',
+    MESA_CENTRO = 'MESA_CENTRO',
+    TOCADOR = 'TOCADOR'
     
 }
